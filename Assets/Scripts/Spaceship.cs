@@ -20,7 +20,7 @@ namespace MFlight.Demo
     {
         //[Header("Components")]
         //public MouseFlightController controller = null;
-        public NetworkVariable<Vector3> MouseAimPos = new();
+        public NetworkVariable<Vector3> MouseAimPos = new(Vector3.zero);
 
         [Header("Physics")]
         [Tooltip("Force to push plane forwards with")] public float thrust = 100f;
@@ -32,16 +32,16 @@ namespace MFlight.Demo
         [Tooltip("Angle at which airplane banks fully into target.")] public float aggressiveTurnAngle = 10f;
 
         [Header("Input")]
-        [SerializeField] [Range(-1f, 1f)] private float pitch = 0f;
-        [SerializeField] [Range(-1f, 1f)] private float yaw = 0f;
-        [SerializeField] [Range(-1f, 1f)] private float roll = 0f;
-        [SerializeField] [Range(-0.25f, 1f)] private float throttle = 0f;
+        [SerializeField] [Range(-1f, 1f)] private NetworkVariable<float> pitch = new();
+        [SerializeField] [Range(-1f, 1f)] private NetworkVariable<float> yaw = new();
+        [SerializeField] [Range(-1f, 1f)] private NetworkVariable<float> roll = new();
+        [SerializeField] [Range(-0.25f, 1f)] private NetworkVariable<float> throttle = new();
         [SerializeField] private float throttleSenstivity = 1f;
 
-        public float Pitch { set { pitch = Mathf.Clamp(value, -1f, 1f); } get { return pitch; } }
-        public float Yaw { set { yaw = Mathf.Clamp(value, -1f, 1f); } get { return yaw; } }
-        public float Roll { set { roll = Mathf.Clamp(value, -1f, 1f); } get { return roll; } }
-        public float Throttle { set { throttle = Drag = Mathf.Clamp(value, -0.25f, 1f); } get { return throttle; } }
+        public float Pitch { set { pitch.Value = Mathf.Clamp(value, -1f, 1f); } get { return pitch.Value; } }
+        public float Yaw { set { yaw.Value = Mathf.Clamp(value, -1f, 1f); } get { return yaw.Value; } }
+        public float Roll { set { roll.Value = Mathf.Clamp(value, -1f, 1f); } get { return roll.Value; } }
+        public float Throttle { set { throttle.Value = Drag = Mathf.Clamp(value, -0.25f, 1f); } get { return throttle.Value; } }
 
         private float Drag { set { rigid.drag = Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
 
@@ -61,7 +61,7 @@ namespace MFlight.Demo
 
         private void Update()
         {
-            if (!IsOwner) return;
+            //if (!IsOwner) return;
             // When the player commands their own stick input, it should override what the
             // autopilot is trying to do.
             rollOverride = false;
@@ -88,31 +88,42 @@ namespace MFlight.Demo
                 pitchOverride = true;
                 rollOverride = true;
             }
-
+            float throttle = 0f;
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                Throttle += throttleSenstivity * Time.deltaTime;
+                throttle += throttleSenstivity * Time.deltaTime;
             }
 
             if (Input.GetKey(KeyCode.LeftControl))
             {
-                Throttle -= throttleSenstivity * Time.deltaTime;
+                throttle -= throttleSenstivity * Time.deltaTime;
             }
 
             // Calculate the autopilot stick inputs.
             RunAutopilot(MouseAimPos.Value, out float autoYaw, out float autoPitch, out float autoRoll);
 
             // Use either keyboard or autopilot input.
-            yaw = yawOverride ? keyboardYaw : autoYaw;
-            pitch = pitchOverride ? keyboardPitch : autoPitch;
-            roll = rollOverride ? keyboardRoll : autoRoll;
+            //yaw.Value = yawOverride ? keyboardYaw : autoYaw;
+            //pitch.Value = pitchOverride ? keyboardPitch : autoPitch;
+            //roll.Value = rollOverride ? keyboardRoll : autoRoll;
+            if (!IsOwner) return;
+            SetOverridesAndThrottleServerRPC(yawOverride ? keyboardYaw : autoYaw,
+                pitchOverride ? keyboardPitch : autoPitch,
+                rollOverride ? keyboardRoll : autoRoll, throttle);
+        }
+        [ServerRpc]
+        public void SetMouseAimPosServerRPC(Vector3 aimPos)
+        {
+            MouseAimPos.Value = aimPos;
         }
 
         [ServerRpc]
-        public void SetTeamServerRpc(Vector3 newMouseAimPos)
+        public void SetOverridesAndThrottleServerRPC(float yaw, float pitch, float roll, float throttle)
         {
-            MouseAimPos.Value = newMouseAimPos;
-
+            this.yaw.Value = yaw;
+            this.pitch.Value = pitch;
+            this.roll.Value = roll;
+            this.throttle.Value += throttle;
         }
 
         private void RunAutopilot(Vector3 flyTarget, out float yaw, out float pitch, out float roll)
@@ -165,7 +176,7 @@ namespace MFlight.Demo
             // Ultra simple flight where the plane just gets pushed forward and manipulated
             // with torques to turn.
             rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
-            rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * pitch, turnTorque.y * yaw, -turnTorque.z * roll), ForceMode.Force);
+            rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * pitch.Value, turnTorque.y * yaw.Value, -turnTorque.z * roll.Value), ForceMode.Force);
         }
     }
 }

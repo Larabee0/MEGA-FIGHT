@@ -45,7 +45,7 @@ namespace MFlight
         private Vector3 frozenDirection = Vector3.forward;
         private bool isMouseAimFrozen = false;
 
-        private Spaceship spaceship;
+        [SerializeField] private Spaceship spaceship;
 
         /// <summary>
         /// Get a point along the aircraft's boresight projected out to aimDistance meters.
@@ -85,11 +85,12 @@ namespace MFlight
 
         private void Awake()
         {
-            GetPlane();
-            if (aircraft == null)
-            {
-                Debug.LogError(name + "MouseFlightController - No aircraft transform assigned!");
-            }
+            //GetPlane();
+            //
+            //if (aircraft == null)
+            //{
+            //    Debug.LogError(name + "MouseFlightController - No aircraft transform assigned!");
+            //}
             if (mouseAim == null)
                 Debug.LogError(name + "MouseFlightController - No mouse aim transform assigned!");
             if (cameraRig == null)
@@ -105,15 +106,9 @@ namespace MFlight
 
         private void GetPlane()
         {
-            Spaceship[] ships = FindObjectsOfType<Spaceship>();
-            for (int i = 0; i < ships.Length; i++)
-            {
-                if(ships[i].GetComponent<NetworkObject>().OwnerClientId ==NetworkManager.Singleton.LocalClientId)
-                {
-                    aircraft = ships[i].transform;
-                    Cursor.lockState = CursorLockMode.Locked;
-                }
-            }
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject;
+            aircraft = playerObject.transform;
+            spaceship = playerObject.GetComponent<Spaceship>();
         }
 
         private void Update()
@@ -128,6 +123,10 @@ namespace MFlight
             {
                 Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
             }
+            if (spaceship != null)
+            {
+                spaceship.SetMouseAimPosServerRPC(MouseAimPos);
+            }
             RotateRig();
         }
 
@@ -137,10 +136,7 @@ namespace MFlight
         {
             if (useFixed == true)
                 UpdateCameraPos();
-            if (spaceship != null)
-            {
-                spaceship.SetTeamServerRpc(MouseAimPos);
-            }
+            
         }
 
         private void RotateRig()
