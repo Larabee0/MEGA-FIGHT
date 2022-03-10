@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PasswordLobbyDemo
 {
-    public class PasswordNetworkManager : MonoBehaviour
+    public class PasswordLobbyMP : MonoBehaviour
     {
         [SerializeField] private InputField passwordInputField;
         [SerializeField] private GameObject passwordEntryUI;

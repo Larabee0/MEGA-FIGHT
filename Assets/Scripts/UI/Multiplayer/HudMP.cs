@@ -5,12 +5,12 @@
 
 using UnityEngine;
 
-namespace MFlight.Demo
+namespace MultiplayerRunTime
 {
-    public class Hud : MonoBehaviour
+    public class HudMP : MonoBehaviour
     {
         [Header("Components")]
-        [SerializeField] private MouseFlightController mouseFlight = null;
+        [SerializeField] private MouseFlightControllerMP mouseFlight = null;
 
         [Header("HUD Elements")]
         [SerializeField] private RectTransform boresight = null;
@@ -37,7 +37,7 @@ namespace MFlight.Demo
             UpdateGraphics(mouseFlight);
         }
 
-        private void UpdateGraphics(MouseFlightController controller)
+        private void UpdateGraphics(MouseFlightControllerMP controller)
         {
             if (boresight != null)
             {
@@ -52,7 +52,7 @@ namespace MFlight.Demo
             }
         }
 
-        public void SetReferenceMouseFlight(MouseFlightController controller)
+        public void SetReferenceMouseFlight(MouseFlightControllerMP controller)
         {
             mouseFlight = controller;
         }

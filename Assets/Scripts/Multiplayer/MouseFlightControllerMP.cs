@@ -3,17 +3,16 @@
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 //
 
-using MFlight.Demo;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace MFlight
+namespace MultiplayerRunTime
 {
     /// <summary>
     /// Combination of camera rig and controller for aircraft. Requires a properly set
     /// up rig. I highly recommend either using or referencing the included prefab.
     /// </summary>
-    public class MouseFlightController : MonoBehaviour
+    public class MouseFlightControllerMP : MonoBehaviour
     {
         [Header("Components")]
         [SerializeField] [Tooltip("Transform of the aircraft the rig follows and references")]
@@ -50,7 +49,7 @@ namespace MFlight
         private float throttleLastFrame;
         private Vector3 mouseAimLastFrame;
 
-        [SerializeField] private Spaceship spaceship;
+        [SerializeField] private SpaceshipMP spaceship;
 
         /// <summary>
         /// Get a point along the aircraft's boresight projected out to aimDistance meters.
@@ -117,7 +116,7 @@ namespace MFlight
                 {
                     GameObject playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject;
                     aircraft = playerObject.transform;
-                    spaceship = playerObject.GetComponent<Spaceship>();
+                    spaceship = playerObject.GetComponent<SpaceshipMP>();
                 }
             }
         }
@@ -137,13 +136,14 @@ namespace MFlight
             if (spaceship != null && spaceship.IsOwner)
             {
 
-                Vector3 playerOverride = new Vector3
+                Vector3 playerOverride = new()
                 {
                     x = Input.GetAxis("Vertical"),
                     y = Input.GetAxis("Yaw"),
                     z = Input.GetAxis("Horizontal")
                 };
                 bool sendOverride = false;
+                // roll (z)
                 if (Mathf.Abs(playerOverride.z) > .25f)
                 {
                     sendOverride = true;
