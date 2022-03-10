@@ -44,6 +44,11 @@ namespace MFlight
 
         private Vector3 frozenDirection = Vector3.forward;
         private bool isMouseAimFrozen = false;
+        private bool overrideLastFrame = false;
+        [SerializeField] private float throttleSenstivity = 1f;
+        private float throttle;
+        private float throttleLastFrame;
+        private Vector3 mouseAimLastFrame;
 
         [SerializeField] private Spaceship spaceship;
 
@@ -106,9 +111,15 @@ namespace MFlight
 
         private void GetPlane()
         {
-            GameObject playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject;
-            aircraft = playerObject.transform;
-            spaceship = playerObject.GetComponent<Spaceship>();
+            if(NetworkManager.Singleton != null && NetworkManager.Singleton.SpawnManager != null)
+            {
+                if(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject() != null)
+                {
+                    GameObject playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject;
+                    aircraft = playerObject.transform;
+                    spaceship = playerObject.GetComponent<Spaceship>();
+                }
+            }
         }
 
         private void Update()
@@ -123,9 +134,58 @@ namespace MFlight
             {
                 Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
             }
-            if (spaceship != null)
+            if (spaceship != null && spaceship.IsOwner)
             {
-                spaceship.SetMouseAimPosServerRPC(MouseAimPos);
+
+                Vector3 playerOverride = new Vector3
+                {
+                    x = Input.GetAxis("Vertical"),
+                    y = Input.GetAxis("Yaw"),
+                    z = Input.GetAxis("Horizontal")
+                };
+                bool sendOverride = false;
+                if (Mathf.Abs(playerOverride.z) > .25f)
+                {
+                    sendOverride = true;
+                }
+                // pitch (x)
+                if (Mathf.Abs(playerOverride.x) > .25f)
+                {
+                    sendOverride = true;
+                }
+                // yaw (y)
+                if (Mathf.Abs(playerOverride.y) > .25f)
+                {
+                    sendOverride = true;
+                }
+                if(MouseAimPos != mouseAimLastFrame)
+                {
+                    spaceship.SetMouseAimServerRPC(MouseAimPos);
+                }
+                
+
+                if (sendOverride || sendOverride != overrideLastFrame)
+                {
+                    spaceship.SetPlayerOverrideServerRPC(playerOverride);
+                }
+                overrideLastFrame = sendOverride;
+
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    throttle += throttleSenstivity * Time.deltaTime;
+                }
+
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    throttle -= throttleSenstivity * Time.deltaTime;
+                }
+
+                if(throttle != throttleLastFrame)
+                {
+                    spaceship.Throttle = throttle;
+                }
+                throttleLastFrame = throttle;
+                mouseAimLastFrame = MouseAimPos;
             }
             RotateRig();
         }
