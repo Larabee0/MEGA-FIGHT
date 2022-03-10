@@ -18,10 +18,6 @@ namespace MultiplayerRunTime
     [RequireComponent(typeof(Rigidbody))]
     public class SpaceshipMP : NetworkBehaviour
     {
-        //[Header("Components")]
-        //public MouseFlightController controller = null;
-        public NetworkVariable<Vector3> MouseAimPos = new(NetworkVariableReadPermission.OwnerOnly, Vector3.zero);
-
         [Header("Physics")]
         [Tooltip("Force to push plane forwards with")] public float thrust = 100f;
         [Tooltip("Pitch, Yaw, Roll")] public Vector3 turnTorque = new(90f, 25f, 45f);
@@ -31,83 +27,22 @@ namespace MultiplayerRunTime
         [Tooltip("Sensitivity for autopilot flight.")] public float sensitivity = 5f;
         [Tooltip("Angle at which airplane banks fully into target.")] public float aggressiveTurnAngle = 10f;
 
-        [Header("Player Input")]
-        private NetworkVariable<Vector3> playerOverride = new(NetworkVariableReadPermission.OwnerOnly, Vector3.zero);
-
         [Header("Server Input")]
-        [SerializeField] [Range(-1f, 1f)] private float pitch = 0f;
-        [SerializeField] [Range(-1f, 1f)] private float yaw = 0f;
-        [SerializeField][Range(-1f, 1f)] private float roll = 0f;
         [SerializeField] private NetworkVariable<float> throttle = new(NetworkVariableReadPermission.OwnerOnly);
 
-        public float Pitch { set {pitch=( Mathf.Clamp(value, -1f, 1f)); } get { return pitch; } }
-        public float Yaw { set { yaw=(Mathf.Clamp(value, -1f, 1f)); } get { return yaw; } }
-        public float Roll { set { roll=( Mathf.Clamp(value, -1f, 1f)); } get { return roll; } }
         public float Throttle { set { value = Mathf.Clamp(value, -0.25f, 1f); SetThrottleServerRPC(value); Drag = value; } get { return throttle.Value; } }
 
         private float Drag { set { rigid.drag = Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
 
-        private Rigidbody rigid;
+        private Vector3 torqueInput;
 
-        private bool rollOverride = false;
-        private bool yawOverride = false;
-        private bool pitchOverride = false;
+        public Vector3 TorqueInput { set { SetTorqueInputServerRPC(value); torqueInput = value; } get => torqueInput; }
+
+        private Rigidbody rigid;
 
         private void Awake()
         {
             rigid = GetComponent<Rigidbody>();
-
-            //if (controller == null)
-            //    Debug.LogError(name + ": Plane - Missing reference to MouseFlightController!");
-        }
-
-        private void Update()
-        {
-            //if (!IsOwner) return;
-            // When the player commands their own stick input, it should override what the
-            // autopilot is trying to do.
-
-            if (IsServer)
-            {
-                Vector3 playerOverride = this.playerOverride.Value;
-
-                rollOverride = false;
-                pitchOverride = false;
-                yawOverride = false;
-                // roll (z)
-                if (Mathf.Abs(playerOverride.z) > .25f)
-                {
-                    rollOverride = true;
-                }
-                // pitch (x)
-                if (Mathf.Abs(playerOverride.x) > .25f)
-                {
-                    pitchOverride = true;
-                    rollOverride = true;
-                }
-                // yaw (y)
-                if (Mathf.Abs(playerOverride.y) > .25f)
-                {
-                    yawOverride = true;
-                    pitchOverride = true;
-                    rollOverride = true;
-                }
-
-                RunAutopilot(MouseAimPos.Value, out float autoYaw, out float autoPitch, out float autoRoll);
-                Yaw = yawOverride ? playerOverride.y : autoYaw;
-                Pitch = pitchOverride ? playerOverride.x : autoPitch;
-                Roll = rollOverride ? playerOverride.z : autoRoll;
-            }
-
-            // Calculate the autopilot stick inputs.
-
-            // Use either keyboard or autopilot input.
-        }
-
-        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
-        public void SetMouseAimServerRPC(Vector3 mouseAimPos)
-        {
-            MouseAimPos.Value = mouseAimPos;
         }
 
         [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
@@ -117,55 +52,9 @@ namespace MultiplayerRunTime
         }
 
         [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
-        public void SetPlayerOverrideServerRPC(Vector3 @override)
+        public void SetTorqueInputServerRPC(Vector3 torques)
         {
-            playerOverride.Value = @override;
-        }
-
-
-        private void RunAutopilot(Vector3 flyTarget, out float yaw, out float pitch, out float roll)
-        {
-            // This is my usual trick of converting the fly to position to local space.
-            // You can derive a lot of information from where the target is relative to self.
-            Vector3 localFlyTarget = transform.InverseTransformPoint(flyTarget).normalized * sensitivity;
-            float angleOffTarget = Vector3.Angle(transform.forward, flyTarget - transform.position);
-
-            // IMPORTANT!
-            // These inputs are created proportionally. This means it can be prone to
-            // overshooting. The physics in this example are tweaked so that it's not a big
-            // issue, but in something with different or more realistic physics this might
-            // not be the case. Use of a PID controller for each axis is highly recommended.
-
-            // ====================
-            // PITCH AND YAW
-            // ====================
-
-            // Yaw/Pitch into the target so as to put it directly in front of the aircraft.
-            // A target is directly in front the aircraft if the relative X and Y are both
-            // zero. Note this does not handle for the case where the target is directly behind.
-            yaw = Mathf.Clamp(localFlyTarget.x, -1f, 1f);
-            pitch = -Mathf.Clamp(localFlyTarget.y, -1f, 1f);
-
-            // ====================
-            // ROLL
-            // ====================
-
-            // Roll is a little special because there are two different roll commands depending
-            // on the situation. When the target is off axis, then the plane should roll into it.
-            // When the target is directly in front, the plane should fly wings level.
-
-            // An "aggressive roll" is input such that the aircraft rolls into the target so
-            // that pitching up (handled above) will put the nose onto the target. This is
-            // done by rolling such that the X component of the target's position is zeroed.
-            float agressiveRoll = Mathf.Clamp(localFlyTarget.x, -1f, 1f);
-
-            // A "wings level roll" is a roll commands the aircraft to fly wings level.
-            // This can be done by zeroing out the Y component of the aircraft's right.
-            float wingsLevelRoll = transform.right.y;
-
-            // Blend between auto level and banking into the target.
-            float wingsLevelInfluence = Mathf.InverseLerp(0f, aggressiveTurnAngle, angleOffTarget);
-            roll = Mathf.Lerp(wingsLevelRoll, agressiveRoll, wingsLevelInfluence);
+            torqueInput = torques;
         }
 
         private void FixedUpdate()
@@ -173,7 +62,7 @@ namespace MultiplayerRunTime
             // Ultra simple flight where the plane just gets pushed forward and manipulated
             // with torques to turn.
             rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
-            rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * Pitch, turnTorque.y * Yaw, -turnTorque.z * Roll), ForceMode.Force);
+            rigid.AddRelativeTorque(TorqueInput, ForceMode.Force);
         }
     }
 }
