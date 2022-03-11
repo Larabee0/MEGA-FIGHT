@@ -28,6 +28,7 @@ namespace MultiplayerRunTime
         [SerializeField]
         [Tooltip("Transform of the third person camera")]
         private Transform TPSCamPos = null;
+        private Transform FPSCamPos = null;
 
         [SerializeField]
         [Tooltip("Camera of the third person camera")]
@@ -79,7 +80,7 @@ namespace MultiplayerRunTime
         public float Pitch { set { pitch = (Mathf.Clamp(value, -1f, 1f)); } get { return pitch; } }
         public float Yaw { set { yaw = (Mathf.Clamp(value, -1f, 1f)); } get { return yaw; } }
         public float Roll { set { roll = (Mathf.Clamp(value, -1f, 1f)); } get { return roll; } }
-
+        Vector3 playerOverride;
         private Vector3 torques;
         private Vector3 torquesLastFrame;
 
@@ -106,7 +107,7 @@ namespace MultiplayerRunTime
         {
             get
             {
-                if (mouseAim != null && spaceshipController != null)
+                if (mouseAim != null && spaceshipController!= null)
                 {
                     return isMouseAimFrozen
                         ? GetFrozenMouseAimPos()
@@ -155,12 +156,12 @@ namespace MultiplayerRunTime
                     else
                     {
                         EnableFPS = true;
-                        FPSVirtualCamera.Follow = spaceshipController.FPSCamPos;
+                        FPSVirtualCamera.Follow = FPSCamPos= spaceshipController.FPSCamPos;
                     }
 
                     fireControl.spaceship = spaceshipController;
                     fireControl.enabled = true;
-
+                    Debug.Log(spaceshipController.AimOffset);
                     SetVirtualCameraTarget();
                 }
             }
@@ -184,6 +185,8 @@ namespace MultiplayerRunTime
             if (spaceshipController != null && spaceshipController.IsOwner)
             {
                 NewUpdate();
+                spaceshipController.SetMouseAimPosServerRPC(MouseAimPos);
+                spaceshipController.SetPlayerOverrideServerRPC(playerOverride);
             }
             RotateRig();
         }
@@ -193,7 +196,7 @@ namespace MultiplayerRunTime
             rollOverride = false;
             pitchOverride = false;
             yawOverride = false;
-            Vector3 playerOverride = new()
+            playerOverride = new()
             {
                 x = Input.GetAxis("Vertical"),
                 y = Input.GetAxis("Yaw"),
@@ -232,11 +235,10 @@ namespace MultiplayerRunTime
             Pitch = pitchOverride ? playerOverride.x : autoPitch;
             Roll = rollOverride ? playerOverride.z : autoRoll;
 
-            torques = new Vector3(turnTorque.x * pitch, turnTorque.y * yaw, -turnTorque.z * roll);
-            if(torques != torquesLastFrame)
-            {
-                spaceshipController.TorqueInput = torques * forceMult;
-            }
+            torques = new Vector3(turnTorque.x * Pitch, turnTorque.y * Yaw, -turnTorque.z * Roll);
+
+            spaceshipController.TorqueInput = torques * forceMult;
+
             if (throttle != throttleLastFrame)
             {
                 spaceshipController.Throttle = throttle;
@@ -250,8 +252,8 @@ namespace MultiplayerRunTime
         {
             // This is my usual trick of converting the fly to position to local space.
             // You can derive a lot of information from where the target is relative to self.
-            Vector3 localFlyTarget = spaceshipController.transform.InverseTransformPoint(flyTarget).normalized * sensitivity;
-            float angleOffTarget = Vector3.Angle(spaceshipController.transform.forward, flyTarget - spaceshipController.transform.position);
+            Vector3 localFlyTarget = spaceshipTransform.InverseTransformPoint(flyTarget).normalized * sensitivity;
+            float angleOffTarget = Vector3.Angle(spaceshipTransform.forward, flyTarget - spaceshipTransform.position);
 
             // IMPORTANT!
             // These inputs are created proportionally. This means it can be prone to
@@ -284,7 +286,7 @@ namespace MultiplayerRunTime
 
             // A "wings level roll" is a roll commands the aircraft to fly wings level.
             // This can be done by zeroing out the Y component of the aircraft's right.
-            float wingsLevelRoll = spaceshipController.transform.right.y;
+            float wingsLevelRoll = spaceshipTransform.right.y;
 
             // Blend between auto level and banking into the target.
             float wingsLevelInfluence = Mathf.InverseLerp(0f, aggressiveTurnAngle, angleOffTarget);
@@ -314,8 +316,17 @@ namespace MultiplayerRunTime
 
             // Rotate the aim target that the plane is meant to fly towards.
             // Use the camera's axes in world space so that mouse motion is intuitive.
-            mouseAim.Rotate(TPSCamPos.right, mouseY, Space.World);
-            mouseAim.Rotate(TPSCamPos.up, mouseX, Space.World);
+            switch (perspective)
+            {
+                case Perspective.ThridPerson:
+                    mouseAim.Rotate(TPSCamPos.right, mouseY, Space.World);
+                    mouseAim.Rotate(TPSCamPos.up, mouseX, Space.World);
+                    break;
+                case Perspective.FirstPerson:
+                    mouseAim.Rotate(FPSCamPos.right, mouseY, Space.World);
+                    mouseAim.Rotate(FPSCamPos.up, mouseX, Space.World);
+                    break;
+            }
 
             // The up vector of the camera normally is aligned to the horizon. However, when
             // looking straight up/down this can feel a bit weird. At those extremes, the camera

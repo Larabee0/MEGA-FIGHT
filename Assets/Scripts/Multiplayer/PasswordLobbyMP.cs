@@ -84,9 +84,9 @@ namespace PasswordLobbyDemo
             string password = Encoding.ASCII.GetString(connectionData);
             bool approveConnection = password == passwordInputField.text;
 
-            Vector3 spawnPos = new(-5f, 5f, 0);
+            Vector3 spawnPos = new(0f, 200f, 100f);
 
-            spawnPos.x += NetworkManager.Singleton.ConnectedClients.Count*2f;
+            spawnPos.x -= NetworkManager.Singleton.ConnectedClients.Count*100f;
             Debug.Log(spawnPos.x);
             callback(true, null, approveConnection, spawnPos, null);
         }
