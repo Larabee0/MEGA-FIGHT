@@ -18,6 +18,21 @@ namespace MultiplayerRunTime
     [RequireComponent(typeof(Rigidbody))]
     public class SpaceshipMP : NetworkBehaviour
     {
+        [Header("Local Components")]
+        public Transform FPSCamPos;
+        public Transform TargetPoint;
+        public Transform[] WeaponOutputPoints;
+
+        public Vector3 AimOffset { get => FPSCamPos != null ? FPSCamPos.localPosition : Vector3.zero; }
+
+        private float TargetDistance
+        {
+            set
+            {
+                TargetPoint.localPosition = new(TargetPoint.localPosition.x, TargetPoint.localPosition.y, value);
+            }
+        }
+
         [Header("Physics")]
         [Tooltip("Force to push plane forwards with")] public float thrust = 100f;
         [Tooltip("Pitch, Yaw, Roll")] public Vector3 turnTorque = new(90f, 25f, 45f);
@@ -28,14 +43,12 @@ namespace MultiplayerRunTime
         [Tooltip("Angle at which airplane banks fully into target.")] public float aggressiveTurnAngle = 10f;
 
         [Header("Server Input")]
-        [SerializeField] private NetworkVariable<float> throttle = new(NetworkVariableReadPermission.OwnerOnly);
-
-        public float Throttle { set { value = Mathf.Clamp(value, -0.25f, 1f); SetThrottleServerRPC(value); Drag = value; } get { return throttle.Value; } }
+        [SerializeField] private float throttle = 0f;
+        public float Throttle { set { value = Mathf.Clamp(value, -0.25f, 1f); SetThrottleServerRPC(value); Drag = value; } get { return throttle; } }
 
         private float Drag { set { rigid.drag = Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
 
         private Vector3 torqueInput;
-
         public Vector3 TorqueInput { set { SetTorqueInputServerRPC(value); torqueInput = value; } get => torqueInput; }
 
         private Rigidbody rigid;
@@ -45,10 +58,18 @@ namespace MultiplayerRunTime
             rigid = GetComponent<Rigidbody>();
         }
 
+        private void FixedUpdate()
+        {
+            // Ultra simple flight where the plane just gets pushed forward and manipulated
+            // with torques to turn.
+            rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
+            rigid.AddRelativeTorque(TorqueInput, ForceMode.Force);
+        }
+
         [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
         public void SetThrottleServerRPC(float throttle)
         {
-            this.throttle.Value = throttle;
+            this.throttle = throttle;
         }
 
         [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
@@ -57,12 +78,17 @@ namespace MultiplayerRunTime
             torqueInput = torques;
         }
 
-        private void FixedUpdate()
+
+        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
+        public void SetTargetposServerRPC(Vector3 pos)
         {
-            // Ultra simple flight where the plane just gets pushed forward and manipulated
-            // with torques to turn.
-            rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
-            rigid.AddRelativeTorque(TorqueInput, ForceMode.Force);
+            TargetPoint.localPosition = pos;
+        }
+
+        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
+        public void SetTargetDstServerRPC(float dst)
+        {
+            TargetDistance = dst;
         }
     }
 }

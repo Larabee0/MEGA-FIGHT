@@ -23,7 +23,7 @@ namespace MultiplayerRunTime
             if (mouseFlight == null)
                 Debug.LogError(name + ": Hud - Mouse Flight Controller not assigned!");
 
-            playerCam = mouseFlight.GetComponentInChildren<Camera>();
+            playerCam = Camera.main;
 
             if (playerCam == null)
                 Debug.LogError(name + ": Hud - No camera found on assigned Mouse Flight Controller!");

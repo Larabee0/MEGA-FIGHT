@@ -3,7 +3,29 @@
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 //
 
+using Cinemachine;
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+
+public enum Perspective { ThridPerson, FirstPerson }
+
+public static class PerspectiveExtentions
+{
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Perspective Previous(this Perspective direction)
+    {
+        return direction == Perspective.ThridPerson ? Perspective.FirstPerson : (direction - 1);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Perspective Next(this Perspective direction)
+    {
+        return direction == Perspective.FirstPerson ? Perspective.ThridPerson : (direction + 1);
+    }
+
+}
 
 namespace SinglePlayerRunTime
 {
@@ -14,32 +36,56 @@ namespace SinglePlayerRunTime
     public class FirstPersonMouseFlightControllerSP : MonoBehaviour
     {
         [Header("Components")]
-        [SerializeField] [Tooltip("Transform of the aircraft the rig follows and references")]
+        [SerializeField]
+        [Tooltip("Transform of the aircraft the rig follows and references")]
         private Transform aircraft = null;
-        [SerializeField] [Tooltip("Transform of the object the mouse rotates to generate MouseAim position")]
+        [SerializeField]
+        [Tooltip("Transform of the object the mouse rotates to generate MouseAim position")]
         private Transform mouseAim = null;
-        [SerializeField] [Tooltip("Transform of the object on the rig which the camera is attached to")]
+        [SerializeField]
+        [Tooltip("Transform of the object on the rig which the camera is attached to")]
         private Transform cameraRig = null;
-        [SerializeField] [Tooltip("Transform of the camera itself")]
-        private Transform cam = null;
-
-        public Transform Cam => cam;
+        [SerializeField]
+        [Tooltip("Transform of the third person camera")]
+        private Transform ThirdPersonCamPos = null;
+        [SerializeField]
+        [Tooltip("Transform of the first person camera")]
+        private Transform FirstPersonCamPos = null;
+        [SerializeField]
+        [Tooltip("Camera of the third person camera")]
+        private CinemachineVirtualCamera TPSVirtualCamera = null;
+        [SerializeField]
+        [Tooltip("Camera of the first person camera")]
+        private CinemachineVirtualCamera FPSVirtualCamera = null;
 
         [Header("Options")]
-        [SerializeField] [Tooltip("Follow aircraft using fixed update loop")]
+        [SerializeField]
+        [Tooltip("Starting Camera Perspective")]
+        private Perspective perspective = Perspective.ThridPerson;
+
+        [SerializeField]
+        private Vector3 aimOffset = Vector3.zero;
+
+        [SerializeField]
+        [Tooltip("Follow aircraft using fixed update loop")]
         private bool useFixed = true;
 
-        [SerializeField] [Tooltip("How quickly the camera tracks the mouse aim point.")]
+        [SerializeField]
+        [Tooltip("How quickly the camera tracks the mouse aim point.")]
         private float camSmoothSpeed = 5f;
 
-        [SerializeField] [Tooltip("Mouse sensitivity for the mouse flight target")]
+        [SerializeField]
+        [Tooltip("Mouse sensitivity for the mouse flight target")]
         private float mouseSensitivity = 3f;
 
-        [SerializeField] [Tooltip("How far the boresight and mouse flight are from the aircraft")]
-        private float aimDistance = 500f;
+
+        private float AimDistance {
+            get => aircraft.GetComponent<SpaceshipSP>().AimDst;
+        }
 
         [Space]
-        [SerializeField] [Tooltip("How far the boresight and mouse flight are from the aircraft")]
+        [SerializeField]
+        [Tooltip("How far the boresight and mouse flight are from the aircraft")]
         private bool showDebugInfo = false;
 
         private Vector3 frozenDirection = Vector3.forward;
@@ -55,8 +101,8 @@ namespace SinglePlayerRunTime
             get
             {
                 return aircraft == null
-                     ? transform.forward * aimDistance
-                     : (aircraft.transform.forward * aimDistance) + aircraft.transform.position;
+                     ? transform.forward * AimDistance
+                     : (aircraft.transform.forward * AimDistance) + (aircraft.transform.position + aimOffset);
             }
         }
 
@@ -72,11 +118,11 @@ namespace SinglePlayerRunTime
                 {
                     return isMouseAimFrozen
                         ? GetFrozenMouseAimPos()
-                        : mouseAim.position + (mouseAim.forward * aimDistance);
+                        : (mouseAim.position+ aimOffset) + (mouseAim.forward * AimDistance);
                 }
                 else
                 {
-                    return transform.forward * aimDistance;
+                    return transform.forward * AimDistance;
                 }
             }
         }
@@ -89,7 +135,7 @@ namespace SinglePlayerRunTime
                 Debug.LogError(name + "MouseFlightController - No mouse aim transform assigned!");
             if (cameraRig == null)
                 Debug.LogError(name + "MouseFlightController - No camera rig transform assigned!");
-            if (cam == null)
+            if (ThirdPersonCamPos == null)
                 Debug.LogError(name + "MouseFlightController - No camera transform assigned!");
 
             // To work correctly, the entire rig must not be parented to anything.
@@ -97,6 +143,13 @@ namespace SinglePlayerRunTime
             // rotations causing unintended rotations as it gets dragged around.
             transform.parent = null;
             Cursor.lockState = CursorLockMode.Locked;
+            TPSVirtualCamera.Follow = ThirdPersonCamPos;
+            FPSVirtualCamera.Follow = FirstPersonCamPos;
+        }
+
+        private void Start()
+        {
+            SetVirtualCameraTarget();
         }
 
         private void Update()
@@ -105,6 +158,10 @@ namespace SinglePlayerRunTime
                 UpdateCameraPos();
 
             RotateRig();
+            if (Input.GetKeyUp(KeyCode.V))
+            {
+                OnPerspectiveButtonPressed();
+            }
         }
 
         private void FixedUpdate()
@@ -113,9 +170,30 @@ namespace SinglePlayerRunTime
                 UpdateCameraPos();
         }
 
+        public void OnPerspectiveButtonPressed()
+        {
+            perspective = perspective.Next();
+            SetVirtualCameraTarget();
+        }
+
+        private void SetVirtualCameraTarget()
+        {
+            switch (perspective)
+            {
+                case Perspective.ThridPerson:
+                    TPSVirtualCamera.Priority = 10;
+                    FPSVirtualCamera.Priority = 9;
+                    break;
+                case Perspective.FirstPerson:
+                    TPSVirtualCamera.Priority = 9;
+                    FPSVirtualCamera.Priority = 10;
+                    break;
+            }
+        }
+
         private void RotateRig()
         {
-            if (mouseAim == null || cam == null || cameraRig == null)
+            if (mouseAim == null || ThirdPersonCamPos == null || cameraRig == null)
                 return;
 
             // Freeze the mouse aim direction when the free look key is pressed.
@@ -124,7 +202,7 @@ namespace SinglePlayerRunTime
                 isMouseAimFrozen = true;
                 frozenDirection = mouseAim.forward;
             }
-            else if  (Input.GetKeyUp(KeyCode.C))
+            else if (Input.GetKeyUp(KeyCode.C))
             {
                 isMouseAimFrozen = false;
                 mouseAim.forward = frozenDirection;
@@ -136,8 +214,8 @@ namespace SinglePlayerRunTime
 
             // Rotate the aim target that the plane is meant to fly towards.
             // Use the camera's axes in world space so that mouse motion is intuitive.
-            mouseAim.Rotate(cam.right, mouseY, Space.World);
-            mouseAim.Rotate(cam.up, mouseX, Space.World);
+            mouseAim.Rotate(ThirdPersonCamPos.right, mouseY, Space.World);
+            mouseAim.Rotate(ThirdPersonCamPos.up, mouseX, Space.World);
 
             // The up vector of the camera normally is aligned to the horizon. However, when
             // looking straight up/down this can feel a bit weird. At those extremes, the camera
@@ -154,9 +232,9 @@ namespace SinglePlayerRunTime
         private Vector3 GetFrozenMouseAimPos()
         {
             if (mouseAim != null)
-                return mouseAim.position + (frozenDirection * aimDistance);
+                return (mouseAim.position+ aimOffset) + (frozenDirection * AimDistance);
             else
-                return transform.forward * aimDistance;
+                return transform.forward * AimDistance;
         }
 
         private void UpdateCameraPos()

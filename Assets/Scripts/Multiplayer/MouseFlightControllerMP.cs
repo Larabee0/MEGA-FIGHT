@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 //
 
+using Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,27 +16,39 @@ namespace MultiplayerRunTime
     public class MouseFlightControllerMP : MonoBehaviour
     {
         [Header("Components")]
-
-        [SerializeField] private SpaceshipMP spaceshipController;
-
-        [SerializeField] [Tooltip("Transform of the aircraft the rig follows and references")]
+        [HideInInspector] public SpaceshipMP spaceshipController;
         private Transform spaceshipTransform = null;
+
+        public FireControlMP fireControl;
+
         [SerializeField] [Tooltip("Transform of the object the mouse rotates to generate MouseAim position")]
         private Transform mouseAim = null;
         [SerializeField] [Tooltip("Transform of the object on the rig which the camera is attached to")]
         private Transform cameraRig = null;
-        [SerializeField] [Tooltip("Transform of the camera itself")]
-        private Transform cam = null;
+        [SerializeField]
+        [Tooltip("Transform of the third person camera")]
+        private Transform TPSCamPos = null;
+
+        [SerializeField]
+        [Tooltip("Camera of the third person camera")]
+        private CinemachineVirtualCamera TPSVirtualCamera = null;
+        [SerializeField]
+        [Tooltip("Camera of the first person camera")]
+        private CinemachineVirtualCamera FPSVirtualCamera = null;
 
         [Header("Options")]
+        [SerializeField]
+        [Tooltip("Starting Camera Perspective")]
+        private Perspective perspective = Perspective.ThridPerson;
+        private bool EnableFPS = true;
+
         [SerializeField] [Tooltip("How quickly the camera tracks the mouse aim point.")]
         private float camSmoothSpeed = 5f;
 
         [SerializeField] [Tooltip("Mouse sensitivity for the mouse flight target")]
         private float mouseSensitivity = 3f;
 
-        [SerializeField] [Tooltip("How far the boresight and mouse flight are from the aircraft")]
-        private float aimDistance = 500f;
+        private float AimDistance { get => fireControl.TargetDistance; }
 
         [Space]
         [SerializeField] [Tooltip("How far the boresight and mouse flight are from the aircraft")]
@@ -80,8 +93,8 @@ namespace MultiplayerRunTime
             get
             {
                 return spaceshipTransform == null
-                     ? transform.forward * aimDistance
-                     : (spaceshipTransform.transform.forward * aimDistance) + spaceshipTransform.transform.position;
+                     ? transform.forward * AimDistance
+                     : (spaceshipTransform.transform.forward * AimDistance) + (spaceshipTransform.transform.position + spaceshipController.AimOffset);
             }
         }
 
@@ -93,15 +106,15 @@ namespace MultiplayerRunTime
         {
             get
             {
-                if (mouseAim != null)
+                if (mouseAim != null && spaceshipController != null)
                 {
                     return isMouseAimFrozen
                         ? GetFrozenMouseAimPos()
-                        : mouseAim.position + (mouseAim.forward * aimDistance);
+                        : mouseAim.position + spaceshipController.AimOffset + (mouseAim.forward * AimDistance);
                 }
                 else
                 {
-                    return transform.forward * aimDistance;
+                    return transform.forward * AimDistance;
                 }
             }
         }
@@ -112,8 +125,6 @@ namespace MultiplayerRunTime
                 Debug.LogError(name + "MouseFlightController - No mouse aim transform assigned!");
             if (cameraRig == null)
                 Debug.LogError(name + "MouseFlightController - No camera rig transform assigned!");
-            if (cam == null)
-                Debug.LogError(name + "MouseFlightController - No camera transform assigned!");
 
             // To work correctly, the entire rig must not be parented to anything.
             // When parented to something (such as an aircraft) it will inherit those
@@ -121,7 +132,7 @@ namespace MultiplayerRunTime
             transform.parent = null;
         }
 
-        private void GetPlane()
+        private void GetShip()
         {
             if(NetworkManager.Singleton != null && NetworkManager.Singleton.SpawnManager != null)
             {
@@ -134,6 +145,23 @@ namespace MultiplayerRunTime
                     forceMult = spaceshipController.forceMult;
                     sensitivity = spaceshipController.sensitivity;
                     aggressiveTurnAngle = spaceshipController.aggressiveTurnAngle;
+
+                    TPSVirtualCamera.Follow = TPSCamPos;
+                    if(spaceshipController.FPSCamPos == null)
+                    {
+                        EnableFPS = false;
+                        perspective = Perspective.ThridPerson;
+                    }
+                    else
+                    {
+                        EnableFPS = true;
+                        FPSVirtualCamera.Follow = spaceshipController.FPSCamPos;
+                    }
+
+                    fireControl.spaceship = spaceshipController;
+                    fireControl.enabled = true;
+
+                    SetVirtualCameraTarget();
                 }
             }
         }
@@ -142,12 +170,16 @@ namespace MultiplayerRunTime
         {
             if(spaceshipTransform == null)
             {
-                GetPlane();
+                GetShip();
             }
             UpdateCameraPos();
             if (Input.GetKeyUp(KeyCode.Escape))
             {
                 Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+            }
+            if (Input.GetKeyUp(KeyCode.V))
+            {
+                OnPerspectiveButtonPressed();
             }
             if (spaceshipController != null && spaceshipController.IsOwner)
             {
@@ -261,7 +293,7 @@ namespace MultiplayerRunTime
 
         private void RotateRig()
         {
-            if (mouseAim == null || cam == null || cameraRig == null)
+            if (mouseAim == null || TPSCamPos == null || cameraRig == null)
                 return;
 
             // Freeze the mouse aim direction when the free look key is pressed.
@@ -282,8 +314,8 @@ namespace MultiplayerRunTime
 
             // Rotate the aim target that the plane is meant to fly towards.
             // Use the camera's axes in world space so that mouse motion is intuitive.
-            mouseAim.Rotate(cam.right, mouseY, Space.World);
-            mouseAim.Rotate(cam.up, mouseX, Space.World);
+            mouseAim.Rotate(TPSCamPos.right, mouseY, Space.World);
+            mouseAim.Rotate(TPSCamPos.up, mouseX, Space.World);
 
             // The up vector of the camera normally is aligned to the horizon. However, when
             // looking straight up/down this can feel a bit weird. At those extremes, the camera
@@ -300,9 +332,9 @@ namespace MultiplayerRunTime
         private Vector3 GetFrozenMouseAimPos()
         {
             if (mouseAim != null)
-                return mouseAim.position + (frozenDirection * aimDistance);
+                return mouseAim.position + spaceshipController.AimOffset + (frozenDirection * AimDistance);
             else
-                return transform.forward * aimDistance;
+                return transform.forward * AimDistance;
         }
 
         private void UpdateCameraPos()
@@ -311,6 +343,27 @@ namespace MultiplayerRunTime
             {
                 // Move the whole rig to follow the aircraft.
                 transform.position = spaceshipTransform.position;
+            }
+        }
+
+        public void OnPerspectiveButtonPressed()
+        {
+            perspective = EnableFPS ? perspective.Next() : Perspective.ThridPerson;
+            SetVirtualCameraTarget();
+        }
+
+        private void SetVirtualCameraTarget()
+        {
+            switch (perspective)
+            {
+                case Perspective.ThridPerson:
+                    TPSVirtualCamera.Priority = 10;
+                    FPSVirtualCamera.Priority = 9;
+                    break;
+                case Perspective.FirstPerson:
+                    TPSVirtualCamera.Priority = 9;
+                    FPSVirtualCamera.Priority = 10;
+                    break;
             }
         }
 

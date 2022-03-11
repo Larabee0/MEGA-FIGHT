@@ -19,6 +19,12 @@ namespace SinglePlayerRunTime
     {
         [Header("Components")]
         [SerializeField] private FirstPersonMouseFlightControllerSP controller = null;
+        [SerializeField] private FireControlSP fireControl = null;
+
+        public float AimDst
+        {
+            get => fireControl.TargetDistance;
+        }
 
         [Header("Physics")]
         [Tooltip("Force to push plane forwards with")] public float thrust = 100f;
@@ -52,6 +58,7 @@ namespace SinglePlayerRunTime
         private void Awake()
         {
             rigid = GetComponent<Rigidbody>();
+            fireControl = GetComponent<FireControlSP>();
 
             if (controller == null)
                 Debug.LogError(name + ": Plane - Missing reference to MouseFlightController!");
