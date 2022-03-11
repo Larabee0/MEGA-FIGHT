@@ -6,6 +6,7 @@ using TMPro;
 using Unity.Netcode;
 using System;
 using System.Text;
+using System.Net;
 
 namespace PasswordLobbyDemo
 {
@@ -19,6 +20,7 @@ namespace PasswordLobbyDemo
         {
             leaveButton.SetActive(false);
             passwordEntryUI.SetActive(true);
+            //Debug.Log(Dns.GetHostAddresses(Dns.GetHostName())[1].ToString());
         }
 
         private void Start()
@@ -89,6 +91,7 @@ namespace PasswordLobbyDemo
             spawnPos.x -= NetworkManager.Singleton.ConnectedClients.Count*100f;
             Debug.Log(spawnPos.x);
             callback(true, null, approveConnection, spawnPos, null);
+
         }
     }
 }
