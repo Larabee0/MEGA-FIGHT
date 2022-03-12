@@ -18,6 +18,12 @@ namespace MultiplayerRunTime
         [SerializeField] private float maxDst;
         [SerializeField] private float targetDistance = 50f;
 
+        [SerializeField] [Range(0f,1f)] float fireIntervalMin = 0.01f;
+        [SerializeField] [Range(0f, 1f)] float fireIntervalMax = 0.05f;
+        private float fireInterval = 0f;
+        private int currentWeaponIndex = 0;
+
+
         public float TargetDistance
         {
             get => targetDistance;
@@ -38,11 +44,27 @@ namespace MultiplayerRunTime
 
         private void Update()
         {
-            for (int i = 0; i < WeaponOutputPoints.Length; i++)
-            {
-                Debug.DrawLine(WeaponOutputPoints[i].position, TargetPoint.position, Color.red);
-            }
             TargetDistance += Input.GetAxis("Mouse ScrollWheel") * dstSenstivity * Time.deltaTime;
+
+            if (Input.GetMouseButton(0))
+            {
+                Fire();
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                fireInterval = 0f;
+            }
+        }
+
+        private void Fire()
+        {
+            fireInterval -= Time.deltaTime;
+            if(fireInterval <= 0f)
+            {
+                fireInterval = UnityEngine.Random.Range(fireIntervalMin, fireIntervalMax);
+                Debug.DrawLine(WeaponOutputPoints[currentWeaponIndex].position, TargetPoint.position, Color.red, 0.25f);
+                currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
+            }
         }
     }
 }

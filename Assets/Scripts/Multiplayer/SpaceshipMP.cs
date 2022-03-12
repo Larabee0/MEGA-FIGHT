@@ -43,15 +43,13 @@ namespace MultiplayerRunTime
         [Tooltip("Angle at which airplane banks fully into target.")] public float aggressiveTurnAngle = 10f;
 
         [Header("Server Input")]
-        [SerializeField] private float throttle = 0f;
-        public float Throttle { set { value = Mathf.Clamp(value, -0.25f, 1f); SetThrottleServerRPC(value); Drag = value; } get { return throttle; } }
+        private NetworkVariable<float> throttle = new();
+        public float Throttle { set { value = Mathf.Clamp(value, -0.25f, 1f); SetThrottleServerRPC(value); Drag = value; } get { return throttle.Value; } }
 
         private float Drag { set { rigid.drag = Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
 
         private Vector3 playerOverride ;
         public Vector3 MouseAimPos;
-        private NetworkVariable<Vector3> torqueInput = new();
-        public Vector3 TorqueInput { set { SetTorqueInputServerRPC(value); } get => torqueInput.Value; }
 
         private Rigidbody rigid;
 
@@ -132,15 +130,8 @@ namespace MultiplayerRunTime
         [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
         public void SetThrottleServerRPC(float throttle)
         {
-            this.throttle = throttle;
+            this.throttle.Value = throttle;
         }
-
-        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
-        public void SetTorqueInputServerRPC(Vector3 torques)
-        {
-            torqueInput.Value = torques;
-        }
-
 
         [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
         public void SetTargetposServerRPC(Vector3 pos)
