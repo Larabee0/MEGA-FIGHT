@@ -15,10 +15,10 @@ namespace MultiplayerRunTime
 
         private void Awake()
         {
+            partHealths = new();
             shipHierarchy = new(stats);
             if (IsServer)
             {
-                partHealths = new();
                 for (int i = 0; i < shipHierarchy.parts.Count; i++)
                 {
                     partHealths.Add(shipHierarchy.parts[i].maxHitPoints);
