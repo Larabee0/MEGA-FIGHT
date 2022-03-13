@@ -742,6 +742,7 @@ GameObject:
   - component: {fileID: 1048490580}
   - component: {fileID: 1048490579}
   - component: {fileID: 1048490578}
+  - component: {fileID: 1048490581}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -814,6 +815,77 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1048490581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048490577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 597624511527451498d52d04ac019fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: 19d8b6bca1682a445ad765082fd99ac1, type: 2}
+  shipHierarchy:
+    ShipID: 0
+    Label: 
+    parts: []
+    root:
+      HierarchyIndex: 0
+      PartID: 0
+      label: 
+      hitPoints: 0
+      tags: 
+      Ship:
+        ShipID: 0
+        Label: 
+        parts: []
+        root:
+          HierarchyIndex: 0
+          PartID: 0
+          label: 
+          hitPoints: 0
+          tags: 
+          Ship:
+            ShipID: 0
+            Label: 
+            parts: []
+            root:
+              HierarchyIndex: 0
+              PartID: 0
+              label: 
+              hitPoints: 0
+              tags: 
+              Ship:
+                ShipID: 0
+                Label: 
+                parts: []
+                root:
+                  HierarchyIndex: 0
+                  PartID: 0
+                  label: 
+                  hitPoints: 0
+                  tags: 
+                  Ship:
+                    ShipID: 0
+                    Label: 
+                    parts: []
+                    root:
+                      HierarchyIndex: 0
+                      PartID: 0
+                      label: 
+                      hitPoints: 0
+                      tags: 
+                      Ship:
+                        ShipID: 0
+                        Label: 
+                      Children: []
+                  Children: []
+              Children: []
+          Children: []
+      Children: []
 --- !u!1 &1085942656
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,7 +1031,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.8256736, y: 1}
+    m_SensorSize: {x: 1.480695, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1289,7 +1361,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1695420802}
   - component: {fileID: 1695420801}
-  - component: {fileID: 1695420800}
+  - component: {fileID: 1695420803}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1297,25 +1369,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1695420800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1695420799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &1695420801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1346,6 +1399,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1695420803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695420799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_PointAction: {fileID: -1185242101903629397, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_MoveAction: {fileID: 8735004231012004764, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_SubmitAction: {fileID: 4266022748779216358, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_CancelAction: {fileID: -7805144813912469849, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_LeftClickAction: {fileID: 153817376367415665, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_MiddleClickAction: {fileID: -7773159561696508039, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_RightClickAction: {fileID: 3770190620204602207, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_ScrollWheelAction: {fileID: -2139039152997960270, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 7237886727528376662, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: -8975652618707866829, guid: 12b92986cee675f4186feccde026bcbd, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
 --- !u!1 &1845776815
 GameObject:
   m_ObjectHideFlags: 0
@@ -1523,7 +1604,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.8256736, y: 1}
+    m_SensorSize: {x: 1.480695, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

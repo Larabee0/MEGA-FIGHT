@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54bc352c9f3f7764a9be3046fb0c1fa6, type: 3}
+  m_Name: X-Wing Parts Hierarchy
+  m_EditorClassIdentifier: Assembly-CSharp:MultiplayerRunTime:ShipSO
+  ShipID: 0
+  label: X-Wing
+  parts:
+  - {fileID: 11400000, guid: 9af7b429303c358438de520087d0a444, type: 2}
+  - {fileID: 11400000, guid: 5cb025a6bcaffa043b5db8c053957c50, type: 2}
+  - {fileID: 11400000, guid: be7837435a0218e4489afc41bd48c21b, type: 2}
+  - {fileID: 11400000, guid: dd027ab89a0a41f4ca820569c12ed85b, type: 2}
+  - {fileID: 11400000, guid: 8a1e3620b32d6184694e06cfb886fa9e, type: 2}
+  root:
+    PartID: 0
+    HierachyID: 0
+    customLabel: 
+    children:
+    - PartID: 4
+      HierachyID: 1
+      customLabel: 
+      children: []
+    - PartID: 1
+      HierachyID: 2
+      customLabel: Bottom Left Wing (1)
+      children:
+      - PartID: 2
+        HierachyID: 6
+        customLabel: Number 1 Engine
+        children: []
+      - PartID: 3
+        HierachyID: 7
+        customLabel: Number 1 Gun
+        children: []
+    - PartID: 1
+      HierachyID: 3
+      customLabel: Top Left Wing (2)
+      children:
+      - PartID: 2
+        HierachyID: 8
+        customLabel: Number 2 Engine
+        children: []
+      - PartID: 3
+        HierachyID: 9
+        customLabel: Number 2 Gun
+        children: []
+    - PartID: 1
+      HierachyID: 4
+      customLabel: Bottom Right Wing (3)
+      children:
+      - PartID: 2
+        HierachyID: 10
+        customLabel: Number 3 Engine
+        children: []
+      - PartID: 3
+        HierachyID: 11
+        customLabel: Number 3 Gun
+        children: []
+    - PartID: 1
+      HierachyID: 5
+      customLabel: Top Right Wing (4)
+      children:
+      - PartID: 2
+        HierachyID: 12
+        customLabel: Number 4 Engine
+        children: []
+      - PartID: 3
+        HierachyID: 13
+        customLabel: Number 4 Gun
+        children: []

@@ -78,6 +78,11 @@ namespace MultiplayerRunTime
                 if(Physics.Raycast(ray, out RaycastHit hit, laserRange))
                 {
                     endPoint = hit.point;
+                    if(hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
+                    {
+                        byte ID = part.HierarchyID;
+                        SpaceshipMP shipHit = part.owner;
+                    }
                 }
 
                 laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].position), spaceship.transform.InverseTransformPoint(endPoint)));

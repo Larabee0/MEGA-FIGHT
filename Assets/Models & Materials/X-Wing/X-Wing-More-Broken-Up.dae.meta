@@ -3,7 +3,22 @@ guid: 49a01a1b3aa257248be60997466ca479
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mesh-0-material-0
+    second: {fileID: 2100000, guid: 73c9e0ff61ae2aa45879fdff72c3617d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mesh-1-material-1
+    second: {fileID: 2100000, guid: 31d03d1570105704eb6f181c99111bed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mesh-2-material-2
+    second: {fileID: 2100000, guid: fe64ec75af919584b8f4d456e62f8a90, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -37,7 +52,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importVisibility: 1
@@ -69,7 +84,7 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
