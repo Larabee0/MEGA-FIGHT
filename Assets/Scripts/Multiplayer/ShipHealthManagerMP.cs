@@ -11,16 +11,21 @@ namespace MultiplayerRunTime
         public ShipHierarchyScriptableObject stats;
         public ShipHierarchy shipHierarchy;
 
-        private NetworkList<float> partHealths = new();
+        [HideInInspector] private NetworkList<float> partHealths;
 
         private void Awake()
         {
             shipHierarchy = new(stats);
-            for (int i = 0; i < shipHierarchy.parts.Count; i++)
+            if (IsServer)
             {
-                partHealths.Add(shipHierarchy.parts[i].maxHitPoints);
+                partHealths = new();
+                for (int i = 0; i < shipHierarchy.parts.Count; i++)
+                {
+                    partHealths.Add(shipHierarchy.parts[i].maxHitPoints);
+                }
             }
         }
+
 
         [ServerRpc(Delivery = RpcDelivery.Reliable)]
         public void HitServerRpc(byte hierachyID,ulong callID, float damage)
