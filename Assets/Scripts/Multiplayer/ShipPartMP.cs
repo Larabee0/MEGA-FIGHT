@@ -18,7 +18,7 @@ namespace MultiplayerRunTime
         [ServerRpc(Delivery = RpcDelivery.Reliable)]
         public void SetDamageServerRpc(float ammount)
         {
-            health.Value = ammount;
+            health.Value -= ammount;
         }
     }
 }

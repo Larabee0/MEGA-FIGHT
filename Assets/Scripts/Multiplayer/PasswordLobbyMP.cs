@@ -8,16 +8,25 @@ using System;
 using System.Text;
 using System.Net;
 
-namespace PasswordLobbyDemo
+namespace MultiplayerRunTime
 {
     public class PasswordLobbyMP : MonoBehaviour
     {
+        public static PasswordLobbyMP Singleton;
+
+        public ClientConnects OnClientConnects;
+        public ClientDisconnects OnClientDisconnects;
+
+        public delegate void ClientConnects(GameObject ClientObject);
+        public delegate void ClientDisconnects();
+
         [SerializeField] private InputField passwordInputField;
         [SerializeField] private GameObject passwordEntryUI;
         [SerializeField] private GameObject leaveButton;
 
         private void Awake()
         {
+            Singleton = this;
             leaveButton.SetActive(false);
             passwordEntryUI.SetActive(true);
             //Debug.Log(Dns.GetHostAddresses(Dns.GetHostName())[1].ToString());
@@ -69,6 +78,7 @@ namespace PasswordLobbyDemo
             {
                 passwordEntryUI.SetActive(false);
                 leaveButton.SetActive(true);
+                OnClientConnects?.Invoke(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject);
             }
         }
 
@@ -78,6 +88,7 @@ namespace PasswordLobbyDemo
             {
                 passwordEntryUI.SetActive(true);
                 leaveButton.SetActive(false);
+                OnClientDisconnects?.Invoke();
             }
         }
 
@@ -89,7 +100,6 @@ namespace PasswordLobbyDemo
             Vector3 spawnPos = new(0f, 200f, 100f);
 
             spawnPos.x -= NetworkManager.Singleton.ConnectedClients.Count*100f;
-            Debug.Log(spawnPos.x);
             callback(true, null, approveConnection, spawnPos, null);
 
         }

@@ -6,6 +6,7 @@
 using Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace MultiplayerRunTime
 {
@@ -17,6 +18,7 @@ namespace MultiplayerRunTime
     {
         [Header("Components")]
         [HideInInspector] public SpaceshipMP spaceshipController;
+        private InputControl inputControl;
         private Transform spaceshipTransform = null;
 
         public FireControlMP fireControl;
@@ -114,83 +116,60 @@ namespace MultiplayerRunTime
             // When parented to something (such as an aircraft) it will inherit those
             // rotations causing unintended rotations as it gets dragged around.
             transform.parent = null;
+            inputControl = InputControl.Singleton;
+            inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
+            PasswordLobbyMP.Singleton.OnClientConnects += EnableMFC;
+            PasswordLobbyMP.Singleton.OnClientDisconnects +=DisableMFC;
         }
 
-        private void GetShip()
+        private void GetShip(GameObject playerObject)
         {
-            if(NetworkManager.Singleton != null && NetworkManager.Singleton.SpawnManager != null)
+            if (playerObject == null) return;
+            spaceshipTransform = playerObject.transform;
+            spaceshipController = playerObject.GetComponent<SpaceshipMP>();
+
+            TPSVirtualCamera.Follow = TPSCamPos;
+            if (spaceshipController.FPSCamPos == null)
             {
-                if (NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject() != null)
-                {
-                    GameObject playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject;
-                    spaceshipTransform = playerObject.transform;
-                    spaceshipController = playerObject.GetComponent<SpaceshipMP>();
-
-                    TPSVirtualCamera.Follow = TPSCamPos;
-                    if(spaceshipController.FPSCamPos == null)
-                    {
-                        EnableFPS = false;
-                        perspective = Perspective.ThridPerson;
-                    }
-                    else
-                    {
-                        EnableFPS = true;
-                        FPSVirtualCamera.Follow = FPSCamPos= spaceshipController.FPSCamPos;
-                    }
-
-                    fireControl.spaceship = spaceshipController;
-                    fireControl.enabled = true;
-                    SetVirtualCameraTarget();
-                }
+                EnableFPS = false;
+                perspective = Perspective.ThridPerson;
             }
+            else
+            {
+                EnableFPS = true;
+                FPSVirtualCamera.Follow = FPSCamPos = spaceshipController.FPSCamPos;
+            }
+
+            SetVirtualCameraTarget();
         }
 
         private void Update()
         {
             if(spaceshipTransform == null)
             {
-                GetShip();
+                return;
             }
             UpdateCameraPos();
             if (Input.GetKeyUp(KeyCode.Escape))
             {
                 Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
             }
-            if (Input.GetKeyUp(KeyCode.V))
-            {
-                OnPerspectiveButtonPressed();
-            }
             if (spaceshipController != null && spaceshipController.IsOwner)
             {
-                NewUpdate();
-                playerOverride = new()
-                {
-                    x = Input.GetAxis("Vertical"),
-                    y = Input.GetAxis("Yaw"),
-                    z = Input.GetAxis("Horizontal")
-                };
+                ThrottleInput();
+                playerOverride = inputControl.FlightActions.JoyStick.ReadValue<Vector3>();
                 spaceshipController.SetMouseAimPosServerRPC(MouseAimPos);
                 spaceshipController.SetPlayerOverrideServerRPC(playerOverride);
             }
             RotateRig();
         }
 
-        private void NewUpdate()
+        private void ThrottleInput()
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                throttle += throttleSenstivity * Time.deltaTime;
-            }
+            float axisValue = inputControl.FlightActions.Throttle.ReadValue<float>();
 
-            if (Input.GetKey(KeyCode.LeftControl))
-            {
-                throttle = Mathf.Clamp01(throttle - (throttleSenstivity * Time.deltaTime));
-            }
-
-            if (Input.GetKey(KeyCode.B))
-            {
-                throttle -= throttleSenstivity * Time.deltaTime;
-            }
+            throttle = axisValue != 0 ? Mathf.Clamp01(throttle + (axisValue * (throttleSenstivity * Time.deltaTime))) : throttle;
+            throttle -= inputControl.FlightActions.ReverseThrottle.IsPressed() ? throttleSenstivity * Time.deltaTime : 0;
 
             if (throttle != throttleLastFrame)
             {
@@ -211,15 +190,16 @@ namespace MultiplayerRunTime
                 isMouseAimFrozen = true;
                 frozenDirection = mouseAim.forward;
             }
-            else if  (Input.GetKeyUp(KeyCode.C))
+            else if (Input.GetKeyUp(KeyCode.C))
             {
                 isMouseAimFrozen = false;
                 mouseAim.forward = frozenDirection;
             }
 
             // Mouse input.
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-            float mouseY = -Input.GetAxis("Mouse Y") * mouseSensitivity;
+            Vector2 rawAxis = inputControl.FlightActions.Mouse.ReadValue<Vector2>();
+            float mouseX = rawAxis.x * mouseSensitivity;
+            float mouseY = -rawAxis.y * mouseSensitivity;
 
             // Rotate the aim target that the plane is meant to fly towards.
             // Use the camera's axes in world space so that mouse motion is intuitive.
@@ -264,7 +244,7 @@ namespace MultiplayerRunTime
             }
         }
 
-        public void OnPerspectiveButtonPressed()
+        public void OnPerspectiveButtonPressed(InputAction.CallbackContext context)
         {
             perspective = EnableFPS ? perspective.Next() : Perspective.ThridPerson;
             SetVirtualCameraTarget();
@@ -298,6 +278,18 @@ namespace MultiplayerRunTime
         private Quaternion Damp(Quaternion a, Quaternion b, float lambda, float dt)
         {
             return Quaternion.Slerp(a, b, 1 - Mathf.Exp(-lambda * dt));
+        }
+
+        private void DisableMFC()
+        {
+            enabled = false;
+        }
+
+        private void EnableMFC(GameObject playerObject)
+        {
+            GetShip(playerObject);
+            fireControl.GetComponentReferences(spaceshipController);
+            enabled = true;
         }
 
         private void OnDrawGizmos()

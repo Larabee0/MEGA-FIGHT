@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4614794542237088}
   - component: {fileID: 114412280367074530}
-  - component: {fileID: 2120721624599225261}
+  - component: {fileID: 595201830}
   m_Layer: 0
   m_Name: MouseFlightRig
   m_TagString: Untagged
@@ -56,7 +56,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1340265690153048}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -73,40 +73,41 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1340265690153048}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 328caa1fb9777e748bf0f109cc7a60d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spaceshipController: {fileID: 0}
-  spaceshipTransform: {fileID: 0}
+  fireControl: {fileID: 595201830}
   mouseAim: {fileID: 4145331850755762}
   cameraRig: {fileID: 4543348934785170}
-  cam: {fileID: 4696854366641388}
+  TPSCamPos: {fileID: 4696854366641388}
+  TPSVirtualCamera: {fileID: 0}
+  FPSVirtualCamera: {fileID: 0}
+  perspective: 0
   camSmoothSpeed: 5
-  mouseSensitivity: 3
-  aimDistance: 500
+  mouseSensitivity: 0.15
   showDebugInfo: 0
   throttleSenstivity: 1
-  pitch: 0
-  yaw: 0
-  roll: 0
---- !u!114 &2120721624599225261
+--- !u!114 &595201830
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1340265690153048}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Script: {fileID: 11500000, guid: f54c0594f5d6ed540af9a0f7940e3142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
+  dstSenstivity: 25
+  minDst: 100
+  maxDst: 500
+  targetDistance: 500
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
 --- !u!1 &1411132086413374
 GameObject:
   m_ObjectHideFlags: 0

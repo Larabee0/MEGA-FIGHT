@@ -22,6 +22,7 @@ namespace MultiplayerRunTime
         public Transform FPSCamPos;
         public Transform TargetPoint;
         public Transform[] WeaponOutputPoints;
+        public LaserSpawnerMP laserSpawnerMP;
 
         public Vector3 AimOffset { get => FPSCamPos != null ? new Vector3(0f, FPSCamPos.localPosition.y) : Vector3.zero; }
 
@@ -46,7 +47,7 @@ namespace MultiplayerRunTime
         private NetworkVariable<float> throttle = new();
         public float Throttle { set { value = Mathf.Clamp(value, -0.25f, 1f); SetThrottleServerRPC(value); Drag = value; } get { return throttle.Value; } }
 
-        private float Drag { set { rigid.drag = Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
+        private float Drag { set { rigid.drag = value == 0 ? 2.5f : Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
 
         private Vector3 playerOverride ;
         public Vector3 MouseAimPos;
@@ -73,18 +74,19 @@ namespace MultiplayerRunTime
                 pitchOverride = false;
                 yawOverride = false;
                 // roll (z)
-                if (Mathf.Abs(playerOverride.z) > .25f)
+                if (Mathf.Abs(playerOverride.x) > .25f)
                 {
                     rollOverride = true;
                 }
                 // pitch (x)
-                if (Mathf.Abs(playerOverride.x) > .25f)
+                if (Mathf.Abs(playerOverride.y) > .25f)
                 {
+                    yawOverride = true;
                     pitchOverride = true;
                     rollOverride = true;
                 }
                 // yaw (y)
-                if (Mathf.Abs(playerOverride.y) > .25f)
+                if (Mathf.Abs(playerOverride.z) > .25f)
                 {
                     yawOverride = true;
                     pitchOverride = true;
@@ -92,9 +94,9 @@ namespace MultiplayerRunTime
                 }
 
                 RunAutopilot(MouseAimPos, out float autoYaw, out float autoPitch, out float autoRoll);
-                yaw = yawOverride ? playerOverride.y : autoYaw;
-                pitch = pitchOverride ? playerOverride.x : autoPitch;
-                roll = rollOverride ? playerOverride.z : autoRoll;
+                yaw = yawOverride ? playerOverride.z : autoYaw;
+                pitch = pitchOverride ? playerOverride.y : autoPitch;
+                roll = rollOverride ? playerOverride.x : autoRoll;
             }
         }
 

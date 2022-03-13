@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace MultiplayerRunTime
 {
     public class FireControlMP : MonoBehaviour
     {
-        public SpaceshipMP spaceship;
-        public MouseFlightControllerMP controller;
+        private InputControl inputControl;
+        private LaserSpawnerMP laserSpawnerMP;
+        private SpaceshipMP spaceship;
 
         private Transform[] WeaponOutputPoints;
         private Transform TargetPoint;
@@ -20,6 +22,7 @@ namespace MultiplayerRunTime
 
         [SerializeField] [Range(0f,1f)] float fireIntervalMin = 0.01f;
         [SerializeField] [Range(0f, 1f)] float fireIntervalMax = 0.05f;
+        [SerializeField][Range(500f, 2000f)] float laserRange = 1000f;
         private float fireInterval = 0f;
         private int currentWeaponIndex = 0;
 
@@ -34,26 +37,33 @@ namespace MultiplayerRunTime
             }
         }
 
-        private void Start()
+        private void Awake()
         {
-            spaceship = controller.spaceshipController;
+            PasswordLobbyMP.Singleton.OnClientDisconnects += NullOutandStop;
+            inputControl = InputControl.Singleton;
+            inputControl.FlightActions.Shoot.canceled += (InputAction.CallbackContext context) => { fireInterval = 0f; };
+        }
+
+        public void GetComponentReferences(SpaceshipMP ship)
+        {
+            spaceship = ship;
+            laserSpawnerMP = spaceship.laserSpawnerMP;
             WeaponOutputPoints = spaceship.WeaponOutputPoints;
             TargetPoint = spaceship.TargetPoint;
             TargetDistance = TargetDistance;
+            enabled = true;
         }
 
         private void Update()
         {
-            TargetDistance += Input.GetAxis("Mouse ScrollWheel") * dstSenstivity * Time.deltaTime;
+            TargetDistance += inputControl.FlightActions.ScrollWheel.ReadValue<Vector2>().y * dstSenstivity * Time.deltaTime;
 
-            if (Input.GetMouseButton(0))
+            if (inputControl.FlightActions.Shoot.IsPressed())
             {
                 Fire();
             }
-            if (Input.GetMouseButtonUp(0))
-            {
-                fireInterval = 0f;
-            }
+
+            //Debug.DrawRay(WeaponOutputPoints[0].position, TargetPoint.position - WeaponOutputPoints[0].position);
         }
 
         private void Fire()
@@ -62,9 +72,28 @@ namespace MultiplayerRunTime
             if(fireInterval <= 0f)
             {
                 fireInterval = UnityEngine.Random.Range(fireIntervalMin, fireIntervalMax);
-                Debug.DrawLine(WeaponOutputPoints[currentWeaponIndex].position, TargetPoint.position, Color.red, 0.25f);
+                Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].position;
+                Ray ray = new(WeaponOutputPoints[currentWeaponIndex].position, direciton);
+                Vector3 endPoint = TargetPoint.position + (direciton * laserRange);
+                if(Physics.Raycast(ray, out RaycastHit hit, laserRange))
+                {
+                    endPoint = hit.point;
+                }
+
+                laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].position), spaceship.transform.InverseTransformPoint(endPoint)));
+                //Debug.DrawLine(WeaponOutputPoints[currentWeaponIndex].position, endPoint, Color.red, 0.25f);
                 currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
             }
+        }
+
+        private void NullOutandStop()
+        {
+            laserSpawnerMP = null;
+            spaceship = null;
+
+            WeaponOutputPoints = null;
+            TargetPoint = null;
+            enabled = false;
         }
     }
 }
