@@ -23,6 +23,7 @@ namespace MultiplayerRunTime
         public Transform TargetPoint;
         public Transform[] WeaponOutputPoints;
         public LaserSpawnerMP laserSpawnerMP;
+        public ShipHealthManagerMP shipHealthManagerMP;
 
         public Vector3 AimOffset { get => FPSCamPos != null ? new Vector3(0f, FPSCamPos.localPosition.y) : Vector3.zero; }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -82,6 +83,7 @@ namespace MultiplayerRunTime
                     {
                         byte ID = part.HierarchyID;
                         SpaceshipMP shipHit = part.owner;
+                        shipHit.shipHealthManagerMP.HitServerRpc(ID, NetworkManager.Singleton.LocalClientId, 1f);
                     }
                 }
 
