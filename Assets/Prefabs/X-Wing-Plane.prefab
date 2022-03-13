@@ -1141,6 +1141,7 @@ MonoBehaviour:
   - {fileID: 1250232991}
   - {fileID: 3092463}
   laserSpawnerMP: {fileID: -1804329374080476669}
+  shipHealthManagerMP: {fileID: 2173042695768397383}
   thrust: 3750
   turnTorque: {x: 180, y: 180, z: 180}
   forceMult: 100
@@ -1250,7 +1251,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 19d8b6bca1682a445ad765082fd99ac1, type: 2}
-  part: {fileID: 0}
+  shipHierarchy:
+    ShipID: 0
+    Label: 
 --- !u!1 &4987517962439922506
 GameObject:
   m_ObjectHideFlags: 0

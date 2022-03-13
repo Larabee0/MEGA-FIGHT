@@ -11,7 +11,7 @@ namespace MultiplayerRunTime
         public ShipHierarchyScriptableObject stats;
         public ShipHierarchy shipHierarchy;
 
-        [HideInInspector] private NetworkList<float> partHealths;
+        private NetworkList<float> partHealths;
 
         private void Awake()
         {
@@ -26,13 +26,38 @@ namespace MultiplayerRunTime
             }
         }
 
+        private void Start()
+        {
+            partHealths.OnListChanged += HealthChanged;
+        }
 
-        [ServerRpc(Delivery = RpcDelivery.Reliable)]
+        private void HealthChanged(NetworkListEvent<float> changeEvent)
+        {
+            if (IsOwner)
+            {
+                Debug.LogFormat("Your {0} is now on {1}/{2}hp.", shipHierarchy.parts[changeEvent.Index].label, changeEvent.Value, shipHierarchy.parts[changeEvent.Index].maxHitPoints);
+            }
+            else
+            {
+                Debug.LogFormat("{0}'s {1} is now on {2}/{3}hp.", OwnerClientId, shipHierarchy.parts[changeEvent.Index].label, changeEvent.Value, shipHierarchy.parts[changeEvent.Index].maxHitPoints);
+            }
+            
+        }
+
+        [ServerRpc(Delivery = RpcDelivery.Reliable ,RequireOwnership = false)]
         public void HitServerRpc(byte hierachyID,ulong callID, float damage)
         {
-            partHealths[hierachyID] -= damage;
+            if(partHealths[hierachyID] > 0)
+            {
+                partHealths[hierachyID] -= damage;
+            }
+            else
+            {
+
+            }
             if (partHealths[hierachyID] <= 0)
             {
+                partHealths[hierachyID] = 0;
                 // destroy part
             }
 
@@ -45,7 +70,7 @@ namespace MultiplayerRunTime
         private void AlertHitClientRPC(byte hierachyID)
         {
             if (!IsOwner) return;
-            Debug.Log("You where damaged");
+            //Debug.Log("You where damaged");
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
@@ -55,7 +80,7 @@ namespace MultiplayerRunTime
             if(NetworkManager.Singleton.LocalClientId == clientID)
             {
                 // inform instigator client of result
-                Debug.Log("You where damaged");
+                //Debug.Log("You damaged someone");
             }
         }
     }
