@@ -63,8 +63,8 @@ namespace MultiplayerRunTime
             }
 
             AlertHitClientRPC(instigatorClientID, hierachyID, damage);
-
-            AlertInstigatorClientRPC(instigatorClientID,OwnerClientId, hierachyID, damage);
+            
+            AlertInstigatorClientRPC(instigatorClientID, this.NetworkObject.NetworkObjectId, hierachyID, damage);
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
@@ -80,12 +80,12 @@ namespace MultiplayerRunTime
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertInstigatorClientRPC(ulong instigatorClientID, ulong targetClientID, byte hierachyID, float damage)
+        private void AlertInstigatorClientRPC(ulong instigatorClientID, ulong targetObjectID, byte hierachyID, float damage)
         {
             if (!IsClient) return;
             if(NetworkManager.Singleton.LocalClientId == instigatorClientID)
             {
-                PlayerManagerMP hitTarget = NetworkManager.SpawnManager.GetPlayerNetworkObject(targetClientID).GetComponent<PlayerManagerMP>();
+                PlayerManagerMP hitTarget = NetworkManager.SpawnManager.SpawnedObjects[targetObjectID].GetComponent<PlayerManagerMP>();
                 DamageInfo damageInfo = hitTarget.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID,damage);
                 damageInfo.Instigator = "You";
                 damageInfo.hitPlayer = hitTarget.DisplayedName;
