@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -28,24 +29,23 @@ namespace MultiplayerRunTime
 
         private void Start()
         {
-            partHealths.OnListChanged += HealthChanged;
+            
         }
 
-        private void HealthChanged(NetworkListEvent<float> changeEvent)
+        public DamageInfo GetDamageInfo(byte hierarchyID, float damage)
         {
-            if (IsOwner)
+            return new DamageInfo
             {
-                Debug.LogFormat("Your {0} is now on {1}/{2}hp.", shipHierarchy.parts[changeEvent.Index].label, changeEvent.Value, shipHierarchy.parts[changeEvent.Index].maxHitPoints);
-            }
-            else
-            {
-                Debug.LogFormat("{0}'s {1} is now on {2}/{3}hp.", OwnerClientId, shipHierarchy.parts[changeEvent.Index].label, changeEvent.Value, shipHierarchy.parts[changeEvent.Index].maxHitPoints);
-            }
+                HierarchyID = hierarchyID,
+                partID = shipHierarchy.parts[hierarchyID].PartID,
+                ammount = damage,
+                PartLabel = shipHierarchy.parts[hierarchyID].label
+            };
             
         }
 
         [ServerRpc(Delivery = RpcDelivery.Reliable ,RequireOwnership = false)]
-        public void HitServerRpc(byte hierachyID,ulong callID, float damage)
+        public void HitServerRpc(byte hierachyID,ulong instigatorClientID, float damage)
         {
             if(partHealths[hierachyID] > 0)
             {
@@ -53,38 +53,72 @@ namespace MultiplayerRunTime
             }
             else
             {
-
+                // apply any functionality changes
             }
             if (partHealths[hierachyID] <= 0)
             {
+                damage += partHealths[hierachyID];
                 partHealths[hierachyID] = 0;
                 // destroy part
             }
 
-            AlertHitClientRPC(hierachyID);
+            AlertHitClientRPC(instigatorClientID, hierachyID, damage);
 
-            AlertInstigatorClientRPC(callID, hierachyID);
+            AlertInstigatorClientRPC(instigatorClientID,OwnerClientId, hierachyID, damage);
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertHitClientRPC(byte hierachyID)
+        private void AlertHitClientRPC(ulong instigatorClientID, byte hierachyID, float damage)
         {
             if (!IsOwner) return;
-            //Debug.Log("You where damaged");
+            DamageInfo damageInfo = GetDamageInfo(hierachyID, damage);
+            string instigator = NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>().DisplayedName;
+            damageInfo.Instigator = instigator;
+            damageInfo.hitPlayer = "You";
+            damageInfo.HitPlayerGrammar = "'re";
+            Debug.Log(damageInfo.ToString());
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertInstigatorClientRPC(ulong clientID, byte hierachyID)
+        private void AlertInstigatorClientRPC(ulong instigatorClientID, ulong targetClientID, byte hierachyID, float damage)
         {
             if (!IsClient) return;
-            if(NetworkManager.Singleton.LocalClientId == clientID)
+            if(NetworkManager.Singleton.LocalClientId == instigatorClientID)
             {
-                // inform instigator client of result
-                //Debug.Log("You damaged someone");
+                PlayerManagerMP hitTarget = NetworkManager.SpawnManager.GetPlayerNetworkObject(targetClientID).GetComponent<PlayerManagerMP>();
+                DamageInfo damageInfo = hitTarget.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID,damage);
+                damageInfo.Instigator = "You";
+                damageInfo.hitPlayer = hitTarget.DisplayedName;
+                damageInfo.HitPlayerGrammar = "'s";
+                Debug.Log(damageInfo.ToString());
+            }
+        }
+
+        public void DestroyShip()
+        {
+            if (IsServer || IsOwner)
+            {
+                Destroy(gameObject);
             }
         }
     }
 
+
+    public struct DamageInfo
+    {
+        public float ammount;
+        public string hitPlayer;
+        public byte partID;
+        public byte HierarchyID;
+        public string PartLabel;
+        public string HitPlayerGrammar;
+        public string Instigator;
+
+        public override string ToString()
+        {
+            return string.Format("{0} damaged {1}{2} {3} for {4} damage", Instigator, hitPlayer, HitPlayerGrammar, PartLabel, ammount);
+        }
+    }
 
     [Serializable]
     public class ShipHierarchy

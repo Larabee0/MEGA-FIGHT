@@ -9,7 +9,7 @@ namespace MultiplayerRunTime
 {
     public class FireControlMP : MonoBehaviour
     {
-        private InputControl inputControl;
+        public InputControl inputControl;
         private LaserSpawnerMP laserSpawnerMP;
         private SpaceshipMP spaceship;
 
@@ -26,7 +26,7 @@ namespace MultiplayerRunTime
         [SerializeField][Range(500f, 2000f)] float laserRange = 1000f;
         private float fireInterval = 0f;
         private int currentWeaponIndex = 0;
-
+        private bool fire = false;
 
         public float TargetDistance
         {
@@ -38,12 +38,26 @@ namespace MultiplayerRunTime
             }
         }
 
-        private void Awake()
+        private void OnEnable()
         {
-            PasswordLobbyMP.Singleton.OnClientDisconnects += NullOutandStop;
-            inputControl = InputControl.Singleton;
-            inputControl.FlightActions.Shoot.canceled += (InputAction.CallbackContext context) => { fireInterval = 0f; };
+            inputControl.FlightActions.Shoot.canceled += ResetFireInterval;
+            inputControl.FlightActions.Shoot.canceled += ToggleOffFire;
+            inputControl.FlightActions.Shoot.started += ToggleOnFire;
+            inputControl.FlightActions.ScrollWheel.performed += SetTargetDistance;
         }
+        private void OnDisable()
+        {
+            inputControl.FlightActions.Shoot.canceled -= ResetFireInterval;
+            inputControl.FlightActions.Shoot.canceled -= ToggleOffFire;
+            inputControl.FlightActions.Shoot.started -= ToggleOnFire;
+            inputControl.FlightActions.ScrollWheel.performed -= SetTargetDistance;
+            NullOut();
+        }
+
+        private void ResetFireInterval(InputAction.CallbackContext context) => fireInterval = 0f;
+
+        private void ToggleOnFire(InputAction.CallbackContext context) => fire = true;
+        private void ToggleOffFire(InputAction.CallbackContext context) => fire = false;
 
         public void GetComponentReferences(SpaceshipMP ship)
         {
@@ -55,11 +69,14 @@ namespace MultiplayerRunTime
             enabled = true;
         }
 
-        private void Update()
+        private void SetTargetDistance(InputAction.CallbackContext context)
         {
             TargetDistance += inputControl.FlightActions.ScrollWheel.ReadValue<Vector2>().y * dstSenstivity * Time.deltaTime;
+        }
 
-            if (inputControl.FlightActions.Shoot.IsPressed())
+        private void Update()
+        {
+            if (fire)
             {
                 Fire();
             }
@@ -76,7 +93,7 @@ namespace MultiplayerRunTime
                 Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].position;
                 Ray ray = new(WeaponOutputPoints[currentWeaponIndex].position, direciton);
                 Vector3 endPoint = TargetPoint.position + (direciton * laserRange);
-                if(Physics.Raycast(ray, out RaycastHit hit, laserRange))
+                if(Physics.SphereCast(ray,0.005f, out RaycastHit hit, laserRange))
                 {
                     endPoint = hit.point;
                     if(hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
@@ -93,14 +110,14 @@ namespace MultiplayerRunTime
             }
         }
 
-        private void NullOutandStop()
+        private void NullOut()
         {
+            fire = false;
             laserSpawnerMP = null;
             spaceship = null;
 
             WeaponOutputPoints = null;
             TargetPoint = null;
-            enabled = false;
         }
     }
 }

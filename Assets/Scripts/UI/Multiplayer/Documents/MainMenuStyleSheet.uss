@@ -1,0 +1,86 @@
+.InGameInfoLabel {
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+    -unity-text-outline-color: rgba(5, 5, 5, 0.44);
+    -unity-text-outline-width: 0.25px;
+}
+
+.InGameInfoLabelGreyed {
+    color: rgba(255, 255, 255, 0.53);
+    font-size: 14px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+    -unity-text-outline-color: rgba(5, 5, 5, 0.44);
+    -unity-text-outline-width: 0.25px;
+}
+
+.unity-text-field__label {
+    color: rgb(255, 255, 255);
+}
+
+.unity-text-field__input {
+    background-color: rgb(42, 42, 42);
+    border-left-color: rgb(33, 33, 33);
+    border-right-color: rgb(33, 33, 33);
+    border-top-color: rgb(33, 33, 33);
+    border-bottom-color: rgb(33, 33, 33);
+    color: rgb(255, 255, 255);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.StandardButton {
+    color: rgb(255, 255, 255);
+    background-color: rgb(88, 88, 88);
+    border-bottom-color: rgb(36, 36, 36);
+    border-top-color: rgb(48, 48, 48);
+    border-left-color: rgb(48, 48, 48);
+    border-right-color: rgb(48, 48, 48);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.StandardButton:hover {
+    background-color: rgb(103, 103, 103);
+}
+
+.StandardButton:active {
+    background-color: rgb(70, 96, 124);
+}
+
+.unity-text-field__input:focus {
+    border-left-color: rgb(58, 121, 187);
+    border-right-color: rgb(58, 121, 187);
+    border-top-color: rgb(58, 121, 187);
+    border-bottom-color: rgb(58, 121, 187);
+}
+
+.unity-base-text-field {
+    --unity-cursor-color: rgb(255, 255, 255);
+}

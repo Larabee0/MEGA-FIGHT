@@ -55,6 +55,11 @@ namespace MultiplayerRunTime
 
         private Rigidbody rigid;
 
+        public float Velocity
+        {
+            get => rigid.velocity.magnitude;
+        }
+
         private float pitch = 0f;
         private float yaw = 0f;
         private float roll = 0f;
@@ -111,6 +116,19 @@ namespace MultiplayerRunTime
                 //rigid.AddRelativeTorque(TorqueInput, ForceMode.Force);
                 rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * pitch, turnTorque.y * yaw, -turnTorque.z * roll), ForceMode.Force);
             }
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();        
+            if (!IsOwner) return;
+            FindObjectOfType<PlayerManagerMP>().HandleShipDestroyed();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (!IsOwner) return;
+            FindObjectOfType<PlayerManagerMP>().LocalSpaceship = this;
         }
 
         private void RunAutopilot(Vector3 flyTarget, out float yaw, out float pitch, out float roll)

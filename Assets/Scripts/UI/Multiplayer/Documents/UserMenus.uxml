@@ -1,0 +1,61 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/UI/Multiplayer/Documents/MainMenuStyleSheet.uss?fileID=7433441132597879392&amp;guid=572322021726fdc4487c24c6a2dc06fc&amp;type=3#MainMenuStyleSheet" />
+    <ui:VisualElement name="InGameInfo">
+        <ui:VisualElement name="IGIContainer" style="flex-direction: row;">
+            <ui:VisualElement name="Desc" style="align-items: flex-start;">
+                <ui:Label text="THR" display-tooltip-when-elided="true" class="InGameInfoLabel" style="-unity-text-align: middle-left;" />
+                <ui:Label text="SPD" display-tooltip-when-elided="true" class="InGameInfoLabel" style="-unity-text-align: middle-left;" />
+                <ui:Label text="ALT" display-tooltip-when-elided="true" class="InGameInfoLabel" style="-unity-text-align: middle-left;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Value" style="align-items: flex-end; width: 45px;">
+                <ui:Label text="100" display-tooltip-when-elided="true" name="THRValue" class="InGameInfoLabel" style="-unity-text-align: middle-right; margin-right: 0;" />
+                <ui:Label text="25200" display-tooltip-when-elided="true" name="SPDValue" class="InGameInfoLabel" style="-unity-text-align: middle-right; margin-right: 0;" />
+                <ui:Label text="900" display-tooltip-when-elided="true" name="ALTValue" class="InGameInfoLabel" style="-unity-text-align: middle-right; margin-right: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Unit" style="align-items: flex-start;">
+                <ui:Label text="%" display-tooltip-when-elided="true" class="InGameInfoLabelGreyed" style="-unity-text-align: middle-left; margin-left: 2px;" />
+                <ui:Label text="km/h" display-tooltip-when-elided="true" class="InGameInfoLabelGreyed" style="-unity-text-align: middle-left; margin-left: 2px;" />
+                <ui:Label text="m" display-tooltip-when-elided="true" class="InGameInfoLabelGreyed" style="-unity-text-align: middle-left; margin-left: 2px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="overlay" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.69); align-items: center; justify-content: center; display: none;">
+        <ui:VisualElement name="ConnectionPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgb(56, 56, 56); display: none; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
+            <ui:VisualElement style="flex-direction: row;">
+                <ui:VisualElement name="ConnectSide" style="margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);">
+                    <ui:Label text="Connect" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
+                    <ui:TextField picking-mode="Ignore" label="IP Address" value="filler text" text="filler text" name="TargetIP" style="flex-direction: column; -unity-text-align: upper-center;" />
+                    <ui:TextField picking-mode="Ignore" label="Lobby Password" password="true" name="ClientPassword" style="flex-direction: column; -unity-text-align: upper-center;" />
+                    <ui:Button text="Connect" display-tooltip-when-elided="true" name="ClientConnectButton" class="StandardButton" />
+                </ui:VisualElement>
+                <ui:VisualElement name="HostSide" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px;">
+                    <ui:Label text="Host" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; -unity-font-style: bold; font-size: 28px;" />
+                    <ui:Label text="Local IP Address" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center;" />
+                    <ui:Label text="0.0.0.0" display-tooltip-when-elided="true" name="HostIP" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; padding-top: 0; margin-top: 2px;" />
+                    <ui:TextField picking-mode="Ignore" label="Set Lobby Password" password="true" name="LobbyPassword" style="flex-direction: column; -unity-text-align: upper-center;" />
+                    <ui:Button text="Host" display-tooltip-when-elided="true" name="HostStartButton" class="StandardButton" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 5px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: none;">
+            <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                <ui:Label text="Respawn?" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
+                <ui:TextField picking-mode="Ignore" label="Displayed Name" value="Player" text="Player" name="DisplayedName" style="flex-direction: column; -unity-text-align: upper-center;" />
+                <ui:VisualElement style="flex-direction: row; justify-content: center;">
+                    <ui:Button text="Spawn" display-tooltip-when-elided="true" name="SpawnButton" class="StandardButton" style="width: 75px;" />
+                    <ui:Button text="Leave" display-tooltip-when-elided="true" name="LeaveButton" class="StandardButton" style="width: 75px;" />
+                </ui:VisualElement>
+                <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-bottom: 7px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="PausePopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: flex;">
+            <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                <ui:Button text="Resume" display-tooltip-when-elided="true" name="ResumeGameButton" class="StandardButton" style="margin-top: 5px;" />
+                <ui:Button text="Respawn" display-tooltip-when-elided="true" name="RespawnButton" class="StandardButton" style="margin-top: 5px;" />
+                <ui:Button text="Main Menu" display-tooltip-when-elided="true" name="MainMenuButton" class="StandardButton" style="margin-top: 5px;" />
+                <ui:Button text="Close Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 5px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

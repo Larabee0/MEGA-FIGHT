@@ -24,7 +24,7 @@ public class InputControl : MonoBehaviour
     {
         Singleton = this;
         playerActions = new Player();
-        SetFlightEnabled(true);
+        SetUIEnabled(true);
     }
 
     //private void FixedUpdate()

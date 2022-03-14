@@ -18,10 +18,12 @@ namespace MultiplayerRunTime
     {
         [Header("Components")]
         [HideInInspector] public SpaceshipMP spaceshipController;
-        private InputControl inputControl;
+        public InputControl inputControl;
         private Transform spaceshipTransform = null;
 
         public FireControlMP fireControl;
+
+        private UserMenu.InGameInfo inGameInfo;
 
         [SerializeField] [Tooltip("Transform of the object the mouse rotates to generate MouseAim position")]
         private Transform mouseAim = null;
@@ -68,6 +70,8 @@ namespace MultiplayerRunTime
         private float throttleLastFrame;
 
         Vector3 playerOverride;
+        Vector3 playerOverrideLastFrame;
+        Vector3 MouseAimPosLastFrame;
 
         /// <summary>
         /// Get a point along the aircraft's boresight projected out to aimDistance meters.
@@ -105,7 +109,7 @@ namespace MultiplayerRunTime
             }
         }
 
-        private void Awake()
+        private void OnEnable()
         {
             if (mouseAim == null)
                 Debug.LogError(name + "MouseFlightController - No mouse aim transform assigned!");
@@ -116,18 +120,23 @@ namespace MultiplayerRunTime
             // When parented to something (such as an aircraft) it will inherit those
             // rotations causing unintended rotations as it gets dragged around.
             transform.parent = null;
-            inputControl = InputControl.Singleton;
+            //inputControl = InputControl.Singleton;
             inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
-            PasswordLobbyMP.Singleton.OnClientConnects += EnableMFC;
-            PasswordLobbyMP.Singleton.OnClientDisconnects +=DisableMFC;
+            //PasswordLobbyMP.Singleton.OnClientConnects += SetPMMP;//EnableMFC;
+            //PasswordLobbyMP.Singleton.OnClientDisconnects += DisableMFC;
+            inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
         }
 
-        private void GetShip(GameObject playerObject)
+        private void OnDisable()
         {
-            if (playerObject == null) return;
-            spaceshipTransform = playerObject.transform;
-            spaceshipController = playerObject.GetComponent<SpaceshipMP>();
-
+            inputControl.FlightActions.CameraSwitch.canceled -= OnPerspectiveButtonPressed;
+            spaceshipTransform = null;
+            spaceshipController = null;
+        }
+        public void SetShip(SpaceshipMP ship)
+        {
+            spaceshipTransform = ship.transform;
+            spaceshipController = ship;
             TPSVirtualCamera.Follow = TPSCamPos;
             if (spaceshipController.FPSCamPos == null)
             {
@@ -150,18 +159,29 @@ namespace MultiplayerRunTime
                 return;
             }
             UpdateCameraPos();
-            if (Input.GetKeyUp(KeyCode.Escape))
-            {
-                Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
-            }
-            if (spaceshipController != null && spaceshipController.IsOwner)
+            if (spaceshipController != null)
             {
                 ThrottleInput();
                 playerOverride = inputControl.FlightActions.JoyStick.ReadValue<Vector3>();
-                spaceshipController.SetMouseAimPosServerRPC(MouseAimPos);
-                spaceshipController.SetPlayerOverrideServerRPC(playerOverride);
+                if (MouseAimPos != MouseAimPosLastFrame)
+                {
+                    spaceshipController.SetMouseAimPosServerRPC(MouseAimPos);
+                }
+                if (playerOverride != playerOverrideLastFrame)
+                {
+                    spaceshipController.SetPlayerOverrideServerRPC(playerOverride);
+                }
             }
             RotateRig();
+            MouseAimPosLastFrame = MouseAimPos;
+            playerOverrideLastFrame = playerOverride;
+        }
+
+        private void FixedUpdate()
+        {
+            inGameInfo.Thrust = throttle * 100f;
+            inGameInfo.Speed = spaceshipController.Velocity;
+            inGameInfo.Altitude = spaceshipTransform.position.y;
         }
 
         private void ThrottleInput()
@@ -170,6 +190,7 @@ namespace MultiplayerRunTime
 
             throttle = axisValue != 0 ? Mathf.Clamp01(throttle + (axisValue * (throttleSenstivity * Time.deltaTime))) : throttle;
             throttle -= inputControl.FlightActions.ReverseThrottle.IsPressed() ? throttleSenstivity * Time.deltaTime : 0;
+            throttle = Mathf.Clamp(throttle, -0.25f, 1f);
 
             if (throttle != throttleLastFrame)
             {
@@ -278,18 +299,6 @@ namespace MultiplayerRunTime
         private Quaternion Damp(Quaternion a, Quaternion b, float lambda, float dt)
         {
             return Quaternion.Slerp(a, b, 1 - Mathf.Exp(-lambda * dt));
-        }
-
-        private void DisableMFC()
-        {
-            enabled = false;
-        }
-
-        private void EnableMFC(GameObject playerObject)
-        {
-            GetShip(playerObject);
-            fireControl.GetComponentReferences(spaceshipController);
-            enabled = true;
         }
 
         private void OnDrawGizmos()

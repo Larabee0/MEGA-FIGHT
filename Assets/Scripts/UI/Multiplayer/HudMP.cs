@@ -18,7 +18,7 @@ namespace MultiplayerRunTime
 
         private Camera playerCam = null;
 
-        private void Awake()
+        private void Start()
         {
             if (mouseFlight == null)
                 Debug.LogError(name + ": Hud - Mouse Flight Controller not assigned!");
@@ -28,8 +28,8 @@ namespace MultiplayerRunTime
             if (playerCam == null)
                 Debug.LogError(name + ": Hud - No camera found on assigned Mouse Flight Controller!");
 
-            PasswordLobbyMP.Singleton.OnClientConnects += EnableHud;
-            PasswordLobbyMP.Singleton.OnClientDisconnects += DisableHud;
+            //PasswordLobbyMP.Singleton.OnClientConnects += EnableHud;
+            //PasswordLobbyMP.Singleton.OnClientDisconnects += DisableHud;
         }
 
         private void Update()
@@ -58,16 +58,6 @@ namespace MultiplayerRunTime
         public void SetReferenceMouseFlight(MouseFlightControllerMP controller)
         {
             mouseFlight = controller;
-        }
-
-        private void DisableHud()
-        {
-            enabled = false;
-        }
-
-        private void EnableHud(GameObject playerObject)
-        {
-            enabled = true;
         }
     }
 }
