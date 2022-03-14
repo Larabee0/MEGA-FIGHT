@@ -93,10 +93,10 @@ namespace MultiplayerRunTime
                 Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].position;
                 Ray ray = new(WeaponOutputPoints[currentWeaponIndex].position, direciton);
                 Vector3 endPoint = TargetPoint.position + (direciton * laserRange);
-                if(Physics.SphereCast(ray,0.005f, out RaycastHit hit, laserRange))
+                if (Physics.SphereCast(ray, 0.005f, out RaycastHit hit, laserRange))
                 {
                     endPoint = hit.point;
-                    if(hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
+                    if (hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
                     {
                         byte ID = part.HierarchyID;
                         SpaceshipMP shipHit = part.owner;

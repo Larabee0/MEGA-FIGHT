@@ -13,7 +13,6 @@ namespace MultiplayerRunTime
         [SerializeField] private FireControlMP fireControl;
         [SerializeField] private HudMP hud;
         [SerializeField] private PlayerManagerMP PlayerManagerMP;
-        [SerializeField] private LayerMask avoidSelfLayer;
         [SerializeField] private string displayedName;
         private bool Paused = true;
 
@@ -86,8 +85,17 @@ namespace MultiplayerRunTime
         private void OnShipGained(SpaceshipMP ship)
         {
             SetAndEnableLocalScripts(ship);
-            ship.gameObject.layer = avoidSelfLayer;
+            SetLocalShipPhysicsLayer(ship, 2);
             Pause();
+        }
+
+        private void SetLocalShipPhysicsLayer(SpaceshipMP ship, int layer)
+        {
+            Collider[] collidables = ship.GetComponentsInChildren<Collider>();
+            for (int i = 0; i < collidables.Length; i++)
+            {
+                collidables[i].gameObject.layer = layer;
+            }
         }
 
         private void OnShipLost()
@@ -113,7 +121,7 @@ namespace MultiplayerRunTime
             if (PlayerManagerMP != null)
             {
                 PlayerManagerMP.SetDisplayedName(displayedName);
-                PlayerManagerMP.SpawnShipServerRpc(transform.position, 0);
+                PlayerManagerMP.SpawnShipServerRpc(PlayerManagerMP.transform.position, 0);
             }
         }
 

@@ -495,7 +495,7 @@ MonoBehaviour:
   PlayerManagerMP: {fileID: 0}
   avoidSelfLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 4
   displayedName: 
 --- !u!1001 &93711149
 PrefabInstance:
