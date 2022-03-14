@@ -493,6 +493,9 @@ MonoBehaviour:
   fireControl: {fileID: 595201829}
   hud: {fileID: 53659545}
   PlayerManagerMP: {fileID: 0}
+  avoidSelfLayer:
+    serializedVersion: 2
+    m_Bits: 8
   displayedName: 
 --- !u!1001 &93711149
 PrefabInstance:
