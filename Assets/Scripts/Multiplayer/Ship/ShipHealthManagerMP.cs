@@ -86,8 +86,7 @@ namespace MultiplayerRunTime
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void AlertInstigatorClientRPC(ulong instigatorClientID, NetworkBehaviourReference target, byte hierachyID, float damage)
         {
-            if (!IsClient) return;
-            if(NetworkManager.Singleton.LocalClientId == instigatorClientID)
+            if(OwnerClientId == instigatorClientID)
             {
                 if(target.TryGet(out PlayerManagerMP targetObject))
                 {

@@ -63,12 +63,22 @@ namespace MultiplayerRunTime
             displayedName = new NetworkList<byte>(name);
         }
 
-        [ServerRpc]
+        [ServerRpc(Delivery = RpcDelivery.Reliable)]
         public void SpawnShipServerRpc(Vector3 spawnPos, byte index)
         {
             NetworkObject shipInstance = Instantiate(ships[index], spawnPos, Quaternion.identity);
 
             shipInstance.SpawnWithOwnership(OwnerClientId);
+            SetShipReferenceClientRpc(shipInstance.GetComponent<SpaceshipMP>(), this);
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void SetShipReferenceClientRpc(NetworkBehaviourReference Ship, NetworkBehaviourReference Player)
+        {
+            if(Ship.TryGet(out SpaceshipMP spaceship) && Player.TryGet(out PlayerManagerMP player))
+            {
+                player.localSpaceship = spaceship;
+            }
         }
 
         public void HandleShipDestroyed()
