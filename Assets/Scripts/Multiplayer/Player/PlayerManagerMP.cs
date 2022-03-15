@@ -19,14 +19,14 @@ namespace MultiplayerRunTime
             private set
             {
                 shipReference.Value = value;
-                if (value != null)
-                {
-                    OnShipGained?.Invoke(LocalSpaceship);
-                }
-                else
-                {
-                    OnShipLost?.Invoke();
-                }
+                //if (value != null)
+                //{
+                //    OnShipGained?.Invoke(LocalSpaceship);
+                //}
+                //else
+                //{
+                //    OnShipLost?.Invoke();
+                //}
             }
         }
 
@@ -60,10 +60,7 @@ namespace MultiplayerRunTime
             if (LocalSpaceship != null)
             {
                 OnShipGained?.Invoke(LocalSpaceship);
-            }
-            else
-            {
-                OnShipLost?.Invoke();
+                LocalSpaceship.OnShipDestroyed += HandleShipDestroyed;
             }
         }
 
@@ -85,12 +82,11 @@ namespace MultiplayerRunTime
 
             shipInstance.SpawnWithOwnership(OwnerClientId);
             LocalSpaceship = shipInstance.GetComponent<SpaceshipMP>();
-            //SetShipReferenceClientRpc(shipInstance.GetComponent<SpaceshipMP>(), this);
         }
 
         public void HandleShipDestroyed()
         {
-            LocalSpaceship = null;
+            OnShipLost?.Invoke();
         }
     }
 }

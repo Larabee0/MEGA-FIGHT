@@ -24,6 +24,9 @@ namespace MultiplayerRunTime
         public Transform[] WeaponOutputPoints;
         public LaserSpawnerMP laserSpawnerMP;
         public ShipHealthManagerMP shipHealthManagerMP;
+        public delegate void ShipDestroyed();
+
+        public ShipDestroyed OnShipDestroyed;
 
         public Vector3 AimOffset { get => FPSCamPos != null ? new Vector3(0f, FPSCamPos.localPosition.y) : Vector3.zero; }
 
@@ -59,51 +62,10 @@ namespace MultiplayerRunTime
             get => rigid.velocity.magnitude;
         }
 
-        private float pitch = 0f;
-        private float yaw = 0f;
-        private float roll = 0f;
-        private bool rollOverride = false;
-        private bool yawOverride = false;
-        private bool pitchOverride = false;
         private void Awake()
         {
             rigid = GetComponent<Rigidbody>();
         }
-
-        //private void Update()
-        //{
-        //    if (IsOwner)
-        //    {
-        //
-        //        rollOverride = false;
-        //        pitchOverride = false;
-        //        yawOverride = false;
-        //        // roll (x)
-        //        if (Mathf.Abs(playerOverride.x) > .25f)
-        //        {
-        //            rollOverride = true;
-        //        }
-        //        // pitch (y)
-        //        if (Mathf.Abs(playerOverride.y) > .25f)
-        //        {
-        //            yawOverride = true;
-        //            pitchOverride = true;
-        //            rollOverride = true;
-        //        }
-        //        // yaw (z)
-        //        if (Mathf.Abs(playerOverride.z) > .25f)
-        //        {
-        //            yawOverride = true;
-        //            pitchOverride = true;
-        //            rollOverride = true;
-        //        }
-        //
-        //        RunAutopilot(MouseAimPos, out float autoYaw, out float autoPitch, out float autoRoll);
-        //        yaw = yawOverride ? playerOverride.z : autoYaw;
-        //        pitch = pitchOverride ? playerOverride.y : autoPitch;
-        //        roll = rollOverride ? playerOverride.x : autoRoll;
-        //    }
-        //}
 
         private void FixedUpdate()
         {
@@ -112,32 +74,15 @@ namespace MultiplayerRunTime
                 // Ultra simple flight where the plane just gets pushed forward and manipulated
                 // with torques to turn.
                 rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
-                //rigid.AddRelativeTorque(TorqueInput, ForceMode.Force);
                 rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * controlInput.y, turnTorque.y * controlInput.z, -turnTorque.z * controlInput.x), ForceMode.Force);
             }
         }
 
-        public override void OnDestroy()
+        public override void OnNetworkDespawn()
         {
-            base.OnDestroy();        
+            base.OnNetworkDespawn();
             if (!IsOwner) return;
-            FindObjectOfType<PlayerManagerMP>().HandleShipDestroyed();
-        }
-
-        private void RunAutopilot(Vector3 flyTarget, out float yaw, out float pitch, out float roll)
-        {
-            Vector3 localFlyTarget = transform.InverseTransformPoint(flyTarget).normalized * sensitivity;
-            float angleOffTarget = Vector3.Angle(transform.forward, flyTarget - transform.position);
-
-            yaw = Mathf.Clamp(localFlyTarget.x, -1f, 1f);
-            pitch = -Mathf.Clamp(localFlyTarget.y, -1f, 1f);
-
-            float agressiveRoll = Mathf.Clamp(localFlyTarget.x, -1f, 1f);
-
-            float wingsLevelRoll = transform.right.y;
-
-            float wingsLevelInfluence = Mathf.InverseLerp(0f, aggressiveTurnAngle, angleOffTarget);
-            roll = Mathf.Lerp(wingsLevelRoll, agressiveRoll, wingsLevelInfluence);
+            OnShipDestroyed?.Invoke();
         }
     }
 }

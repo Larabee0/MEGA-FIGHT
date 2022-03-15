@@ -146,7 +146,6 @@ namespace MultiplayerRunTime
                 EnableFPS = true;
                 FPSVirtualCamera.Follow = FPSCamPos = spaceshipController.FPSCamPos;
             }
-
             SetVirtualCameraTarget();
         }
 

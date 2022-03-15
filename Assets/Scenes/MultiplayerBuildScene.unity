@@ -482,7 +482,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72686261}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75832c5d44d29a24e9575d953b08d254, type: 3}
   m_Name: 
@@ -687,11 +687,6 @@ MonoBehaviour:
     NetworkTransport: {fileID: 220922730}
     PlayerPrefab: {fileID: 1752566463353520020, guid: f084f8828c950d04da5b3001ad57bce1, type: 3}
     NetworkPrefabs:
-    - Override: 0
-      Prefab: {fileID: 4869471023974022262, guid: 420daaf58e1906745b4b5f1d1230b132, type: 3}
-      SourcePrefabToOverride: {fileID: 0}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
     - Override: 0
       Prefab: {fileID: 4869471023974022262, guid: d6bf3d4486cf04540bb26d4250f781e2, type: 3}
       SourcePrefabToOverride: {fileID: 0}
@@ -1618,7 +1613,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.996139, y: 1}
+    m_SensorSize: {x: 1.7614992, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2184,7 +2179,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.996139, y: 1}
+    m_SensorSize: {x: 1.7614992, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

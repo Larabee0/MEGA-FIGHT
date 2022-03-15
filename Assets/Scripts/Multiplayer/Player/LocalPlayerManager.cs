@@ -49,7 +49,6 @@ namespace MultiplayerRunTime
         private void OnDisable()
         {
             inputControl.UIActions.Pause.canceled -= PauseCallback;
-            fireControl = null;
         }
 
         private void PauseCallback(InputAction.CallbackContext context)
@@ -84,6 +83,7 @@ namespace MultiplayerRunTime
 
         private void OnShipGained(SpaceshipMP ship)
         {
+            Debug.Log("Ship gained");
             SetAndEnableLocalScripts(ship);
             SetLocalShipPhysicsLayer(ship, 2);
             Pause();
@@ -101,9 +101,11 @@ namespace MultiplayerRunTime
         private void OnShipLost()
         {
             Debug.Log("Ship lost");
-            hud.enabled = true;
-            mouseFlightController.enabled = true;
+            hud.enabled = false;
+            mouseFlightController.enabled = false;
             fireControl.enabled = false;
+            enabled = false;
+            lobby.menu.ShowSpawnOverlay(true);
         }
 
 
@@ -114,6 +116,7 @@ namespace MultiplayerRunTime
             hud.enabled = true;
             mouseFlightController.enabled = true;
             fireControl.enabled = true;
+            enabled = true;
         }
 
         public void Spawn()
@@ -121,7 +124,7 @@ namespace MultiplayerRunTime
             if (PlayerManagerMP != null)
             {
                 PlayerManagerMP.SetDisplayedName(displayedName);
-                PlayerManagerMP.SpawnShipServerRpc(PlayerManagerMP.transform.position, 1);
+                PlayerManagerMP.SpawnShipServerRpc(PlayerManagerMP.transform.position, 0);
             }
         }
 
@@ -129,7 +132,7 @@ namespace MultiplayerRunTime
         {
             if (PlayerManagerMP != null)
             {
-                Pause();
+                //Pause();
                 PlayerManagerMP.LocalSpaceship.shipHealthManagerMP.DestroyShip();
             }
         }

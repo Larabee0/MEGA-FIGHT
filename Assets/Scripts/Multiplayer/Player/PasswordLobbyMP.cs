@@ -44,7 +44,6 @@ namespace MultiplayerRunTime
 
         public void Client()
         {
-            //NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(passwordInputField.text);
             NetworkManager.Singleton.StartClient();
         }
 
@@ -53,11 +52,13 @@ namespace MultiplayerRunTime
             if (NetworkManager.Singleton.IsHost)
             {
                 NetworkManager.Singleton.Shutdown();
+                menu.ShowConnectionOverlay(true);
                 NetworkManager.Singleton.ConnectionApprovalCallback-= ApprovalCheck;
             }
             else if (NetworkManager.Singleton.IsClient)
             {
                 NetworkManager.Singleton.Shutdown();
+                menu.ShowConnectionOverlay(true);
             }
         }
 
