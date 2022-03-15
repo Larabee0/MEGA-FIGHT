@@ -62,35 +62,41 @@ namespace MultiplayerRunTime
                 // destroy part
             }
 
-            AlertHitClientRPC(instigatorClientID, hierachyID, damage);
+            AlertHitClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>(), hierachyID, damage);
             
-            AlertInstigatorClientRPC(instigatorClientID, this.NetworkObject.NetworkObjectId, hierachyID, damage);
+            AlertInstigatorClientRPC(instigatorClientID, GetComponent<PlayerManagerMP>(), hierachyID, damage);
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertHitClientRPC(ulong instigatorClientID, byte hierachyID, float damage)
+        private void AlertHitClientRPC(NetworkBehaviourReference instigatorClient, byte hierachyID, float damage)
         {
             if (!IsOwner) return;
             DamageInfo damageInfo = GetDamageInfo(hierachyID, damage);
-            string instigator = NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>().DisplayedName;
-            damageInfo.Instigator = instigator;
+            if (instigatorClient.TryGet(out PlayerManagerMP targetObject))
+            {
+                string instigator = targetObject.DisplayedName;
+                damageInfo.Instigator = instigator;
+            }
+            
             damageInfo.hitPlayer = "You";
             damageInfo.HitPlayerGrammar = "'re";
             Debug.Log(damageInfo.ToString());
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertInstigatorClientRPC(ulong instigatorClientID, ulong targetObjectID, byte hierachyID, float damage)
+        private void AlertInstigatorClientRPC(ulong instigatorClientID, NetworkBehaviourReference target, byte hierachyID, float damage)
         {
             if (!IsClient) return;
             if(NetworkManager.Singleton.LocalClientId == instigatorClientID)
             {
-                PlayerManagerMP hitTarget = NetworkManager.SpawnManager.SpawnedObjects[targetObjectID].GetComponent<PlayerManagerMP>();
-                DamageInfo damageInfo = hitTarget.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID,damage);
-                damageInfo.Instigator = "You";
-                damageInfo.hitPlayer = hitTarget.DisplayedName;
-                damageInfo.HitPlayerGrammar = "'s";
-                Debug.Log(damageInfo.ToString());
+                if(target.TryGet(out PlayerManagerMP targetObject))
+                {
+                    DamageInfo damageInfo = targetObject.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID, damage);
+                    damageInfo.Instigator = "You";
+                    damageInfo.hitPlayer = targetObject.DisplayedName;
+                    damageInfo.HitPlayerGrammar = "'s";
+                    Debug.Log(damageInfo.ToString());
+                }
             }
         }
 
