@@ -118,10 +118,7 @@ namespace MultiplayerRunTime
             // When parented to something (such as an aircraft) it will inherit those
             // rotations causing unintended rotations as it gets dragged around.
             transform.parent = null;
-            //inputControl = InputControl.Singleton;
             inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
-            //PasswordLobbyMP.Singleton.OnClientConnects += SetPMMP;//EnableMFC;
-            //PasswordLobbyMP.Singleton.OnClientDisconnects += DisableMFC;
             inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
         }
 
