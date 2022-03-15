@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using System.Text;
+using System;
 
 namespace MultiplayerRunTime
 {
@@ -51,6 +52,19 @@ namespace MultiplayerRunTime
         private void Awake()
         {
             displayedName = new();
+            shipReference.OnValueChanged += ShipRefereceChanged;
+        }
+
+        private void ShipRefereceChanged(NetworkBehaviourReference previousValue, NetworkBehaviourReference newValue)
+        {
+            if (LocalSpaceship != null)
+            {
+                OnShipGained?.Invoke(LocalSpaceship);
+            }
+            else
+            {
+                OnShipLost?.Invoke();
+            }
         }
 
         public void SetDisplayedName(string name)
