@@ -59,12 +59,12 @@ namespace MultiplayerRunTime
             {
                 damage += partHealths[hierachyID];
                 partHealths[hierachyID] = 0;
-                // destroy part
+                // destroy part OwnerClientId
             }
 
             AlertHitClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>(), hierachyID, damage);
             
-            AlertInstigatorClientRPC(instigatorClientID, GetComponent<PlayerManagerMP>(), hierachyID, damage);
+            AlertInstigatorClientRPC(instigatorClientID, NetworkManager.SpawnManager.GetPlayerNetworkObject(OwnerClientId).GetComponent<PlayerManagerMP>(), hierachyID, damage);
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
