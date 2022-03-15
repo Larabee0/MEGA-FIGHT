@@ -66,12 +66,10 @@ namespace MultiplayerRunTime
         [Header("Player Input")]
 
         [SerializeField] private float throttleSenstivity = 1f;
-        private float throttle;
-        private float throttleLastFrame;
 
-        Vector3 playerOverride;
-        Vector3 playerOverrideLastFrame;
-        Vector3 MouseAimPosLastFrame;
+        private bool rollOverride = false;
+        private bool yawOverride = false;
+        private bool pitchOverride = false;
 
         /// <summary>
         /// Get a point along the aircraft's boresight projected out to aimDistance meters.
@@ -162,24 +160,43 @@ namespace MultiplayerRunTime
             if (spaceshipController != null)
             {
                 ThrottleInput();
-                playerOverride = inputControl.FlightActions.JoyStick.ReadValue<Vector3>();
-                if (MouseAimPos != MouseAimPosLastFrame)
+                Vector3 playerOverride = inputControl.FlightActions.JoyStick.ReadValue<Vector3>();
+                rollOverride = false;
+                pitchOverride = false;
+                yawOverride = false;
+                // roll (x)
+                if (Mathf.Abs(playerOverride.x) > .25f)
                 {
-                    spaceshipController.SetMouseAimPosServerRPC(MouseAimPos);
+                    rollOverride = true;
                 }
-                if (playerOverride != playerOverrideLastFrame)
+                // pitch (y)
+                if (Mathf.Abs(playerOverride.y) > .25f)
                 {
-                    spaceshipController.SetPlayerOverrideServerRPC(playerOverride);
+                    yawOverride = true;
+                    pitchOverride = true;
+                    rollOverride = true;
                 }
+                // yaw (z)
+                if (Mathf.Abs(playerOverride.z) > .25f)
+                {
+                    yawOverride = true;
+                    pitchOverride = true;
+                    rollOverride = true;
+                }
+
+                RunAutopilot(MouseAimPos, out float autoYaw, out float autoPitch, out float autoRoll);
+                playerOverride.x = rollOverride ? playerOverride.x : autoRoll;
+                playerOverride.y = pitchOverride ? playerOverride.y : autoPitch;
+                playerOverride.z = yawOverride ? playerOverride.z : autoYaw;
+
+                spaceshipController.controlInput = playerOverride;
             }
             RotateRig();
-            MouseAimPosLastFrame = MouseAimPos;
-            playerOverrideLastFrame = playerOverride;
         }
 
         private void FixedUpdate()
         {
-            inGameInfo.Thrust = throttle * 100f;
+            inGameInfo.Thrust = spaceshipController.Throttle * 100f;
             inGameInfo.Speed = spaceshipController.Velocity;
             inGameInfo.Altitude = spaceshipTransform.position.y;
         }
@@ -188,16 +205,27 @@ namespace MultiplayerRunTime
         {
             float axisValue = inputControl.FlightActions.Throttle.ReadValue<float>();
 
-            throttle = axisValue != 0 ? Mathf.Clamp01(throttle + (axisValue * (throttleSenstivity * Time.deltaTime))) : throttle;
-            throttle -= inputControl.FlightActions.ReverseThrottle.IsPressed() ? throttleSenstivity * Time.deltaTime : 0;
-            throttle = Mathf.Clamp(throttle, -0.25f, 1f);
+            axisValue = axisValue != 0 ? Mathf.Clamp01(spaceshipController.Throttle + (axisValue * (throttleSenstivity * Time.deltaTime))) : spaceshipController.Throttle;
+            axisValue -= inputControl.FlightActions.ReverseThrottle.IsPressed() ? throttleSenstivity * Time.deltaTime : 0;
+            axisValue = Mathf.Clamp(axisValue, -0.25f, 1f);
+            spaceshipController.Throttle = axisValue;
+        }
 
-            if (throttle != throttleLastFrame)
-            {
-                spaceshipController.Throttle = throttle;
-            }
 
-            throttleLastFrame = throttle;
+        private void RunAutopilot(Vector3 flyTarget, out float yaw, out float pitch, out float roll)
+        {
+            Vector3 localFlyTarget = spaceshipTransform.InverseTransformPoint(flyTarget).normalized * spaceshipController.sensitivity;
+            float angleOffTarget = Vector3.Angle(spaceshipTransform.forward, flyTarget - spaceshipTransform.position);
+
+            yaw = Mathf.Clamp(localFlyTarget.x, -1f, 1f);
+            pitch = -Mathf.Clamp(localFlyTarget.y, -1f, 1f);
+
+            float agressiveRoll = Mathf.Clamp(localFlyTarget.x, -1f, 1f);
+
+            float wingsLevelRoll = spaceshipTransform.right.y;
+
+            float wingsLevelInfluence = Mathf.InverseLerp(0f, spaceshipController.aggressiveTurnAngle, angleOffTarget);
+            roll = Mathf.Lerp(wingsLevelRoll, agressiveRoll, wingsLevelInfluence);
         }
 
         private void RotateRig()

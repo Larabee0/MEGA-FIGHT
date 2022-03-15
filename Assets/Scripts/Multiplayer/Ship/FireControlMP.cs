@@ -33,8 +33,7 @@ namespace MultiplayerRunTime
             get => targetDistance;
             set
             {
-                targetDistance = math.clamp(value, minDst, maxDst); ;
-                spaceship.SetTargetDstServerRPC(targetDistance);
+                spaceship.TargetDistance = targetDistance = math.clamp(value, minDst, maxDst);
             }
         }
 

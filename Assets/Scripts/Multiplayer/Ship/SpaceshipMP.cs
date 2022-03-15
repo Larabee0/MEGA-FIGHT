@@ -27,7 +27,7 @@ namespace MultiplayerRunTime
 
         public Vector3 AimOffset { get => FPSCamPos != null ? new Vector3(0f, FPSCamPos.localPosition.y) : Vector3.zero; }
 
-        private float TargetDistance
+        public float TargetDistance
         {
             set
             {
@@ -44,14 +44,13 @@ namespace MultiplayerRunTime
         [Tooltip("Sensitivity for autopilot flight.")] public float sensitivity = 5f;
         [Tooltip("Angle at which airplane banks fully into target.")] public float aggressiveTurnAngle = 10f;
 
-        [Header("Server Input")]
-        private NetworkVariable<float> throttle = new();
-        public float Throttle { set { value = Mathf.Clamp(value, -0.25f, 1f); SetThrottleServerRPC(value); Drag = value; } get { return throttle.Value; } }
+        [Header("Client Authroative Input")]
+        private float throttle = 0f;
+        public float Throttle { set { throttle = Mathf.Clamp(value, -0.25f, 1f); Drag = throttle; } get { return throttle; } }
 
         private float Drag { set { rigid.drag = value == 0 ? 2.5f : Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
 
-        private Vector3 playerOverride ;
-        public Vector3 MouseAimPos;
+        public Vector3 controlInput;
 
         private Rigidbody rigid;
 
@@ -71,50 +70,50 @@ namespace MultiplayerRunTime
             rigid = GetComponent<Rigidbody>();
         }
 
-        private void Update()
-        {
-            if (IsServer)
-            {
-
-                rollOverride = false;
-                pitchOverride = false;
-                yawOverride = false;
-                // roll (z)
-                if (Mathf.Abs(playerOverride.x) > .25f)
-                {
-                    rollOverride = true;
-                }
-                // pitch (x)
-                if (Mathf.Abs(playerOverride.y) > .25f)
-                {
-                    yawOverride = true;
-                    pitchOverride = true;
-                    rollOverride = true;
-                }
-                // yaw (y)
-                if (Mathf.Abs(playerOverride.z) > .25f)
-                {
-                    yawOverride = true;
-                    pitchOverride = true;
-                    rollOverride = true;
-                }
-
-                RunAutopilot(MouseAimPos, out float autoYaw, out float autoPitch, out float autoRoll);
-                yaw = yawOverride ? playerOverride.z : autoYaw;
-                pitch = pitchOverride ? playerOverride.y : autoPitch;
-                roll = rollOverride ? playerOverride.x : autoRoll;
-            }
-        }
+        //private void Update()
+        //{
+        //    if (IsOwner)
+        //    {
+        //
+        //        rollOverride = false;
+        //        pitchOverride = false;
+        //        yawOverride = false;
+        //        // roll (x)
+        //        if (Mathf.Abs(playerOverride.x) > .25f)
+        //        {
+        //            rollOverride = true;
+        //        }
+        //        // pitch (y)
+        //        if (Mathf.Abs(playerOverride.y) > .25f)
+        //        {
+        //            yawOverride = true;
+        //            pitchOverride = true;
+        //            rollOverride = true;
+        //        }
+        //        // yaw (z)
+        //        if (Mathf.Abs(playerOverride.z) > .25f)
+        //        {
+        //            yawOverride = true;
+        //            pitchOverride = true;
+        //            rollOverride = true;
+        //        }
+        //
+        //        RunAutopilot(MouseAimPos, out float autoYaw, out float autoPitch, out float autoRoll);
+        //        yaw = yawOverride ? playerOverride.z : autoYaw;
+        //        pitch = pitchOverride ? playerOverride.y : autoPitch;
+        //        roll = rollOverride ? playerOverride.x : autoRoll;
+        //    }
+        //}
 
         private void FixedUpdate()
         {
-            if (IsServer)
+            if (IsOwner)
             {
                 // Ultra simple flight where the plane just gets pushed forward and manipulated
                 // with torques to turn.
                 rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
                 //rigid.AddRelativeTorque(TorqueInput, ForceMode.Force);
-                rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * pitch, turnTorque.y * yaw, -turnTorque.z * roll), ForceMode.Force);
+                rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * controlInput.y, turnTorque.y * controlInput.z, -turnTorque.z * controlInput.x), ForceMode.Force);
             }
         }
 
@@ -140,38 +139,5 @@ namespace MultiplayerRunTime
             float wingsLevelInfluence = Mathf.InverseLerp(0f, aggressiveTurnAngle, angleOffTarget);
             roll = Mathf.Lerp(wingsLevelRoll, agressiveRoll, wingsLevelInfluence);
         }
-
-
-        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
-        public void SetThrottleServerRPC(float throttle)
-        {
-            this.throttle.Value = throttle;
-        }
-
-        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
-        public void SetTargetposServerRPC(Vector3 pos)
-        {
-            TargetPoint.localPosition = pos;
-        }
-
-        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
-        public void SetTargetDstServerRPC(float dst)
-        {
-            TargetDistance = dst;
-        }
-
-        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
-        public void SetPlayerOverrideServerRPC(Vector3 pos)
-        {
-            playerOverride = pos;
-        }
-
-        [ServerRpc(Delivery = RpcDelivery.Unreliable, RequireOwnership = true)]
-        public void SetMouseAimPosServerRPC(Vector3 pos)
-        {
-            MouseAimPos = pos;
-        }
-
-
     }
 }
