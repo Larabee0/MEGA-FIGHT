@@ -10,16 +10,17 @@ namespace MultiplayerRunTime
     {
         [SerializeField] private NetworkObject[] ships;
         private NetworkList<byte> displayedName;
-        private SpaceshipMP localSpaceship;
+        private NetworkVariable<NetworkBehaviourReference> shipReference = new();
+        //private SpaceshipMP localSpaceship;
         public SpaceshipMP LocalSpaceship
         {
-            get => localSpaceship;
-            set
+            get { shipReference.Value.TryGet(out SpaceshipMP ship); return ship; }
+            private set
             {
-                localSpaceship = value;
+                shipReference.Value = value;
                 if (value != null)
                 {
-                    OnShipGained?.Invoke(localSpaceship);
+                    OnShipGained?.Invoke(LocalSpaceship);
                 }
                 else
                 {
@@ -69,16 +70,8 @@ namespace MultiplayerRunTime
             NetworkObject shipInstance = Instantiate(ships[index], spawnPos, Quaternion.identity);
 
             shipInstance.SpawnWithOwnership(OwnerClientId);
-            SetShipReferenceClientRpc(shipInstance.GetComponent<SpaceshipMP>(), this);
-        }
-
-        [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void SetShipReferenceClientRpc(NetworkBehaviourReference Ship, NetworkBehaviourReference Player)
-        {
-            if(Ship.TryGet(out SpaceshipMP spaceship) && Player.TryGet(out PlayerManagerMP player))
-            {
-                player.LocalSpaceship = spaceship;
-            }
+            LocalSpaceship = shipInstance.GetComponent<SpaceshipMP>();
+            //SetShipReferenceClientRpc(shipInstance.GetComponent<SpaceshipMP>(), this);
         }
 
         public void HandleShipDestroyed()
