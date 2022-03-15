@@ -77,7 +77,7 @@ namespace MultiplayerRunTime
         {
             if(Ship.TryGet(out SpaceshipMP spaceship) && Player.TryGet(out PlayerManagerMP player))
             {
-                player.localSpaceship = spaceship;
+                player.LocalSpaceship = spaceship;
             }
         }
 

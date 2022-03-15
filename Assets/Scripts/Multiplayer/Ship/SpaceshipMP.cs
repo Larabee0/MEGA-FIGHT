@@ -125,12 +125,6 @@ namespace MultiplayerRunTime
             FindObjectOfType<PlayerManagerMP>().HandleShipDestroyed();
         }
 
-        //public override void OnNetworkSpawn()
-        //{
-        //    if (!IsOwner) return;
-        //    FindObjectOfType<PlayerManagerMP>().LocalSpaceship = this;
-        //}
-
         private void RunAutopilot(Vector3 flyTarget, out float yaw, out float pitch, out float roll)
         {
             Vector3 localFlyTarget = transform.InverseTransformPoint(flyTarget).normalized * sensitivity;
