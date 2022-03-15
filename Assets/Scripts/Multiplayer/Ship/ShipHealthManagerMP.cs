@@ -86,9 +86,9 @@ namespace MultiplayerRunTime
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void AlertInstigatorClientRPC(ulong instigatorClientID, NetworkBehaviourReference target, byte hierachyID, float damage)
         {
-            if(OwnerClientId == instigatorClientID)
+            if (NetworkManager.LocalClientId == instigatorClientID)
             {
-                if(target.TryGet(out PlayerManagerMP targetObject))
+                if (target.TryGet(out PlayerManagerMP targetObject))
                 {
                     DamageInfo damageInfo = targetObject.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID, damage);
                     damageInfo.Instigator = "You";
