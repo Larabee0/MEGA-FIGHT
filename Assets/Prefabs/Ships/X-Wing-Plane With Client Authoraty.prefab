@@ -370,6 +370,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 0
+  meshRenderer: {fileID: 0}
+  flash: 1
 --- !u!1 &306326921642944479
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,6 +651,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 1
+  meshRenderer: {fileID: 0}
+  flash: 0
 --- !u!1 &1624610481822868201
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,6 +933,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 7
+  meshRenderer: {fileID: 0}
+  flash: 0
 --- !u!1 &3259113964725848005
 GameObject:
   m_ObjectHideFlags: 0
@@ -1043,6 +1049,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 13
+  meshRenderer: {fileID: 0}
+  flash: 0
 --- !u!1 &4548468011591463702
 GameObject:
   m_ObjectHideFlags: 0
@@ -1157,6 +1165,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 9
+  meshRenderer: {fileID: 0}
+  flash: 0
 --- !u!1 &4581780140040743590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1271,6 +1281,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 12
+  meshRenderer: {fileID: 0}
+  flash: 0
 --- !u!1 &4869471023974022262
 GameObject:
   m_ObjectHideFlags: 0
@@ -1355,7 +1367,7 @@ MonoBehaviour:
   forceMult: 100
   sensitivity: 5
   aggressiveTurnAngle: 5
-  MouseAimPos: {x: 0, y: 0, z: 0}
+  controlInput: {x: 0, y: 0, z: 0}
 --- !u!114 &-7639359252223520313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1743,6 +1755,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 2
+  meshRenderer: {fileID: 0}
+  flash: 1
 --- !u!1 &6007355766447840066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1857,6 +1871,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 11
+  meshRenderer: {fileID: 0}
+  flash: 0
 --- !u!1 &6035068697437040023
 GameObject:
   m_ObjectHideFlags: 0
@@ -2030,6 +2046,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 8
+  meshRenderer: {fileID: 0}
+  flash: 0
 --- !u!1 &6730058776698920326
 GameObject:
   m_ObjectHideFlags: 0
@@ -2228,6 +2246,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 4
+  meshRenderer: {fileID: 0}
+  flash: 1
 --- !u!1 &7165138793589780413
 GameObject:
   m_ObjectHideFlags: 0
@@ -2343,6 +2363,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 5
+  meshRenderer: {fileID: 0}
+  flash: 1
 --- !u!1 &7375747467580735689
 GameObject:
   m_ObjectHideFlags: 0
@@ -2490,6 +2512,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 3
+  meshRenderer: {fileID: 0}
+  flash: 1
 --- !u!1 &7905077004257493042
 GameObject:
   m_ObjectHideFlags: 0
@@ -2604,6 +2628,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 10
+  meshRenderer: {fileID: 0}
+  flash: 0
 --- !u!1 &8362558298445186175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2860,3 +2886,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 4865623709426122641}
   HierarchyID: 6
+  meshRenderer: {fileID: 0}
+  flash: 0

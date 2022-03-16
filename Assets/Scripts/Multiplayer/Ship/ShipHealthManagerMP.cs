@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,7 +14,11 @@ namespace MultiplayerRunTime
         public ShipHierarchyScriptableObject stats;
         public ShipHierarchy shipHierarchy;
 
+        private List<ShipPartMP> parts;
+
         private NetworkList<float> partHealths;
+
+        public Dictionary<Functionality, float> functionalityEfficiencies = new();
 
         private void Awake()
         {
@@ -24,6 +30,12 @@ namespace MultiplayerRunTime
                 {
                     partHealths.Add(shipHierarchy.parts[i].maxHitPoints);
                 }
+            }
+            parts = new(GetComponentsInChildren<ShipPartMP>());
+            parts.Sort();
+            for (int i = 0; i < shipHierarchy.tags.Count; i++)
+            {
+                functionalityEfficiencies.Add(shipHierarchy.tags[i], CalculateTagEfficiency(shipHierarchy.tags[i]));
             }
         }
 
@@ -50,27 +62,41 @@ namespace MultiplayerRunTime
             if(partHealths[hierachyID] > 0)
             {
                 partHealths[hierachyID] -= damage;
-            }
-            else
-            {
-                // apply any functionality changes
+                parts[hierachyID].FlashPartClientRpc();
+
             }
             if (partHealths[hierachyID] <= 0)
             {
                 damage += partHealths[hierachyID];
                 partHealths[hierachyID] = 0;
                 // destroy part OwnerClientId
+                if (shipHierarchy.parts[hierachyID].tags.Contains(Functionality.Piloting))
+                {
+                    DestroyShip();
+                }
+            }
+            else
+            {
+                // apply any functionality changes
+                float proportion = partHealths[hierachyID] / shipHierarchy.parts[hierachyID].maxHitPoints;
+                parts[hierachyID].SetObjectTintServerRpc((byte)math.lerp(0, 255, proportion));
+
+                Functionality[] effectedFunctions = shipHierarchy.parts[hierachyID].tags;
+                for (int i = 0; i < effectedFunctions.Length; i++)
+                {
+                    functionalityEfficiencies[effectedFunctions[i]] = CalculateTagEfficiency(effectedFunctions[i]);
+                }
             }
 
-            AlertHitClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>(), hierachyID, damage);
-            
-            AlertInstigatorClientRPC(instigatorClientID, NetworkManager.SpawnManager.GetPlayerNetworkObject(OwnerClientId).GetComponent<PlayerManagerMP>(), hierachyID, damage);
+            ClientRpcParams clientRpcParams = new() { Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } } };
+            AlertHitClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
+            clientRpcParams.Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { instigatorClientID } };
+            AlertInstigatorClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(OwnerClientId).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertHitClientRPC(NetworkBehaviourReference instigatorClient, byte hierachyID, float damage)
+        private void AlertHitClientRPC(NetworkBehaviourReference instigatorClient, byte hierachyID, float damage, ClientRpcParams clientRpcParams = default)
         {
-            if (!IsOwner) return;
             DamageInfo damageInfo = GetDamageInfo(hierachyID, damage);
             if (instigatorClient.TryGet(out PlayerManagerMP targetObject))
             {
@@ -78,24 +104,21 @@ namespace MultiplayerRunTime
                 damageInfo.Instigator = instigator;
             }
             
-            damageInfo.hitPlayer = "You";
+            damageInfo.hitPlayer = "you";
             damageInfo.HitPlayerGrammar = "'re";
             Debug.Log(damageInfo.ToString());
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertInstigatorClientRPC(ulong instigatorClientID, NetworkBehaviourReference target, byte hierachyID, float damage)
+        private void AlertInstigatorClientRPC(NetworkBehaviourReference target, byte hierachyID, float damage, ClientRpcParams clientRpcParams = default)
         {
-            if (NetworkManager.LocalClientId == instigatorClientID)
+            if (target.TryGet(out PlayerManagerMP targetObject))
             {
-                if (target.TryGet(out PlayerManagerMP targetObject))
-                {
-                    DamageInfo damageInfo = targetObject.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID, damage);
-                    damageInfo.Instigator = "You";
-                    damageInfo.hitPlayer = targetObject.DisplayedName;
-                    damageInfo.HitPlayerGrammar = "'s";
-                    Debug.Log(damageInfo.ToString());
-                }
+                DamageInfo damageInfo = targetObject.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID, damage);
+                damageInfo.Instigator = "You";
+                damageInfo.hitPlayer = targetObject.DisplayedName;
+                damageInfo.HitPlayerGrammar = "'s";
+                Debug.Log(damageInfo.ToString());
             }
         }
 
@@ -105,6 +128,17 @@ namespace MultiplayerRunTime
             {
                 Destroy(gameObject);
             }
+        }
+
+
+        private float CalculateTagEfficiency(Functionality tag)
+        {
+            float efficiency = 1f;
+            foreach (ShipPartRecord part in shipHierarchy.GetPartsWithTag(tag))
+            {
+                efficiency *= partHealths[part.HierarchyIndex] / part.maxHitPoints;
+            }
+            return math.max(efficiency, 0);
         }
     }
 
@@ -131,6 +165,7 @@ namespace MultiplayerRunTime
         public byte ShipID;
         public string Label;
         public List<ShipPartRecord> parts;
+        public List<Functionality> tags;
         public ShipPartRecord root;
 
         public ShipHierarchy(ShipHierarchyScriptableObject hierarchy)
@@ -138,6 +173,7 @@ namespace MultiplayerRunTime
             ShipID = hierarchy.ShipID;
             Label = hierarchy.label;
             _ = new HierarchyBuilder(this, hierarchy);
+            tags = new List<Functionality>();
             parts.Sort();
             CacheDataRecursive(root);
         }
@@ -145,12 +181,36 @@ namespace MultiplayerRunTime
         private void CacheDataRecursive(ShipPartRecord node)
         {
             node.Ship = this;
+            for (int i = 0; i < node.tags.Length; i++)
+            {
+                if (!tags.Contains(node.tags[i]))
+                {
+                    tags.Add(node.tags[i]);
+                }
+            }
             if (node.Children == null) return;
             for (int l = 0; l < node.Children.Count; l++)
             {
                 CacheDataRecursive(node.Children[l]);
             }
         }
+
+
+        public IEnumerable<ShipPartRecord> GetPartsWithTag(Functionality tag)
+        {
+            int num;
+            for (int i = 0; i < parts.Count; i = num + 1)
+            {
+                ShipPartRecord shipPartRecord = parts[i];
+                if (shipPartRecord.tags.Contains(tag))
+                {
+                    yield return shipPartRecord;
+                }
+                num = i;
+            }
+            yield break;
+        }
+
 
         private class HierarchyBuilder
         {

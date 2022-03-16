@@ -266,6 +266,8 @@ namespace MultiplayerRunTime
 
             private readonly TextField DisplayedNameTextField;
 
+            public string DisplayedNameOut { set => DisplayedNameTextField.value = value; }
+
             public SpawnPopUp(UserMenu Menu, VisualElement RootVisualElement)
             {
                 menu = Menu;

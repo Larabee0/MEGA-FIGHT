@@ -53,12 +53,14 @@ namespace MultiplayerRunTime
             {
                 NetworkManager.Singleton.Shutdown();
                 menu.ShowConnectionOverlay(true);
+                Cursor.lockState = CursorLockMode.None;
                 NetworkManager.Singleton.ConnectionApprovalCallback-= ApprovalCheck;
             }
             else if (NetworkManager.Singleton.IsClient)
             {
                 NetworkManager.Singleton.Shutdown();
                 menu.ShowConnectionOverlay(true);
+                Cursor.lockState = CursorLockMode.None;
             }
         }
 
