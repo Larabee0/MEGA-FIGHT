@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using System.Text;
+using Unity.Services.Relay.Models;
 
 namespace MultiplayerRunTime
 {
@@ -20,6 +22,7 @@ namespace MultiplayerRunTime
 
         private void Awake()
         {
+            //Allocation allocation = await Relay.Instance.CreateAllocationAsync(8);
             Singleton = this;
         }
 
@@ -85,7 +88,7 @@ namespace MultiplayerRunTime
         private void ApprovalCheck(byte[] connectionData, ulong clientID, NetworkManager.ConnectionApprovedDelegate callback)
         {
             string password = Encoding.ASCII.GetString(connectionData);
-
+            Debug.Log(clientID);
             Vector3 spawnPos = new(0f, 200f, 100f);
             spawnPos.x -= NetworkManager.Singleton.ConnectedClients.Count * 100f;
 

@@ -34,6 +34,7 @@ namespace MultiplayerRunTime
         private void Awake()
         {
             meshRenderer = GetComponent<MeshRenderer>();
+            
         }
 
         private void OnEnable()

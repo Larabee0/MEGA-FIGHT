@@ -679,10 +679,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MessageBufferSize: 5120
   MaxConnections: 100
-  MaxSentMessageQueueSize: 256
-  ConnectAddress: 172.31.1.15
-  ConnectPort: 30120
-  ServerListenPort: 30120
+  MaxSentMessageQueueSize: 128
+  ConnectAddress: 169.254.0.36
+  ConnectPort: 7777
+  ServerListenPort: 7777
   MessageSendMode: 0
 --- !u!114 &220922731
 MonoBehaviour:
@@ -1805,7 +1805,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7614992, y: 1}
+    m_SensorSize: {x: 2.2095401, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2371,7 +2371,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7614992, y: 1}
+    m_SensorSize: {x: 2.2095401, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
