@@ -414,6 +414,8 @@ public class RelayUTPHandler
                 isRelayServerConnected = true;
             }
         }
+        hostData.JoinCode = joinCode;
+        PasswordLobbyMP.Singleton.hostData = hostData;
         NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>().SetHostRelayData(hostData.IPv4Address, hostData.Port, hostData.AllocationIDBytes, hostData.Key, hostData.ConnectionData, false);
 
         NetworkManager.Singleton.StartHost();
@@ -475,7 +477,8 @@ public class RelayUTPHandler
             clientConnection = PlayerDriver.Connect(relayServerData.Endpoint);
         }
 
-
+        clientData.JoinCode = joinCode;
+        PasswordLobbyMP.Singleton.clientData = clientData;
         NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>().SetClientRelayData(clientData.IPv4Address, clientData.Port, clientData.AllocationIDBytes, clientData.Key, clientData.ConnectionData, clientData.HostConnectionData, false);
 
 

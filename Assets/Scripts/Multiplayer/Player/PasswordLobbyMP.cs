@@ -116,14 +116,17 @@ namespace MultiplayerRunTime
 
         public void Host()
         {
-            StopAllCoroutines();
-            StartCoroutine(relayUTPHandler.StartRelayServer(8));
+            //StopAllCoroutines();
+            //StartCoroutine(relayUTPHandler.StartRelayServer(8));
+            NetworkManager.Singleton.StartHost();
         }
 
         public void Client(string joinCode)
         {
-            StopAllCoroutines();
-            StartCoroutine(relayUTPHandler.StartClient(joinCode));
+            //StopAllCoroutines();
+            //StartCoroutine(relayUTPHandler.StartClient(joinCode));
+
+            NetworkManager.Singleton.StartClient();
         }
 
         public void Leave()
