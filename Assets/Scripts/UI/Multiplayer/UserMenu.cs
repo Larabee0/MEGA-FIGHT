@@ -145,8 +145,6 @@ namespace MultiplayerRunTime
                 QuitButton.RegisterCallback<ClickEvent>(ev => OnQuitCallback());
                 HostButton.RegisterCallback<ClickEvent>(ev => OnHostCallback());
                 ConnectButton.RegisterCallback<ClickEvent>(ev => OnConnectCallback());
-
-                JoinCodeTextField.RegisterValueChangedCallback(ev => OnIPChanged(ev.newValue));
             }
 
             private void OnQuitCallback()
@@ -164,23 +162,6 @@ namespace MultiplayerRunTime
                 menu.lobby.Client(JoinCodeTextField.value);
             }
 
-            private void OnIPChanged(string newValue)
-            {
-                if (ValidateIP(newValue) != null)
-                {
-                    menu.MakeTextFieldWhite(JoinCodeTextField);
-                }
-                else
-                {
-                    menu.MakeTextFieldRed(JoinCodeTextField);
-                }
-            }
-
-            private IPAddress ValidateIP(string ip)
-            {
-                if (IPAddress.TryParse(ip, out IPAddress validIp)) return validIp;
-                return null;
-            }
         }
 
         public class PausePopUp

@@ -80,6 +80,7 @@ namespace MultiplayerRunTime
 
         public IEnumerator StartClientService(string joinCode)
         {
+            Debug.Log(joinCode);
             var task = UnityRelayHandler.JoinGame(joinCode);
             while (!task.IsCompleted)
             {

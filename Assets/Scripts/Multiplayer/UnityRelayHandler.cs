@@ -75,6 +75,7 @@ public static class UnityRelayHandler
             HostConnectionData = allocation.HostConnectionData,
             IPv4Address = allocation.RelayServer.IpV4
         };
+        data.JoinCode = joinCode;
         return data;
     }
 }
