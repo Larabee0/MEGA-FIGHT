@@ -88,7 +88,7 @@ public static class UnityRelayHandler
     }
 
     public static async Task<(string ipv4address, ushort port, byte[] allocationIdBytes, byte[] connectionData, byte[] key, string joinCode)> 
-        AllocateRelayServerAndGetJoinCode(int maxConnections, string region = null)
+        AllocateRelayServerAndGetJoinCode(int maxConnections)
     {
         await UnityServices.InitializeAsync();
         if (!AuthenticationService.Instance.IsSignedIn)

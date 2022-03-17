@@ -69,7 +69,7 @@ namespace MultiplayerRunTime
         
         public IEnumerator StartHostService()
         {
-            var serverRelayUtilityTask = UnityRelayHandler.AllocateRelayServerAndGetJoinCode(8, "West Europe");
+            var serverRelayUtilityTask = UnityRelayHandler.AllocateRelayServerAndGetJoinCode(8);
             while (!serverRelayUtilityTask.IsCompleted)
             {
                 yield return null;
