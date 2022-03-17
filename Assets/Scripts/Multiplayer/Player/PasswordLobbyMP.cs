@@ -6,6 +6,7 @@ using Unity.Netcode;
 using System.Text;
 using Unity.Services.Relay.Models;
 using Unity.Netcode.Transports.UNET;
+using Unity.Networking.Transport;
 
 namespace MultiplayerRunTime
 {
@@ -22,6 +23,8 @@ namespace MultiplayerRunTime
 
         public RelayHostData hostData;
         public RelayJoinData clientData;
+
+        RelayUTPHandler relayUTPHandler;
 
         public string JoinCode
         {
@@ -42,7 +45,7 @@ namespace MultiplayerRunTime
 
         private void Awake()
         {
-            //Allocation allocation = await Relay.Instance.CreateAllocationAsync(8);
+            relayUTPHandler = new RelayUTPHandler();
             Singleton = this;
         }
 
@@ -50,6 +53,11 @@ namespace MultiplayerRunTime
         {
             NetworkManager.Singleton.OnClientConnectedCallback +=HandleClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback +=HandleClientDisconnected;
+        }
+
+        private void Update()
+        {
+            relayUTPHandler.RelayHandlerUpdate();
         }
 
         private void OnDestroy()
@@ -61,39 +69,47 @@ namespace MultiplayerRunTime
         
         public IEnumerator StartHostService()
         {
-            var task = UnityRelayHandler.HostGame(8);
-            while (!task.IsCompleted)
+            var serverRelayUtilityTask = UnityRelayHandler.AllocateRelayServerAndGetJoinCode(8, "West Europe");
+            while (!serverRelayUtilityTask.IsCompleted)
             {
                 yield return null;
             }
-            if (task.IsFaulted)
+            if (serverRelayUtilityTask.IsFaulted)
             {
-                Debug.LogError("Exception thrown when attempting to start Relay Server.Server not started.Exception: " + task.Exception.Message);
+                Debug.LogError("Exception thrown when attempting to start Relay Server. Server not started. Exception: " + serverRelayUtilityTask.Exception.Message);
                 yield break;
             }
-            hostData = task.Result;
-            NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>().SetRelayServerData(
-                hostData.IPv4Address, hostData.Port, hostData.AllocationIDBytes, hostData.Key, hostData.ConnectionData);
+
+            var (ipv4address, port, allocationIdBytes, connectionData, key, joinCode) = serverRelayUtilityTask.Result;
+
+            NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>().SetHostRelayData(ipv4address, port, allocationIdBytes, key, connectionData, false);
+
             NetworkManager.Singleton.StartHost();
-            menu.spawnPopUp.DisplayJoinCode = JoinCode;
+            menu.spawnPopUp.DisplayJoinCode = joinCode;
         }
 
         public IEnumerator StartClientService(string joinCode)
         {
             Debug.Log(joinCode);
-            var task = UnityRelayHandler.JoinGame(joinCode);
-            while (!task.IsCompleted)
+            var clientRelayUtilityTask = UnityRelayHandler.JoinRelayServerFromJoinCode(joinCode);
+
+            while (!clientRelayUtilityTask.IsCompleted)
             {
                 yield return null;
             }
-            if (task.IsFaulted)
+
+            if (clientRelayUtilityTask.IsFaulted)
             {
-                Debug.LogError("Exception thrown when attempting to start Relay Server.Server not started.Exception: " + task.Exception.Message);
+                Debug.LogError("Exception thrown when attempting to connect to Relay Server. Exception: " + clientRelayUtilityTask.Exception.Message);
                 yield break;
             }
-            clientData = task.Result;
-            NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>().SetRelayServerData(
-                clientData.IPv4Address, clientData.Port, clientData.AllocationIDBytes, clientData.Key, clientData.ConnectionData, clientData.HostConnectionData);
+
+            var (ipv4address, port, allocationIdBytes, connectionData, hostConnectionData, key) = clientRelayUtilityTask.Result;
+
+
+            NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>().SetClientRelayData(ipv4address, port, allocationIdBytes, key, connectionData, hostConnectionData, true);
+
+
             NetworkManager.Singleton.StartClient();
             menu.spawnPopUp.DisplayJoinCode = JoinCode;
         }
@@ -101,13 +117,13 @@ namespace MultiplayerRunTime
         public void Host()
         {
             StopAllCoroutines();
-            StartCoroutine(StartHostService());
+            StartCoroutine(relayUTPHandler.StartRelayServer(8));
         }
 
         public void Client(string joinCode)
         {
             StopAllCoroutines();
-            StartCoroutine(StartClientService(joinCode));
+            StartCoroutine(relayUTPHandler.StartClient(joinCode));
         }
 
         public void Leave()
