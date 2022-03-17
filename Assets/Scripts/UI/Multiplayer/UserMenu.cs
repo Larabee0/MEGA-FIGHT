@@ -106,16 +106,6 @@ namespace MultiplayerRunTime
             if(BackgroundTo) ShowOverlay(shown);
         }
 
-        private void SetIP(string address)
-        {
-            uNetTransport.ConnectAddress = address;
-        }
-
-        private void SetPassword(string password)
-        {
-            networkManager.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(password);
-        }
-
         public void MakeTextFieldWhite(TextField field)
         {
             VisualElement element = field.Q<VisualElement>("unity-text-input");
@@ -141,10 +131,7 @@ namespace MultiplayerRunTime
             private readonly Button ConnectButton;
             private readonly Button HostButton;
 
-            private readonly Label hostIPLabel;
-            private readonly TextField hostPasswordTextField;
-            private readonly TextField clientTargetIPTextField;
-            private readonly TextField clientPasswordTextField;
+            private readonly TextField JoinCodeTextField;
 
             public ConnectionPopUp(UserMenu Menu, VisualElement RootVisualElement)
             {
@@ -153,19 +140,13 @@ namespace MultiplayerRunTime
                 QuitButton = rootVisualElement.Q<Button>("QuitGameButton");
                 ConnectButton = rootVisualElement.Q<Button>("ClientConnectButton");
                 HostButton = rootVisualElement.Q<Button>("HostStartButton");
-                hostIPLabel = rootVisualElement.Q<Label>("HostIP");
-                hostPasswordTextField = rootVisualElement.Q<TextField>("LobbyPassword");
-                clientTargetIPTextField = rootVisualElement.Q<TextField>("TargetIP");
-                clientPasswordTextField = rootVisualElement.Q<TextField>("ClientPassword");
+                JoinCodeTextField = rootVisualElement.Q<TextField>("JoinCode");
 
                 QuitButton.RegisterCallback<ClickEvent>(ev => OnQuitCallback());
                 HostButton.RegisterCallback<ClickEvent>(ev => OnHostCallback());
                 ConnectButton.RegisterCallback<ClickEvent>(ev => OnConnectCallback());
 
-                clientTargetIPTextField.RegisterValueChangedCallback(ev => OnIPChanged(ev.newValue));
-
-                hostIPLabel.text = Dns.GetHostAddresses(Dns.GetHostName())[1].ToString();
-                clientTargetIPTextField.value = menu.uNetTransport.ConnectAddress;
+                JoinCodeTextField.RegisterValueChangedCallback(ev => OnIPChanged(ev.newValue));
             }
 
             private void OnQuitCallback()
@@ -175,28 +156,23 @@ namespace MultiplayerRunTime
 
             private void OnHostCallback()
             {
-                menu.lobby.password = hostPasswordTextField.value;
                 menu.lobby.Host();
             }
 
             private void OnConnectCallback()
             {
-                IPAddress validAddress = ValidateIP(clientTargetIPTextField.value);
-                if (validAddress == null) return;
-                menu.SetIP(validAddress.ToString());
-                menu.SetPassword(clientPasswordTextField.value);
-                menu.lobby.Client();
+                menu.lobby.Client(JoinCodeTextField.value);
             }
 
             private void OnIPChanged(string newValue)
             {
                 if (ValidateIP(newValue) != null)
                 {
-                    menu.MakeTextFieldWhite(clientTargetIPTextField);
+                    menu.MakeTextFieldWhite(JoinCodeTextField);
                 }
                 else
                 {
-                    menu.MakeTextFieldRed(clientTargetIPTextField);
+                    menu.MakeTextFieldRed(JoinCodeTextField);
                 }
             }
 
@@ -264,9 +240,12 @@ namespace MultiplayerRunTime
             private readonly Button LeaveButton;
             private readonly Button QuitGameButton;
 
+            private readonly Label JoinCodeLabel;
             private readonly TextField DisplayedNameTextField;
 
             public string DisplayedNameOut { set => DisplayedNameTextField.value = value; }
+
+            public string DisplayJoinCode { set => JoinCodeLabel.text = string.Format("Join Code: {0}", value); }
 
             public SpawnPopUp(UserMenu Menu, VisualElement RootVisualElement)
             {
@@ -276,6 +255,8 @@ namespace MultiplayerRunTime
                 SpawnButton = rootVisualElement.Q<Button>("SpawnButton");
                 LeaveButton = rootVisualElement.Q<Button>("LeaveButton");
                 QuitGameButton = rootVisualElement.Q<Button>("QuitGameButton");
+
+                JoinCodeLabel = rootVisualElement.Q<Label>("JoinCodeDisplay");
 
                 DisplayedNameTextField = rootVisualElement.Q<TextField>("DisplayedName");
 

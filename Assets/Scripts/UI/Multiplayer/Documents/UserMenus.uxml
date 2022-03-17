@@ -19,28 +19,26 @@
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="overlay" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.69); align-items: center; justify-content: center; display: none;">
+    <ui:VisualElement name="overlay" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.69); align-items: center; justify-content: center; display: flex;">
         <ui:VisualElement name="ConnectionPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgb(56, 56, 56); display: none; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
             <ui:VisualElement style="flex-direction: row;">
-                <ui:VisualElement name="ConnectSide" style="margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);">
+                <ui:VisualElement name="ConnectSide" style="margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); width: 200px;">
                     <ui:Label text="Connect" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
-                    <ui:TextField picking-mode="Ignore" label="IP Address" value="filler text" text="filler text" name="TargetIP" style="flex-direction: column; -unity-text-align: upper-center;" />
-                    <ui:TextField picking-mode="Ignore" label="Lobby Password" password="true" name="ClientPassword" style="flex-direction: column; -unity-text-align: upper-center;" />
+                    <ui:TextField picking-mode="Ignore" label="Join Code" name="JoinCode" style="flex-direction: column; -unity-text-align: upper-center;" />
                     <ui:Button text="Connect" display-tooltip-when-elided="true" name="ClientConnectButton" class="StandardButton" />
                 </ui:VisualElement>
-                <ui:VisualElement name="HostSide" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px;">
+                <ui:VisualElement name="HostSide" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; width: 200px;">
                     <ui:Label text="Host" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; -unity-font-style: bold; font-size: 28px;" />
-                    <ui:Label text="Local IP Address" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center;" />
-                    <ui:Label text="0.0.0.0" display-tooltip-when-elided="true" name="HostIP" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; padding-top: 0; margin-top: 2px;" />
-                    <ui:TextField picking-mode="Ignore" label="Set Lobby Password" password="true" name="LobbyPassword" style="flex-direction: column; -unity-text-align: upper-center;" />
+                    <ui:Label text="Join Code for Connecting Players&#10;Provided in Respawn Lobby" display-tooltip-when-elided="true" name="JoinCodeDisplay" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; padding-top: 6px; margin-top: 2px; white-space: normal;" />
                     <ui:Button text="Host" display-tooltip-when-elided="true" name="HostStartButton" class="StandardButton" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 5px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: none;">
+        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: flex;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:Label text="Respawn?" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
+                <ui:Label text="Join Code: " display-tooltip-when-elided="true" name="JoinCodeDisplay" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; padding-top: 6px; margin-top: 2px; white-space: normal;" />
                 <ui:TextField picking-mode="Ignore" label="Displayed Name" value="Player" text="Player" name="DisplayedName" style="flex-direction: column; -unity-text-align: upper-center;" />
                 <ui:VisualElement style="flex-direction: row; justify-content: center;">
                     <ui:Button text="Spawn" display-tooltip-when-elided="true" name="SpawnButton" class="StandardButton" style="width: 75px;" />
@@ -49,7 +47,7 @@
                 <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-bottom: 7px;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="PausePopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: flex;">
+        <ui:VisualElement name="PausePopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: none;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:Button text="Resume" display-tooltip-when-elided="true" name="ResumeGameButton" class="StandardButton" style="margin-top: 5px;" />
                 <ui:Button text="Respawn" display-tooltip-when-elided="true" name="RespawnButton" class="StandardButton" style="margin-top: 5px;" />
