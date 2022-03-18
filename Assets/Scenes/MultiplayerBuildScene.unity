@@ -657,7 +657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 479ee884edf2adb40b095c3ad75adfbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 805684734}
+  networkManager: {fileID: 220922731}
   uNetTransport: {fileID: 0}
   lobby: {fileID: 131122172}
   localPlayerManager: {fileID: 72686267}
@@ -678,7 +678,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &220922731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,7 +748,7 @@ MonoBehaviour:
   m_ProtocolType: 1
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
-  m_MaxSendQueueSize: 98304
+  m_MaxSendQueueSize: 196608
   m_HeartbeatTimeoutMS: 500
   m_ConnectTimeoutMS: 1000
   m_MaxConnectAttempts: 60
@@ -1602,7 +1602,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &805684734
 MonoBehaviour:
   m_ObjectHideFlags: 0
