@@ -7,6 +7,7 @@ using Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Mathematics;
 
 namespace MultiplayerRunTime
 {
@@ -53,7 +54,7 @@ namespace MultiplayerRunTime
         [SerializeField] [Tooltip("Mouse sensitivity for the mouse flight target")]
         private float mouseSensitivity = 3f;
 
-        private float AimDistance { get => fireControl.TargetDistance; }
+        private float AimDistance => fireControl.TargetDistance;
 
         [Space]
         [SerializeField] [Tooltip("How far the boresight and mouse flight are from the aircraft")]
@@ -76,15 +77,9 @@ namespace MultiplayerRunTime
         /// Useful for drawing a crosshair to aim fixed forward guns with, or to indicate what
         /// direction the aircraft is pointed.
         /// </summary>
-        public Vector3 BoresightPos
-        {
-            get
-            {
-                return spaceshipTransform == null
+        public Vector3 BoresightPos => spaceshipTransform == null
                      ? transform.forward * AimDistance
                      : (spaceshipTransform.transform.forward * AimDistance) + (spaceshipTransform.transform.position + spaceshipController.AimOffset);
-            }
-        }
 
         /// <summary>
         /// Get the position that the mouse is indicating the aircraft should fly, projected
@@ -122,33 +117,9 @@ namespace MultiplayerRunTime
             inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
         }
 
-        private void OnDisable()
-        {
-            inputControl.FlightActions.CameraSwitch.canceled -= OnPerspectiveButtonPressed;
-            spaceshipTransform = null;
-            spaceshipController = null;
-        }
-        public void SetShip(SpaceshipMP ship)
-        {
-            spaceshipTransform = ship.transform;
-            spaceshipController = ship;
-            TPSVirtualCamera.Follow = TPSCamPos;
-            if (spaceshipController.FPSCamPos == null)
-            {
-                EnableFPS = false;
-                perspective = Perspective.ThridPerson;
-            }
-            else
-            {
-                EnableFPS = true;
-                FPSVirtualCamera.Follow = FPSCamPos = spaceshipController.FPSCamPos;
-            }
-            SetVirtualCameraTarget();
-        }
-
         private void Update()
         {
-            if(spaceshipTransform == null)
+            if (spaceshipTransform == null)
             {
                 return;
             }
@@ -160,24 +131,32 @@ namespace MultiplayerRunTime
                 rollOverride = false;
                 pitchOverride = false;
                 yawOverride = false;
+
                 // roll (x)
-                if (Mathf.Abs(playerOverride.x) > .25f)
+                switch (math.abs(playerOverride.x))
                 {
-                    rollOverride = true;
+                    case > 0.25f:
+                        rollOverride = true;
+                        break;
                 }
+
                 // pitch (y)
-                if (Mathf.Abs(playerOverride.y) > .25f)
+                switch (math.abs(playerOverride.y))
                 {
-                    yawOverride = true;
-                    pitchOverride = true;
-                    rollOverride = true;
+                    case > 0.25f:
+                        yawOverride = true;
+                        pitchOverride = true;
+                        rollOverride = true;
+                        break;
                 }
                 // yaw (z)
-                if (Mathf.Abs(playerOverride.z) > .25f)
+                switch (math.abs(playerOverride.z))
                 {
-                    yawOverride = true;
-                    pitchOverride = true;
-                    rollOverride = true;
+                    case > 0.25f:
+                        yawOverride = true;
+                        pitchOverride = true;
+                        rollOverride = true;
+                        break;
                 }
 
                 RunAutopilot(MouseAimPos, out float autoYaw, out float autoPitch, out float autoRoll);
@@ -197,14 +176,45 @@ namespace MultiplayerRunTime
             inGameInfo.Altitude = spaceshipTransform.position.y;
         }
 
+        private void OnDisable()
+        {
+            inputControl.FlightActions.CameraSwitch.canceled -= OnPerspectiveButtonPressed;
+            spaceshipTransform = null;
+            spaceshipController = null;
+        }
+
+        public void SetShip(SpaceshipMP ship)
+        {
+            spaceshipTransform = ship.transform;
+            spaceshipController = ship;
+            TPSVirtualCamera.Follow = TPSCamPos;
+            if (spaceshipController.FPSCamPos == null)
+            {
+                EnableFPS = false;
+                perspective = Perspective.ThridPerson;
+            }
+            else
+            {
+                EnableFPS = true;
+                FPSVirtualCamera.Follow = FPSCamPos = spaceshipController.FPSCamPos;
+            }
+            SetVirtualCameraTarget();
+        }
+
         private void ThrottleInput()
         {
             float axisValue = inputControl.FlightActions.Throttle.ReadValue<float>();
 
-            axisValue = axisValue != 0 ? Mathf.Clamp01(spaceshipController.Throttle + (axisValue * (throttleSenstivity * Time.deltaTime))) : spaceshipController.Throttle;
+            axisValue = axisValue != 0 ? math.clamp(spaceshipController.Throttle + (axisValue * (throttleSenstivity * Time.deltaTime)),0f,1f) : spaceshipController.Throttle;
             axisValue -= inputControl.FlightActions.ReverseThrottle.IsPressed() ? throttleSenstivity * Time.deltaTime : 0;
-            axisValue = Mathf.Clamp(axisValue, -0.25f, 1f);
+            axisValue = math.clamp(axisValue, -0.25f, 1f);
             spaceshipController.Throttle = axisValue;
+        }
+
+        private void OnPerspectiveButtonPressed(InputAction.CallbackContext context)
+        {
+            perspective = EnableFPS ? perspective.Next() : Perspective.ThridPerson;
+            SetVirtualCameraTarget();
         }
 
 
@@ -213,15 +223,15 @@ namespace MultiplayerRunTime
             Vector3 localFlyTarget = spaceshipTransform.InverseTransformPoint(flyTarget).normalized * spaceshipController.sensitivity;
             float angleOffTarget = Vector3.Angle(spaceshipTransform.forward, flyTarget - spaceshipTransform.position);
 
-            yaw = Mathf.Clamp(localFlyTarget.x, -1f, 1f);
-            pitch = -Mathf.Clamp(localFlyTarget.y, -1f, 1f);
+            yaw = math.clamp(localFlyTarget.x, -1f, 1f);
+            pitch = -math.clamp(localFlyTarget.y, -1f, 1f);
 
-            float agressiveRoll = Mathf.Clamp(localFlyTarget.x, -1f, 1f);
+            float agressiveRoll = math.clamp(localFlyTarget.x, -1f, 1f);
 
             float wingsLevelRoll = spaceshipTransform.right.y;
 
             float wingsLevelInfluence = Mathf.InverseLerp(0f, spaceshipController.aggressiveTurnAngle, angleOffTarget);
-            roll = Mathf.Lerp(wingsLevelRoll, agressiveRoll, wingsLevelInfluence);
+            roll = math.lerp(wingsLevelRoll, agressiveRoll, wingsLevelInfluence);
         }
 
         private void RotateRig()
@@ -263,10 +273,10 @@ namespace MultiplayerRunTime
             // The up vector of the camera normally is aligned to the horizon. However, when
             // looking straight up/down this can feel a bit weird. At those extremes, the camera
             // stops aligning to the horizon and instead aligns to itself.
-            Vector3 upVec = (Mathf.Abs(mouseAim.forward.y) > 0.9f) ? cameraRig.up : Vector3.up;
+            Vector3 upVec = (math.abs(mouseAim.forward.y) > 0.9f) ? cameraRig.up : Vector3.up;
 
             // Smoothly rotate the camera to face the mouse aim.
-            cameraRig.rotation = Damp(cameraRig.rotation,
+            cameraRig.rotation = DampCamera(cameraRig.rotation,
                                       Quaternion.LookRotation(mouseAim.forward, upVec),
                                       camSmoothSpeed,
                                       Time.deltaTime);
@@ -289,12 +299,6 @@ namespace MultiplayerRunTime
             }
         }
 
-        public void OnPerspectiveButtonPressed(InputAction.CallbackContext context)
-        {
-            perspective = EnableFPS ? perspective.Next() : Perspective.ThridPerson;
-            SetVirtualCameraTarget();
-        }
-
         private void SetVirtualCameraTarget()
         {
             switch (perspective)
@@ -310,19 +314,9 @@ namespace MultiplayerRunTime
             }
         }
 
-        // Thanks to Rory Driscoll
-        // http://www.rorydriscoll.com/2016/03/07/frame-rate-independent-damping-using-lerp/
-        /// <summary>
-        /// Creates dampened motion between a and b that is framerate independent.
-        /// </summary>
-        /// <param name="a">Initial parameter</param>
-        /// <param name="b">Target parameter</param>
-        /// <param name="lambda">Smoothing factor</param>
-        /// <param name="dt">Time since last damp call</param>
-        /// <returns></returns>
-        private Quaternion Damp(Quaternion a, Quaternion b, float lambda, float dt)
+        private Quaternion DampCamera(Quaternion a, Quaternion b, float lambda, float dt)
         {
-            return Quaternion.Slerp(a, b, 1 - Mathf.Exp(-lambda * dt));
+            return Quaternion.Slerp(a, b, 1 - math.exp(-lambda * dt));
         }
 
         private void OnDrawGizmos()

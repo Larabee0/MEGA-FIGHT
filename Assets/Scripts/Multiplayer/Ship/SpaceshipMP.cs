@@ -69,20 +69,26 @@ namespace MultiplayerRunTime
 
         private void FixedUpdate()
         {
-            if (IsOwner)
+            switch (IsOwner)
             {
-                // Ultra simple flight where the plane just gets pushed forward and manipulated
-                // with torques to turn.
-                rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
-                rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * controlInput.y, turnTorque.y * controlInput.z, -turnTorque.z * controlInput.x), ForceMode.Force);
+                case true:
+                    // Ultra simple flight where the plane just gets pushed forward and manipulated
+                    // with torques to turn.
+                    rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
+                    rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * controlInput.y, turnTorque.y * controlInput.z, -turnTorque.z * controlInput.x), ForceMode.Force);
+                    break;
             }
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
-            if (!IsOwner) return;
-            OnShipDestroyed?.Invoke();
+            switch (IsOwner)
+            {
+                case true:
+                    OnShipDestroyed?.Invoke();
+                    break;
+            }
         }
     }
 }

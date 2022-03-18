@@ -38,9 +38,6 @@ public class InputControl : MonoBehaviour
     //
     //}
 
-
-    
-
     public void SetFlightEnabled(bool enabled)
     {
         switch (enabled)

@@ -72,6 +72,12 @@ namespace MultiplayerRunTime
 
         private void OnDisconnect()
         {
+            PlayerManagerMP.OnShipGained -= OnShipGained;
+            PlayerManagerMP.OnShipLost -= OnShipLost;
+            hud.enabled = false;
+            mouseFlightController.enabled = false;
+            fireControl.enabled = false;
+            enabled = false;
         }
 
         public void SetPlayerManagerMP(PlayerManagerMP playerMP)

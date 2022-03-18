@@ -52,14 +52,16 @@ namespace MultiplayerRunTime
 
         private void FixedUpdate()
         {
-            if (IsOwner)
+            switch (IsOwner)
             {
-                throttleSim = spaceship.Throttle;
-                if (throttleLastFixedUpdate != throttleSim)
-                {
-                    SetThrottleServerRPC(throttleSim);
-                    throttleLastFixedUpdate = throttleSim;
-                }
+                case true:
+                    throttleSim = spaceship.Throttle;
+                    if (throttleLastFixedUpdate != throttleSim)
+                    {
+                        SetThrottleServerRPC(throttleSim);
+                        throttleLastFixedUpdate = throttleSim;
+                    }
+                    break;
             }
         }
 
@@ -72,8 +74,12 @@ namespace MultiplayerRunTime
         [ClientRpc(Delivery = RpcDelivery.Unreliable)]
         private void SetThrottleClientRPC(float value)
         {
-            if (IsOwner) { return; }
-            throttleSim = value;
+            switch (IsOwner)
+            {
+                case false:
+                    throttleSim = value;
+                    break;
+            }
         }
         //private void OnDrawGizmos()
         //{

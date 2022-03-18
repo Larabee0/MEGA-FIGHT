@@ -27,6 +27,7 @@ namespace MultiplayerRunTime
         private float fireInterval = 0f;
         private int currentWeaponIndex = 0;
         private bool fire = false;
+        private ulong LocalClientId = ulong.MaxValue;
 
         public float TargetDistance
         {
@@ -43,6 +44,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.Shoot.canceled += ToggleOffFire;
             inputControl.FlightActions.Shoot.started += ToggleOnFire;
             inputControl.FlightActions.ScrollWheel.performed += SetTargetDistance;
+            LocalClientId = NetworkManager.Singleton.LocalClientId;
         }
         private void OnDisable()
         {
@@ -50,6 +52,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.Shoot.canceled -= ToggleOffFire;
             inputControl.FlightActions.Shoot.started -= ToggleOnFire;
             inputControl.FlightActions.ScrollWheel.performed -= SetTargetDistance;
+            LocalClientId = ulong.MaxValue;
             NullOut();
         }
 
@@ -75,9 +78,11 @@ namespace MultiplayerRunTime
 
         private void Update()
         {
-            if (fire)
+            switch (fire)
             {
-                Fire();
+                case true:
+                    Fire();
+                    break;
             }
 
             //Debug.DrawRay(WeaponOutputPoints[0].position, TargetPoint.position - WeaponOutputPoints[0].position);
@@ -86,26 +91,38 @@ namespace MultiplayerRunTime
         private void Fire()
         {
             fireInterval -= Time.deltaTime;
-            if(fireInterval <= 0f)
-            {
-                fireInterval = UnityEngine.Random.Range(fireIntervalMin, fireIntervalMax);
-                Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].position;
-                Ray ray = new(WeaponOutputPoints[currentWeaponIndex].position, direciton);
-                Vector3 endPoint = TargetPoint.position + (direciton * laserRange);
-                if (Physics.SphereCast(ray, 0.005f, out RaycastHit hit, laserRange))
-                {
-                    endPoint = hit.point;
-                    if (hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
-                    {
-                        byte ID = part.HierarchyID;
-                        SpaceshipMP shipHit = part.owner;
-                        shipHit.shipHealthManagerMP.HitServerRpc(ID, NetworkManager.Singleton.LocalClientId, 1f);
-                    }
-                }
 
-                laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].position), spaceship.transform.InverseTransformPoint(endPoint)));
-                //Debug.DrawLine(WeaponOutputPoints[currentWeaponIndex].position, endPoint, Color.red, 0.25f);
-                currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
+            switch (fireInterval)
+            {
+                case <= 0f:
+                    fireInterval = UnityEngine.Random.Range(fireIntervalMin, fireIntervalMax);
+                    Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].position;
+
+                    Ray ray = new(WeaponOutputPoints[currentWeaponIndex].position, direciton);
+
+                    Vector3 endPoint;
+
+                    switch (Physics.SphereCast(ray, 0.005f, out RaycastHit hit, laserRange))
+                    {
+                        case true:
+                            endPoint = hit.point;
+                            switch (hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
+                            {
+                                case true:
+                                    Debug.LogFormat("Hit Angle:{0} degrees", Vector3.Angle(hit.normal, ray.direction));
+                                    part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID, LocalClientId, 1f);
+                                    break;
+                            }
+                            break;
+                        case false:
+                            endPoint = TargetPoint.position + (direciton * laserRange);
+                            break;
+                    }
+
+                    laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].position), spaceship.transform.InverseTransformPoint(endPoint)));
+                    //Debug.DrawLine(WeaponOutputPoints[currentWeaponIndex].position, endPoint, Color.red, 0.25f);
+                    currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
+                    break;
             }
         }
 

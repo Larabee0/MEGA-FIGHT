@@ -24,7 +24,7 @@ namespace MultiplayerRunTime
         public RelayHostData hostData;
         public RelayJoinData clientData;
 
-        RelayUTPHandler relayUTPHandler;
+        private NetworkManager networkManager;
 
         public string JoinCode
         {
@@ -45,26 +45,21 @@ namespace MultiplayerRunTime
 
         private void Awake()
         {
-            //relayUTPHandler = new RelayUTPHandler();
             Singleton = this;
         }
 
         private void Start()
         {
-            NetworkManager.Singleton.OnClientConnectedCallback +=HandleClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback +=HandleClientDisconnected;
+            networkManager = NetworkManager.Singleton;
+            networkManager.OnClientConnectedCallback +=HandleClientConnected;
+            networkManager.OnClientDisconnectCallback +=HandleClientDisconnected;
         }
-
-        //private void Update()
-        //{
-        //    relayUTPHandler.RelayHandlerUpdate();
-        //}
 
         private void OnDestroy()
         {
-            if(NetworkManager.Singleton == null ) return;
-            NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnected;
+            if(networkManager == null ) return;
+            networkManager.OnClientConnectedCallback -= HandleClientConnected;
+            networkManager.OnClientDisconnectCallback -= HandleClientDisconnected;
         }
 
         public IEnumerator StartHost()
@@ -82,7 +77,7 @@ namespace MultiplayerRunTime
                     Debug.LogError("Exception thrown when attempting to start Relay Server. Server not started. Exception: " + hostDataTask.Exception.Message);
                     yield break;
                 }
-                NetworkManager.Singleton.StartHost();
+                networkManager.StartHost();
                 hostData = hostDataTask.Result;
                 menu.spawnPopUp.DisplayJoinCode = JoinCode;
             }
@@ -103,87 +98,35 @@ namespace MultiplayerRunTime
                     Debug.LogError("Exception thrown when attempting to join Relay Server. Failed to join. Exception: " + clientDataTask.Exception.Message);
                     yield break;
                 }
-                NetworkManager.Singleton.StartClient();
+                networkManager.StartClient();
                 clientData = clientDataTask.Result;
                 menu.spawnPopUp.DisplayJoinCode = JoinCode;
             }
         }
         
-        //public IEnumerator StartHostService()
-        //{
-        //    var serverRelayUtilityTask = UnityRelayHandler.AllocateRelayServerAndGetJoinCode(8);
-        //    while (!serverRelayUtilityTask.IsCompleted)
-        //    {
-        //        yield return null;
-        //    }
-        //    if (serverRelayUtilityTask.IsFaulted)
-        //    {
-        //        Debug.LogError("Exception thrown when attempting to start Relay Server. Server not started. Exception: " + serverRelayUtilityTask.Exception.Message);
-        //        yield break;
-        //    }
-        //
-        //    var (ipv4address, port, allocationIdBytes, connectionData, key, joinCode) = serverRelayUtilityTask.Result;
-        //
-        //    NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>().SetHostRelayData(ipv4address, port, allocationIdBytes, key, connectionData, false);
-        //
-        //    NetworkManager.Singleton.StartHost();
-        //    menu.spawnPopUp.DisplayJoinCode = joinCode;
-        //}
-        //
-        //public IEnumerator StartClientService(string joinCode)
-        //{
-        //    Debug.Log(joinCode);
-        //    var clientRelayUtilityTask = UnityRelayHandler.JoinRelayServerFromJoinCode(joinCode);
-        //
-        //    while (!clientRelayUtilityTask.IsCompleted)
-        //    {
-        //        yield return null;
-        //    }
-        //
-        //    if (clientRelayUtilityTask.IsFaulted)
-        //    {
-        //        Debug.LogError("Exception thrown when attempting to connect to Relay Server. Exception: " + clientRelayUtilityTask.Exception.Message);
-        //        yield break;
-        //    }
-        //
-        //    var (ipv4address, port, allocationIdBytes, connectionData, hostConnectionData, key) = clientRelayUtilityTask.Result;
-        //
-        //
-        //    NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>().SetClientRelayData(ipv4address, port, allocationIdBytes, key, connectionData, hostConnectionData, true);
-        //
-        //
-        //    NetworkManager.Singleton.StartClient();
-        //    menu.spawnPopUp.DisplayJoinCode = JoinCode;
-        //}
-
         public void Host()
         {
             StopAllCoroutines();
-            //StartCoroutine(relayUTPHandler.StartRelayServer(8));
             StartCoroutine(StartHost());
-            //NetworkManager.Singleton.StartHost();
         }
 
         public void Client(string joinCode)
         {
             StopAllCoroutines();
-            //StartCoroutine(relayUTPHandler.StartClient(joinCode));
             StartCoroutine(StartClient(joinCode));
-            //NetworkManager.Singleton.StartClient();
         }
 
         public void Leave()
         {
-            if (NetworkManager.Singleton.IsHost)
+            if (networkManager.IsHost)
             {
-                NetworkManager.Singleton.Shutdown();
+                networkManager.Shutdown();
                 menu.ShowConnectionOverlay(true);
                 Cursor.lockState = CursorLockMode.None;
-                //NetworkManager.Singleton.ConnectionApprovalCallback-= ApprovalCheck;
             }
-            else if (NetworkManager.Singleton.IsClient)
+            else if (networkManager.IsClient)
             {
-                NetworkManager.Singleton.Shutdown();
+                networkManager.Shutdown();
                 menu.ShowConnectionOverlay(true);
                 Cursor.lockState = CursorLockMode.None;
             }
@@ -193,19 +136,20 @@ namespace MultiplayerRunTime
 
         private void HandleClientConnected(ulong clientId)
         {
-            if(clientId == NetworkManager.Singleton.LocalClientId)
+            if (networkManager.IsClient && networkManager.LocalClientId == clientId)
             {
                 menu.ShowConnectionOverlay(false);
-                OnClientConnects?.Invoke(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject);
+                OnClientConnects?.Invoke(networkManager.SpawnManager.GetLocalPlayerObject().gameObject);
             }
         }
 
         private void HandleClientDisconnected(ulong clientId)
         {
-            if (clientId == NetworkManager.Singleton.LocalClientId)
+            if ((networkManager.IsClient && networkManager.LocalClientId == clientId)|| networkManager.ServerClientId == clientId)
             {
                 OnClientDisconnects?.Invoke();
                 menu.ShowConnectionOverlay(true);
+                Cursor.lockState = CursorLockMode.None;
             }
         }
 

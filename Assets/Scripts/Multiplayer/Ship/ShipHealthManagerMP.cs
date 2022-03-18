@@ -162,6 +162,14 @@ namespace MultiplayerRunTime
     [Serializable]
     public class ShipHierarchy
     {
+        public static List<Functionality> RequiredFunctionality = new()
+        {
+            Functionality.Structural,
+            Functionality.Piloting,
+            Functionality.Thrust
+        };
+
+
         public byte ShipID;
         public string Label;
         public List<ShipPartRecord> parts;
@@ -176,6 +184,13 @@ namespace MultiplayerRunTime
             tags = new List<Functionality>();
             parts.Sort();
             CacheDataRecursive(root);
+            for (int i = 0; i < RequiredFunctionality.Count; i++)
+            {
+                if (!tags.Contains(RequiredFunctionality[i]))
+                {
+                    throw new MissingReferenceException(string.Format("Ship Hierarchy {0} is missing required functionality: {1}!", Label, RequiredFunctionality[i].ToString()));
+                }
+            }
         }
 
         private void CacheDataRecursive(ShipPartRecord node)
