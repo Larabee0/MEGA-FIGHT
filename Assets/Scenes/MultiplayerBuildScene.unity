@@ -220,15 +220,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114479940590868176, guid: 736f14c29110ec4418ec43a1d1ae86ff, type: 3}
       propertyPath: m_MatchWidthOrHeight
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114479940590868176, guid: 736f14c29110ec4418ec43a1d1ae86ff, type: 3}
       propertyPath: m_ReferenceResolution.x
-      value: 1034
+      value: 1280
       objectReference: {fileID: 0}
     - target: {fileID: 114479940590868176, guid: 736f14c29110ec4418ec43a1d1ae86ff, type: 3}
       propertyPath: m_ReferenceResolution.y
-      value: 518
+      value: 720
       objectReference: {fileID: 0}
     - target: {fileID: 114491796399247544, guid: 736f14c29110ec4418ec43a1d1ae86ff, type: 3}
       propertyPath: m_Enabled
@@ -658,7 +658,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 220922731}
-  uNetTransport: {fileID: 0}
   lobby: {fileID: 131122172}
   localPlayerManager: {fileID: 72686267}
 --- !u!1 &220922729
@@ -1919,7 +1918,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.0562181, y: 1}
+    m_SensorSize: {x: 1.918919, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2485,7 +2484,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.0562181, y: 1}
+    m_SensorSize: {x: 1.918919, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

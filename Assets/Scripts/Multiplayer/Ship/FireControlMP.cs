@@ -23,7 +23,8 @@ namespace MultiplayerRunTime
 
         [SerializeField] [Range(0f,1f)] float fireIntervalMin = 0.01f;
         [SerializeField] [Range(0f, 1f)] float fireIntervalMax = 0.05f;
-        [SerializeField][Range(500f, 2000f)] float laserRange = 1000f;
+        [SerializeField] [Range(500f, 2000f)] float laserRange = 1000f;
+        [SerializeField][Range(1f, 100f)] float damage = 10f;
         private float fireInterval = 0f;
         private int currentWeaponIndex = 0;
         private bool fire = false;
@@ -109,8 +110,9 @@ namespace MultiplayerRunTime
                             switch (hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
                             {
                                 case true:
-                                    Debug.LogFormat("Hit Angle:{0} degrees", Vector3.Angle(hit.normal, ray.direction));
-                                    part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID, LocalClientId, 1f);
+                                    float angleWeight = Mathf.InverseLerp(90f, 0f, Mathf.Abs(Mathf.DeltaAngle(Vector3.Angle(hit.normal, ray.direction), 90f)));
+                                    //Debug.LogFormat("Hit Daamge: {0}", damage * angleWeight);
+                                    part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID, LocalClientId, damage * angleWeight);
                                     break;
                             }
                             break;

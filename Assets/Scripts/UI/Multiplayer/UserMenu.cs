@@ -13,7 +13,6 @@ namespace MultiplayerRunTime
     public class UserMenu : MonoBehaviour
     {
         [SerializeField] private NetworkManager networkManager;
-        [SerializeField] private UNetTransport uNetTransport;
         [SerializeField] private PasswordLobbyMP lobby;
         [SerializeField] private LocalPlayerManager localPlayerManager;
         private UIDocument document;
