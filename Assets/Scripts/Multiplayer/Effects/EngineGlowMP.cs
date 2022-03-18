@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace MultiplayerRunTime
 {
-    public class EngineGlowMP : MonoBehaviour
+    public class EngineGlowMP : NetworkBehaviour
     {
-        private SpaceshipMP spaceshipMP;
+        private SpaceshipMP spaceship;
 
         [Header("Editor Only (DrawGizmos)")]
-        [SerializeField][Range(0f, 1f)] float throttleSim = 0f;
+        [SerializeField][Range(-0.25f, 1f)] private float throttleSim = 0f;
         [Space]
         [Header("Settings")]
         [SerializeField] private MeshRenderer[] engineGlows;
@@ -19,19 +21,21 @@ namespace MultiplayerRunTime
         [SerializeField] private float intesntiyMin = 0f;
         [SerializeField] private float intensityMax = 3.6f;
 
+        private float throttleLastFixedUpdate = float.NegativeInfinity;
+
         private float Intensity { get => Mathf.Lerp(intesntiyMin, intensityMax, ABSThrottle); }
 
         private float ABSThrottle
         {
             get
             {
-                return Mathf.Abs(spaceshipMP == null ? throttleSim : spaceshipMP.Throttle);
+                return Mathf.Abs(throttleSim);
             }
         }
 
         private void Awake()
         {
-            spaceshipMP = GetComponent<SpaceshipMP>();
+            spaceship = GetComponent<SpaceshipMP>();
         }
 
         private void Update()
@@ -46,6 +50,31 @@ namespace MultiplayerRunTime
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (IsOwner)
+            {
+                throttleSim = spaceship.Throttle;
+                if (throttleLastFixedUpdate != throttleSim)
+                {
+                    SetThrottleServerRPC(throttleSim);
+                    throttleLastFixedUpdate = throttleSim;
+                }
+            }
+        }
+
+        [ServerRpc(Delivery = RpcDelivery.Unreliable)]
+        private void SetThrottleServerRPC(float value)
+        {
+            SetThrottleClientRPC(value);
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Unreliable)]
+        private void SetThrottleClientRPC(float value)
+        {
+            if (IsOwner) { return; }
+            throttleSim = value;
+        }
         //private void OnDrawGizmos()
         //{
         //
