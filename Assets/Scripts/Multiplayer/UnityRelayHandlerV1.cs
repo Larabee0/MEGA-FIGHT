@@ -16,7 +16,6 @@ using MultiplayerRunTime;
 [Serializable]
 public struct RelayHostData
 {
-    public static RelayHostData allocatedData;
     public string JoinCode;
     public string IPv4Address;
     public ushort Port;
@@ -29,7 +28,6 @@ public struct RelayHostData
 [Serializable]
 public struct RelayJoinData
 {
-    public static RelayJoinData allocatedData;
     public string JoinCode;
     public string IPv4Address;
     public ushort Port;
