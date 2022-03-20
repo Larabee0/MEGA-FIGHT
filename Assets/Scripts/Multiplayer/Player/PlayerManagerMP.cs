@@ -9,8 +9,8 @@ namespace MultiplayerRunTime
 {
     public class PlayerManagerMP : NetworkBehaviour
     {
-        [SerializeField] private NetworkObject[] ships;
-        private NetworkList<byte> displayedName;
+        [SerializeField] private NetworkObject[] SpawnableShips;
+        private string displayedName;
         private NetworkVariable<NetworkBehaviourReference> shipReference = new();
         //private SpaceshipMP localSpaceship;
         public SpaceshipMP LocalSpaceship
@@ -34,12 +34,11 @@ namespace MultiplayerRunTime
         {
             get
             {
-                byte[] instigatorByteArray = new byte[displayedName.Count];
-                for (int i = 0; i < displayedName.Count; i++)
-                {
-                    instigatorByteArray[i] = displayedName[i];
-                }
-                return Encoding.ASCII.GetString(instigatorByteArray);
+                return displayedName;
+            }
+            set
+            {
+                SetDisplayedNameServerRpc(value);
             }
         }
 
@@ -51,7 +50,7 @@ namespace MultiplayerRunTime
 
         private void Awake()
         {
-            displayedName = new();
+            displayedName = string.Empty;
             shipReference.OnValueChanged += ShipRefereceChanged;
         }
 
@@ -64,24 +63,25 @@ namespace MultiplayerRunTime
             }
         }
 
-        public void SetDisplayedName(string name)
-        {
-            SetDisplayedNameServerRpc(Encoding.ASCII.GetBytes(name));
-        }
-
         [ServerRpc(Delivery = RpcDelivery.Reliable)]
-        private void SetDisplayedNameServerRpc(byte[] name)
+        private void SetDisplayedNameServerRpc(string name)
         {
-            displayedName = new NetworkList<byte>(name);
+            SetDisplayedNameClientRpc(name);
         }
 
         [ServerRpc(Delivery = RpcDelivery.Reliable)]
         public void SpawnShipServerRpc(Vector3 spawnPos, byte index)
         {
-            NetworkObject shipInstance = Instantiate(ships[index], spawnPos, Quaternion.identity);
+            NetworkObject shipInstance = Instantiate(SpawnableShips[index], spawnPos, Quaternion.identity);
 
             shipInstance.SpawnWithOwnership(OwnerClientId);
             LocalSpaceship = shipInstance.GetComponent<SpaceshipMP>();
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void SetDisplayedNameClientRpc(string name)
+        {
+            displayedName = name;
         }
 
         public void HandleShipDestroyed()

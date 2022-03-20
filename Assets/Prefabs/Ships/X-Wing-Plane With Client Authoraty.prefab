@@ -278,7 +278,7 @@ Transform:
   m_GameObject: {fileID: 165484967621786183}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -0, y: 0, z: -3.76}
-  m_LocalScale: {x: 15.89, y: 15.89, z: 15.89}
+  m_LocalScale: {x: 30.3, y: 30.3, z: 30.3}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6503298839796197007}
@@ -371,7 +371,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 0
   meshRenderer: {fileID: 0}
-  flash: 1
+  FlashTime: 0.25
 --- !u!1 &306326921642944479
 GameObject:
   m_ObjectHideFlags: 0
@@ -652,7 +652,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 1
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
 --- !u!1 &1624610481822868201
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,7 +934,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 7
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
 --- !u!1 &3259113964725848005
 GameObject:
   m_ObjectHideFlags: 0
@@ -1050,7 +1050,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 13
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
 --- !u!1 &4548468011591463702
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,7 +1166,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 9
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
 --- !u!1 &4581780140040743590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1282,7 +1282,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 12
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
 --- !u!1 &4869471023974022262
 GameObject:
   m_ObjectHideFlags: 0
@@ -1363,7 +1363,7 @@ MonoBehaviour:
   laserSpawnerMP: {fileID: -1804329374080476669}
   shipHealthManagerMP: {fileID: 2173042695768397383}
   thrust: 3750
-  turnTorque: {x: 180, y: 180, z: 180}
+  turnTorque: {x: 630, y: 630, z: 630}
   forceMult: 100
   sensitivity: 5
   aggressiveTurnAngle: 5
@@ -1435,6 +1435,7 @@ MonoBehaviour:
   shipHierarchy:
     ShipID: 0
     Label: 
+    tags: 
 --- !u!114 &414878758660390414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1756,7 +1757,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 2
   meshRenderer: {fileID: 0}
-  flash: 1
+  FlashTime: 0.25
 --- !u!1 &6007355766447840066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1872,7 +1873,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 11
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
 --- !u!1 &6035068697437040023
 GameObject:
   m_ObjectHideFlags: 0
@@ -1898,7 +1899,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6035068697437040023}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.1500001, z: -1.882}
+  m_LocalPosition: {x: 0, y: 2.02, z: 0.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2047,7 +2048,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 8
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
 --- !u!1 &6730058776698920326
 GameObject:
   m_ObjectHideFlags: 0
@@ -2247,7 +2248,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 4
   meshRenderer: {fileID: 0}
-  flash: 1
+  FlashTime: 0.25
 --- !u!1 &7165138793589780413
 GameObject:
   m_ObjectHideFlags: 0
@@ -2364,7 +2365,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 5
   meshRenderer: {fileID: 0}
-  flash: 1
+  FlashTime: 0.25
 --- !u!1 &7375747467580735689
 GameObject:
   m_ObjectHideFlags: 0
@@ -2513,7 +2514,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 3
   meshRenderer: {fileID: 0}
-  flash: 1
+  FlashTime: 0.25
 --- !u!1 &7905077004257493042
 GameObject:
   m_ObjectHideFlags: 0
@@ -2629,7 +2630,7 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 10
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
 --- !u!1 &8362558298445186175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2887,4 +2888,4 @@ MonoBehaviour:
   owner: {fileID: 4865623709426122641}
   HierarchyID: 6
   meshRenderer: {fileID: 0}
-  flash: 0
+  FlashTime: 0.25
