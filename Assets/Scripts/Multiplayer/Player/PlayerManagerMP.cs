@@ -10,7 +10,8 @@ namespace MultiplayerRunTime
     public class PlayerManagerMP : NetworkBehaviour
     {
         [SerializeField] private NetworkObject[] SpawnableShips;
-        private string displayedName;
+        [HideInInspector] public LocalPlayerManager LPM;
+        [SerializeField] private string displayedName;
         private NetworkVariable<NetworkBehaviourReference> shipReference = new();
         //private SpaceshipMP localSpaceship;
         public SpaceshipMP LocalSpaceship
@@ -46,7 +47,6 @@ namespace MultiplayerRunTime
         public delegate void PlayerLosesSpaceship();
         public PlayerGainsSpaceship OnShipGained;
         public PlayerLosesSpaceship OnShipLost;
-        public LocalPlayerManager LPM;
 
         private void Awake()
         {

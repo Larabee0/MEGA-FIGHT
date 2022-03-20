@@ -191,7 +191,7 @@ namespace MultiplayerRunTime
 
             private void ResumeButtonCallback()
             {
-                menu.localPlayerManager.Pause();
+                menu.localPlayerManager.UnPause();
             }
 
             private void RespawnButtonCallback()

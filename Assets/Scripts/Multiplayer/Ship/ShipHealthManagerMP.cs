@@ -23,25 +23,24 @@ namespace MultiplayerRunTime
         private void Awake()
         {
             partHealths = new();
-            shipHierarchy = new(stats);
             if (IsServer)
             {
+                shipHierarchy = new(stats);
                 for (int i = 0; i < shipHierarchy.parts.Count; i++)
                 {
                     partHealths.Add(shipHierarchy.parts[i].maxHitPoints);
                 }
             }
+        }
+
+        private void Start()
+        {
             parts = new(GetComponentsInChildren<ShipPartMP>());
             parts.Sort();
             for (int i = 0; i < shipHierarchy.tags.Count; i++)
             {
                 functionalityEfficiencies.Add(shipHierarchy.tags[i], CalculateTagEfficiency(shipHierarchy.tags[i]));
             }
-        }
-
-        private void Start()
-        {
-            
         }
 
         public DamageInfo GetDamageInfo(byte hierarchyID, float damage)
@@ -72,7 +71,7 @@ namespace MultiplayerRunTime
                 // destroy part OwnerClientId
                 if (shipHierarchy.parts[hierachyID].tags.Contains(Functionality.Piloting))
                 {
-                    DestroyShip();
+                    DestroyShipServerRpc();
                 }
             }
             else
@@ -122,12 +121,10 @@ namespace MultiplayerRunTime
             }
         }
 
-        public void DestroyShip()
+        [ServerRpc(Delivery = RpcDelivery.Reliable, RequireOwnership = true)]
+        public void DestroyShipServerRpc()
         {
-            if (IsServer || IsOwner)
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
 
 
@@ -166,7 +163,8 @@ namespace MultiplayerRunTime
         {
             Functionality.Structural,
             Functionality.Piloting,
-            Functionality.Thrust
+            Functionality.Thrust,
+            Functionality.Control
         };
 
 
@@ -342,6 +340,7 @@ namespace MultiplayerRunTime
         Thrust,
         Weapon,
         Piloting,
-        RepairDroid
+        RepairDroid,
+        Control
     }
 }

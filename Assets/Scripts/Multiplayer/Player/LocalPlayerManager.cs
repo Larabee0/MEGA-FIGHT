@@ -53,12 +53,38 @@ namespace MultiplayerRunTime
 
         private void PauseCallback(InputAction.CallbackContext context)
         {
-            Pause();
+            PauseToggle();
         }
 
         public void Pause()
         {
-            Paused = !Paused;
+            Debug.Log("Pausing!");
+            Paused = true;
+            SetBasedOffPause();
+        }
+
+        public void UnPause()
+        {
+            Debug.Log("Un-pausing!");
+            Paused = false;
+            SetBasedOffPause();
+        }
+
+        public void PauseToggle()
+        {
+            switch (Paused)
+            {
+                case true:
+                    UnPause();
+                    break;
+                case false:
+                    Pause();
+                    break;
+            }
+        }
+
+        private void SetBasedOffPause()
+        {
             Cursor.lockState = Paused ? CursorLockMode.None : CursorLockMode.Locked;
             lobby.menu.ShowPauseOverlay(Paused);
             inputControl.SetFlightEnabled(!Paused);
@@ -72,6 +98,7 @@ namespace MultiplayerRunTime
 
         private void OnDisconnect()
         {
+            Pause();
             PlayerManagerMP.OnShipGained -= OnShipGained;
             PlayerManagerMP.OnShipLost -= OnShipLost;
             hud.enabled = false;
@@ -92,7 +119,7 @@ namespace MultiplayerRunTime
             Debug.Log("Ship gained");
             SetAndEnableLocalScripts(ship);
             SetLocalShipPhysicsLayer(ship, 2);
-            Pause();
+            UnPause();
         }
 
         private void SetLocalShipPhysicsLayer(SpaceshipMP ship, int layer)
@@ -106,6 +133,7 @@ namespace MultiplayerRunTime
 
         private void OnShipLost()
         {
+            Pause();
             Debug.Log("Ship lost");
             hud.enabled = false;
             mouseFlightController.enabled = false;
@@ -138,8 +166,7 @@ namespace MultiplayerRunTime
         {
             if (PlayerManagerMP != null)
             {
-                //Pause();
-                PlayerManagerMP.LocalSpaceship.shipHealthManagerMP.DestroyShip();
+                PlayerManagerMP.LocalSpaceship.shipHealthManagerMP.DestroyShipServerRpc();
             }
         }
     }

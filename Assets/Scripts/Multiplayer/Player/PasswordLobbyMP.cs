@@ -118,6 +118,11 @@ namespace MultiplayerRunTime
 
         public void Leave()
         {
+
+            OnClientDisconnects?.Invoke();
+            //Debug.Log("Properly shutting down");
+            //menu.ShowConnectionOverlay(true);
+            //Cursor.lockState = CursorLockMode.None;
             if (networkManager.IsHost)
             {
                 networkManager.Shutdown();
@@ -145,13 +150,16 @@ namespace MultiplayerRunTime
 
         private void HandleClientDisconnected(ulong clientId)
         {
-            if ((networkManager.IsClient && networkManager.LocalClientId == clientId)|| networkManager.ServerClientId == clientId)
+            if(networkManager.IsServer && networkManager.LocalClientId != clientId)
             {
-                OnClientDisconnects?.Invoke();
-                menu.ShowConnectionOverlay(true);
-                Cursor.lockState = CursorLockMode.None;
+                Debug.Log("Non-server shut down");
+                return;
             }
+            OnClientDisconnects?.Invoke();
+            menu.ShowConnectionOverlay(true);
+            Debug.Log("Client Properly shutting down");
         }
+
 
         //private void ApprovalCheck(byte[] connectionData, ulong clientID, NetworkManager.ConnectionApprovedDelegate callback)
         //{
