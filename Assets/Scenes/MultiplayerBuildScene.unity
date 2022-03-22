@@ -1101,6 +1101,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 595201830, guid: 81eac8e00d74bbd4c8222cd2f96ba42f, type: 3}
+      propertyPath: damage
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 595201830, guid: 81eac8e00d74bbd4c8222cd2f96ba42f, type: 3}
+      propertyPath: maxDst
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 595201830, guid: 81eac8e00d74bbd4c8222cd2f96ba42f, type: 3}
+      propertyPath: laserRange
+      value: 2000
+      objectReference: {fileID: 0}
     - target: {fileID: 1340265690153048, guid: 81eac8e00d74bbd4c8222cd2f96ba42f, type: 3}
       propertyPath: m_Name
       value: MouseFlightRig
@@ -1922,7 +1934,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9238477, y: 1}
+    m_SensorSize: {x: 2.2903225, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2488,7 +2500,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.9238477, y: 1}
+    m_SensorSize: {x: 2.2903225, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

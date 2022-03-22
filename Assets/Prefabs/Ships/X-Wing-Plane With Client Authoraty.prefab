@@ -1188,6 +1188,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8705dc15d490e848a9922640c4b3b91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  engineParts:
+  - {fileID: 5766632327771962252}
+  - {fileID: 4756082214617020543}
+  - {fileID: 7135360335286438660}
+  - {fileID: 5655622476312374004}
   throttleSim: 0
   engineGlows:
   - {fileID: 3466254916143918202}

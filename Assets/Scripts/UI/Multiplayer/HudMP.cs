@@ -41,13 +41,17 @@ namespace MultiplayerRunTime
         {
             if (boresight != null)
             {
-                boresight.position = playerCam.WorldToScreenPoint(controller.BoresightPos);
+                Vector3 position = playerCam.WorldToScreenPoint(controller.BoresightPos);
+                position.z = Mathf.Clamp(position.z, float.MinValue, 2f);
+                boresight.position = position;
                 boresight.gameObject.SetActive(boresight.position.z > 1f);
             }
 
             if (mousePos != null)
             {
-                mousePos.position = playerCam.WorldToScreenPoint(controller.MouseAimPos);
+                Vector3 position = playerCam.WorldToScreenPoint(controller.MouseAimPos);
+                position.z = Mathf.Clamp(position.z, float.MinValue, 2f);
+                mousePos.position = position;
                 mousePos.gameObject.SetActive(mousePos.position.z > 1f);
             }
         }

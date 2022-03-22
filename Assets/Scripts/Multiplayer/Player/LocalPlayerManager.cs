@@ -41,6 +41,12 @@ namespace MultiplayerRunTime
             mouseFlightController.inputControl = inputControl;
         }
 
+        //private void Start()
+        //{
+        //    Display.displays[0].Activate();
+        //    Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+        //}
+
         private void OnEnable()
         {
             inputControl.UIActions.Pause.canceled += PauseCallback;

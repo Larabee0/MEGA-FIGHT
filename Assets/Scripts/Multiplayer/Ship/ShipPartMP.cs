@@ -67,7 +67,7 @@ namespace MultiplayerRunTime
             ObjectTint.Value = objectTint;
         }
 
-        [ServerRpc(Delivery = RpcDelivery.Reliable)]
+        [ServerRpc(Delivery = RpcDelivery.Reliable,RequireOwnership = false)]
         public void SetObjectTintServerRpc(byte darkness)
         {
             ObjectTint.Value = new Color32(darkness, darkness, darkness, 255);

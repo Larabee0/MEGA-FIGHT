@@ -6,6 +6,7 @@ using System.Text;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace MultiplayerRunTime
 {
@@ -20,12 +21,70 @@ namespace MultiplayerRunTime
 
         public Dictionary<Functionality, float> functionalityEfficiencies = new();
 
+        public float WeaponEfficiency
+        {
+            get
+            {
+                if (functionalityEfficiencies.ContainsKey(Functionality.Weapon))
+                {
+                    return functionalityEfficiencies[Functionality.Weapon];
+                }
+                else
+                {
+                    return CalculateTagEfficiency(Functionality.Weapon);
+                }
+            }
+        }
+
+        public float ManeourveEfficiency
+        {
+            get
+            {
+                float efficiency = 0f;
+                
+                if (functionalityEfficiencies.ContainsKey(Functionality.Piloting))
+                {
+                    efficiency+= functionalityEfficiencies[Functionality.Piloting];
+                }
+                else
+                {
+                    efficiency += CalculateTagEfficiency(Functionality.Piloting);
+                }
+
+                if (functionalityEfficiencies.ContainsKey(Functionality.Control))
+                {
+                    efficiency += functionalityEfficiencies[Functionality.Control];
+                }
+                else
+                {
+                    efficiency += CalculateTagEfficiency(Functionality.Control);
+                }
+
+                return efficiency /= 2f;
+            }
+        }
+
+        public float ThrustEfficiency
+        {
+            get
+            {
+                if (functionalityEfficiencies.ContainsKey(Functionality.Thrust))
+                {
+                    return functionalityEfficiencies[Functionality.Thrust];
+                }
+                else
+                {
+                    return CalculateTagEfficiency(Functionality.Thrust);
+                }
+            }
+        }
+
         private void Awake()
         {
             partHealths = new();
+            shipHierarchy = new(stats);
             if (IsServer)
             {
-                shipHierarchy = new(stats);
                 for (int i = 0; i < shipHierarchy.parts.Count; i++)
                 {
                     partHealths.Add(shipHierarchy.parts[i].maxHitPoints);
@@ -40,6 +99,28 @@ namespace MultiplayerRunTime
             for (int i = 0; i < shipHierarchy.tags.Count; i++)
             {
                 functionalityEfficiencies.Add(shipHierarchy.tags[i], CalculateTagEfficiency(shipHierarchy.tags[i]));
+                Debug.LogFormat("Tag: {0} Effiency: {1}", shipHierarchy.tags[i].ToString(), functionalityEfficiencies[shipHierarchy.tags[i]]);
+            }
+
+            partHealths.OnListChanged += RecalculateEffiencies;
+        }
+
+        private void RecalculateEffiencies(NetworkListEvent<float> changedValue)
+        {
+            int hierarchyID = changedValue.Index;
+            Functionality[] effectedFunctions = shipHierarchy.parts[hierarchyID].tags;
+
+            for (int i = 0; i < effectedFunctions.Length; i++)
+            {
+                if (functionalityEfficiencies.ContainsKey(effectedFunctions[i]))
+                {
+                    functionalityEfficiencies[effectedFunctions[i]] = CalculateTagEfficiency(effectedFunctions[i]);
+                    Debug.LogFormat("Tag: {0} Effiency: {1}", effectedFunctions[i].ToString(), functionalityEfficiencies[effectedFunctions[i]]);
+                }
+                else
+                {
+                    Debug.LogWarningFormat("Hiercarchy Missing function {0}", effectedFunctions[i].ToString());
+                }
             }
         }
 
@@ -69,7 +150,7 @@ namespace MultiplayerRunTime
                 damage += partHealths[hierachyID];
                 partHealths[hierachyID] = 0;
                 // destroy part OwnerClientId
-                if (shipHierarchy.parts[hierachyID].tags.Contains(Functionality.Piloting))
+                if (ShouldBeDead())
                 {
                     DestroyShipServerRpc();
                 }
@@ -127,15 +208,49 @@ namespace MultiplayerRunTime
             Destroy(gameObject);
         }
 
-
         private float CalculateTagEfficiency(Functionality tag)
         {
-            float efficiency = 1f;
+            float num = 0f;
+            int num2 = 0;
+            float num3 = 0f;
             foreach (ShipPartRecord part in shipHierarchy.GetPartsWithTag(tag))
             {
-                efficiency *= partHealths[part.HierarchyIndex] / part.maxHitPoints;
+                float num4 = CalculatePartEfficiency(part);
+                num += num4;
+                num3 = math.max(num3, num4);
+                num2++;
             }
-            return math.max(efficiency, 0);
+            if (num2 == 0)
+            {
+                return 1f;
+            }
+            return math.min(num / num2, 3.4028235E+38f);
+        }
+
+        public float CalculatePartEfficiency(byte hierarchyIndex)
+        {
+            return CalculatePartEfficiency(shipHierarchy.parts[hierarchyIndex]);
+        }
+
+        private float CalculatePartEfficiency(ShipPartRecord part)
+        {
+            float num = 1f;
+            float num3 = partHealths[part.HierarchyIndex] / part.maxHitPoints;
+            num *= num3;
+            return math.max(num, 0f);
+        }
+
+        private bool ShouldBeDead()
+        {
+            List<RequiredFunctionality> requiredFunctions = ShipHierarchy.RequiredFunctionality;
+            for (int i = 0; i < requiredFunctions.Count; i++)
+            {
+                if(CalculateTagEfficiency(requiredFunctions[i].function)< requiredFunctions[i].minEfficiency)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -159,12 +274,28 @@ namespace MultiplayerRunTime
     [Serializable]
     public class ShipHierarchy
     {
-        public static List<Functionality> RequiredFunctionality = new()
+        public static List<RequiredFunctionality> RequiredFunctionality = new()
         {
-            Functionality.Structural,
-            Functionality.Piloting,
-            Functionality.Thrust,
-            Functionality.Control
+            new RequiredFunctionality
+            {
+                function = Functionality.Structural,
+                minEfficiency = 0.1f
+            },
+            new RequiredFunctionality
+            {
+                function = Functionality.Piloting,
+                minEfficiency = 0.25f
+            },
+            new RequiredFunctionality
+            {
+                function = Functionality.Thrust,
+                minEfficiency = 0.0f
+            },
+            new RequiredFunctionality
+            {
+                function = Functionality.Control,
+                minEfficiency = 0.05f
+            }
         };
 
 
@@ -184,7 +315,7 @@ namespace MultiplayerRunTime
             CacheDataRecursive(root);
             for (int i = 0; i < RequiredFunctionality.Count; i++)
             {
-                if (!tags.Contains(RequiredFunctionality[i]))
+                if (!tags.Contains(RequiredFunctionality[i].function))
                 {
                     throw new MissingReferenceException(string.Format("Ship Hierarchy {0} is missing required functionality: {1}!", Label, RequiredFunctionality[i].ToString()));
                 }
@@ -342,5 +473,11 @@ namespace MultiplayerRunTime
         Piloting,
         RepairDroid,
         Control
+    }
+
+    public struct RequiredFunctionality
+    {
+        public Functionality function;
+        public float minEfficiency;
     }
 }

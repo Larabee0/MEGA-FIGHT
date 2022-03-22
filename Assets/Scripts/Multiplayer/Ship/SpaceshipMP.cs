@@ -74,8 +74,9 @@ namespace MultiplayerRunTime
                 case true:
                     // Ultra simple flight where the plane just gets pushed forward and manipulated
                     // with torques to turn.
-                    rigid.AddRelativeForce(forceMult * Throttle * thrust * Vector3.forward, ForceMode.Force);
-                    rigid.AddRelativeTorque(forceMult * new Vector3(turnTorque.x * controlInput.y, turnTorque.y * controlInput.z, -turnTorque.z * controlInput.x), ForceMode.Force);
+                    rigid.AddRelativeForce(forceMult * Throttle * thrust * shipHealthManagerMP.ThrustEfficiency * Vector3.forward, ForceMode.Force);
+
+                    rigid.AddRelativeTorque(shipHealthManagerMP.ManeourveEfficiency * forceMult * new Vector3(turnTorque.x * controlInput.y, turnTorque.y * controlInput.z, -turnTorque.z * controlInput.x), ForceMode.Force);
                     break;
             }
         }

@@ -9,7 +9,7 @@ namespace MultiplayerRunTime
     public class EngineGlowMP : NetworkBehaviour
     {
         private SpaceshipMP spaceship;
-
+        [SerializeField] private ShipPartMP[] engineParts;
         [Header("Editor Only (DrawGizmos)")]
         [SerializeField][Range(-0.25f, 1f)] private float throttleSim = 0f;
         [Space]
@@ -23,7 +23,10 @@ namespace MultiplayerRunTime
 
         private float throttleLastFixedUpdate = float.NegativeInfinity;
 
-        private float Intensity { get => Mathf.Lerp(intesntiyMin, intensityMax, ABSThrottle); }
+        private float GetIntensity(float throttle)
+        {
+            return Mathf.Lerp(intesntiyMin, intensityMax, throttle);
+        }
 
         private float ABSThrottle
         {
@@ -44,9 +47,11 @@ namespace MultiplayerRunTime
             calBase.a = ABSThrottle != 0f ? baseColour.a : 0;
             for (int i = 0; i < engineGlows.Length; i++)
             {
+                float maxThrottle = spaceship.shipHealthManagerMP.CalculatePartEfficiency(engineParts[i].HierarchyID);
+                float intensity = GetIntensity(math.clamp(ABSThrottle, 0, maxThrottle));
                 Material material = engineGlows[i].material;
                 material.SetColor("_BaseColor", calBase);
-                material.SetColor("_EmissionColor", emissionColour * Intensity);
+                material.SetColor("_EmissionColor", emissionColour * intensity);
             }
         }
 
