@@ -13,7 +13,7 @@ namespace MultiplayerRunTime
         private LaserSpawnerMP laserSpawnerMP;
         private SpaceshipMP spaceship;
 
-        private Transform[] WeaponOutputPoints;
+        private ShipPartMP[] WeaponOutputPoints;
         private Transform TargetPoint;
 
         [SerializeField] private float dstSenstivity = 1f;
@@ -97,9 +97,14 @@ namespace MultiplayerRunTime
             {
                 case <= 0f:
                     fireInterval = UnityEngine.Random.Range(fireIntervalMin, fireIntervalMax);
-                    Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].position;
+                    if (WeaponOutputPoints[currentWeaponIndex] == null)
+                    {
+                        currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
+                        break;
+                    }
+                    Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].AnimationPoint.position;
 
-                    Ray ray = new(WeaponOutputPoints[currentWeaponIndex].position, direciton);
+                    Ray ray = new(WeaponOutputPoints[currentWeaponIndex].AnimationPoint.position, direciton);
 
                     Vector3 endPoint;
 
@@ -121,7 +126,7 @@ namespace MultiplayerRunTime
                             break;
                     }
 
-                    laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].position), spaceship.transform.InverseTransformPoint(endPoint)));
+                    laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].AnimationPoint.position), spaceship.transform.InverseTransformPoint(endPoint)));
                     //Debug.DrawLine(WeaponOutputPoints[currentWeaponIndex].position, endPoint, Color.red, 0.25f);
                     currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
                     break;

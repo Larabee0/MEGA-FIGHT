@@ -23,9 +23,10 @@ namespace SinglePlayerRunTime
             {
                 enabled = false;
             }
+            //Display.displays[0].Activate();
+            //Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
         }
 
-        // Update is called once per frame
         void Update()
         {
             FPS = (int)(1f / Time.unscaledDeltaTime);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Unity.Mathematics;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -136,78 +137,6 @@ namespace MultiplayerRunTime
             
         }
 
-        [ServerRpc(Delivery = RpcDelivery.Reliable ,RequireOwnership = false)]
-        public void HitServerRpc(byte hierachyID,ulong instigatorClientID, float damage)
-        {
-            if(partHealths[hierachyID] > 0)
-            {
-                partHealths[hierachyID] -= damage;
-                parts[hierachyID].FlashPartClientRpc();
-
-            }
-            if (partHealths[hierachyID] <= 0)
-            {
-                damage += partHealths[hierachyID];
-                partHealths[hierachyID] = 0;
-                // destroy part OwnerClientId
-                if (ShouldBeDead())
-                {
-                    DestroyShipServerRpc();
-                }
-            }
-            else
-            {
-                // apply any functionality changes
-                float proportion = partHealths[hierachyID] / shipHierarchy.parts[hierachyID].maxHitPoints;
-                parts[hierachyID].SetObjectTintServerRpc((byte)math.lerp(0, 255, proportion));
-
-                Functionality[] effectedFunctions = shipHierarchy.parts[hierachyID].tags;
-                for (int i = 0; i < effectedFunctions.Length; i++)
-                {
-                    functionalityEfficiencies[effectedFunctions[i]] = CalculateTagEfficiency(effectedFunctions[i]);
-                }
-            }
-
-            ClientRpcParams clientRpcParams = new() { Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } } };
-            AlertHitClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
-            clientRpcParams.Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { instigatorClientID } };
-            AlertInstigatorClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(OwnerClientId).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
-        }
-
-        [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertHitClientRPC(NetworkBehaviourReference instigatorClient, byte hierachyID, float damage, ClientRpcParams clientRpcParams = default)
-        {
-            DamageInfo damageInfo = GetDamageInfo(hierachyID, damage);
-            if (instigatorClient.TryGet(out PlayerManagerMP targetObject))
-            {
-                string instigator = targetObject.DisplayedName;
-                damageInfo.Instigator = instigator;
-            }
-            
-            damageInfo.hitPlayer = "you";
-            damageInfo.HitPlayerGrammar = "'re";
-            Debug.Log(damageInfo.ToString());
-        }
-
-        [ClientRpc(Delivery = RpcDelivery.Reliable)]
-        private void AlertInstigatorClientRPC(NetworkBehaviourReference target, byte hierachyID, float damage, ClientRpcParams clientRpcParams = default)
-        {
-            if (target.TryGet(out PlayerManagerMP targetObject))
-            {
-                DamageInfo damageInfo = targetObject.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID, damage);
-                damageInfo.Instigator = "You";
-                damageInfo.hitPlayer = targetObject.DisplayedName;
-                damageInfo.HitPlayerGrammar = "'s";
-                Debug.Log(damageInfo.ToString());
-            }
-        }
-
-        [ServerRpc(Delivery = RpcDelivery.Reliable, RequireOwnership = true)]
-        public void DestroyShipServerRpc()
-        {
-            Destroy(gameObject);
-        }
-
         private float CalculateTagEfficiency(Functionality tag)
         {
             float num = 0f;
@@ -252,6 +181,123 @@ namespace MultiplayerRunTime
             }
             return false;
         }
+
+        private void DestroyChildren(byte hierachyID)
+        {
+            
+            ShipPartRecord part = shipHierarchy.parts[hierachyID];
+            if (part.Destroyed)
+            {
+                return;
+            }
+            part.Destroyed = true;
+            partHealths[hierachyID] = 0;
+            if (part.Children != null && part.Children.Count > 0)
+            {
+                for (int i = 0; i < part.Children.Count; i++)
+                {
+                    DestroyChildren(part.Children[i].HierarchyIndex);
+                }
+            }
+        }
+
+        #region RPCS
+
+        [ServerRpc(Delivery = RpcDelivery.Reliable, RequireOwnership = false)]
+        public void HitServerRpc(byte hierachyID, ulong instigatorClientID, float damage)
+        {
+            if (partHealths[hierachyID] > 0)
+            {
+                partHealths[hierachyID] -= damage;
+                parts[hierachyID].FlashPartClientRpc();
+
+            }
+            if (partHealths[hierachyID] <= 0)
+            {
+                
+                damage += partHealths[hierachyID];
+                partHealths[hierachyID] = 0;
+                if (!shipHierarchy.parts[hierachyID].Destroyed)
+                {
+                    DestroyChildren(hierachyID);
+                    DetachPartClientRPC(hierachyID);
+                }
+                // destroy part OwnerClientId
+            }
+            else
+            {
+                // apply any functionality changes
+                float proportion = partHealths[hierachyID] / shipHierarchy.parts[hierachyID].maxHitPoints;
+                parts[hierachyID].SetObjectTintServerRpc((byte)math.lerp(0, 255, proportion));
+
+                // Functionality[] effectedFunctions = shipHierarchy.parts[hierachyID].tags;
+                // for (int i = 0; i < effectedFunctions.Length; i++)
+                // {
+                //     functionalityEfficiencies[effectedFunctions[i]] = CalculateTagEfficiency(effectedFunctions[i]);
+                // }
+            }
+
+            if (ShouldBeDead())
+            {
+                DestroyShipServerRpc();
+            }
+
+            ClientRpcParams clientRpcParams = new() { Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } } };
+            AlertHitClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
+            clientRpcParams.Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { instigatorClientID } };
+            AlertInstigatorClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(OwnerClientId).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void AlertHitClientRPC(NetworkBehaviourReference instigatorClient, byte hierachyID, float damage, ClientRpcParams clientRpcParams = default)
+        {
+            DamageInfo damageInfo = GetDamageInfo(hierachyID, damage);
+            if (instigatorClient.TryGet(out PlayerManagerMP targetObject))
+            {
+                string instigator = targetObject.DisplayedName;
+                damageInfo.Instigator = instigator;
+            }
+
+            damageInfo.hitPlayer = "you";
+            damageInfo.HitPlayerGrammar = "'re";
+            Debug.Log(damageInfo.ToString());
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void AlertInstigatorClientRPC(NetworkBehaviourReference target, byte hierachyID, float damage, ClientRpcParams clientRpcParams = default)
+        {
+            if (target.TryGet(out PlayerManagerMP targetObject))
+            {
+                DamageInfo damageInfo = targetObject.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID, damage);
+                damageInfo.Instigator = "You";
+                damageInfo.hitPlayer = targetObject.DisplayedName;
+                damageInfo.HitPlayerGrammar = "'s";
+                Debug.Log(damageInfo.ToString());
+            }
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void DetachPartClientRPC(byte hierachyID)
+        {
+            parts[hierachyID].gameObject.AddComponent<Rigidbody>().mass = 100f;
+            
+            Collider[] collidables = parts[hierachyID].gameObject.GetComponentsInChildren<Collider>();
+            for (int i = 0; i < collidables.Length; i++)
+            {
+                collidables[i].gameObject.layer = 2;
+            }
+            parts[hierachyID].transform.parent = null;
+            Destroy(parts[hierachyID].gameObject, 30f);
+            Destroy(parts[hierachyID]);
+        }
+
+        [ServerRpc(Delivery = RpcDelivery.Reliable, RequireOwnership = true)]
+        public void DestroyShipServerRpc()
+        {
+            Destroy(gameObject);
+        }
+
+        #endregion
     }
 
 
@@ -425,6 +471,7 @@ namespace MultiplayerRunTime
         public ShipHierarchy Ship;
         public ShipPartRecord Parent;
         public List<ShipPartRecord> Children;
+        public bool Destroyed = false;
 
         public ShipPartRecord(ShipPartScriptableObject part)
         {

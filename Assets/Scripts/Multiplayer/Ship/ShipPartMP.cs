@@ -15,6 +15,7 @@ namespace MultiplayerRunTime
         private Color32 flashColour = new(187, 191, 41, 255);
         private float Intensity = 10f;
         [SerializeField] private float FlashTime = 0.25f;
+        public Transform AnimationPoint;
 
         public Color32 TintColour
         {
@@ -103,6 +104,11 @@ namespace MultiplayerRunTime
             {
                 return HierarchyID.CompareTo(other.HierarchyID);
             }
+        }
+
+        public override void OnDestroy()
+        {
+            FlashColour = normalFlashColour;
         }
     }
 }

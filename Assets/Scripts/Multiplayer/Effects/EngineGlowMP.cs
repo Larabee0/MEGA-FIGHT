@@ -47,11 +47,14 @@ namespace MultiplayerRunTime
             calBase.a = ABSThrottle != 0f ? baseColour.a : 0;
             for (int i = 0; i < engineGlows.Length; i++)
             {
-                float maxThrottle = spaceship.shipHealthManagerMP.CalculatePartEfficiency(engineParts[i].HierarchyID);
-                float intensity = GetIntensity(math.clamp(ABSThrottle, 0, maxThrottle));
-                Material material = engineGlows[i].material;
-                material.SetColor("_BaseColor", calBase);
-                material.SetColor("_EmissionColor", emissionColour * intensity);
+                if (engineGlows[i] != null && engineParts[i] != null)
+                {
+                    float maxThrottle = spaceship.shipHealthManagerMP.CalculatePartEfficiency(engineParts[i].HierarchyID);
+                    float intensity = GetIntensity(math.clamp(ABSThrottle, 0, maxThrottle));
+                    Material material = engineGlows[i].material;
+                    material.SetColor("_BaseColor", calBase);
+                    material.SetColor("_EmissionColor", emissionColour * intensity);
+                }
             }
         }
 

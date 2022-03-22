@@ -216,6 +216,7 @@ MonoBehaviour:
   HierarchyID: 0
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &306326921642944479
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +446,7 @@ MonoBehaviour:
   HierarchyID: 1
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &1624610481822868201
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,6 +729,7 @@ MonoBehaviour:
   HierarchyID: 7
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 1316016083}
 --- !u!1 &3259113964725848005
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,6 +846,7 @@ MonoBehaviour:
   HierarchyID: 13
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 4138997790421556530}
 --- !u!1 &4548468011591463702
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,6 +963,7 @@ MonoBehaviour:
   HierarchyID: 9
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 1250232991}
 --- !u!1 &4581780140040743590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1075,6 +1080,7 @@ MonoBehaviour:
   HierarchyID: 12
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &4869471023974022262
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,10 +1154,10 @@ MonoBehaviour:
   FPSCamPos: {fileID: 7933710497908283195}
   TargetPoint: {fileID: 3292349200878381999}
   WeaponOutputPoints:
-  - {fileID: 1316016083}
-  - {fileID: 4138997790421556530}
-  - {fileID: 1250232991}
-  - {fileID: 3092463}
+  - {fileID: 3242495910465099249}
+  - {fileID: 6215544819434177246}
+  - {fileID: 4443922864700374434}
+  - {fileID: 7639641787217677109}
   laserSpawnerMP: {fileID: -1804329374080476669}
   shipHealthManagerMP: {fileID: 2173042695768397383}
   thrust: 3750
@@ -1555,6 +1561,7 @@ MonoBehaviour:
   HierarchyID: 2
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &6007355766447840066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1671,6 +1678,7 @@ MonoBehaviour:
   HierarchyID: 11
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 3092463}
 --- !u!1 &6035068697437040023
 GameObject:
   m_ObjectHideFlags: 0
@@ -1846,6 +1854,7 @@ MonoBehaviour:
   HierarchyID: 8
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &6730058776698920326
 GameObject:
   m_ObjectHideFlags: 0
@@ -2046,6 +2055,7 @@ MonoBehaviour:
   HierarchyID: 4
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &7165138793589780413
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,6 +2173,7 @@ MonoBehaviour:
   HierarchyID: 5
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &7375747467580735689
 GameObject:
   m_ObjectHideFlags: 0
@@ -2312,6 +2323,7 @@ MonoBehaviour:
   HierarchyID: 3
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &7905077004257493042
 GameObject:
   m_ObjectHideFlags: 0
@@ -2428,6 +2440,7 @@ MonoBehaviour:
   HierarchyID: 10
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}
 --- !u!1 &8362558298445186175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2686,3 +2699,4 @@ MonoBehaviour:
   HierarchyID: 6
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
+  AnimationPoint: {fileID: 0}

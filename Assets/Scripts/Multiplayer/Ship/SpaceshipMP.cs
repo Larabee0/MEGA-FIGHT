@@ -21,7 +21,7 @@ namespace MultiplayerRunTime
         [Header("Local Components")]
         public Transform FPSCamPos;
         public Transform TargetPoint;
-        public Transform[] WeaponOutputPoints;
+        public ShipPartMP[] WeaponOutputPoints;
         public LaserSpawnerMP laserSpawnerMP;
         public ShipHealthManagerMP shipHealthManagerMP;
         public delegate void ShipDestroyed();
