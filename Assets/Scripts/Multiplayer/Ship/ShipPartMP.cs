@@ -29,6 +29,11 @@ namespace MultiplayerRunTime
             set => meshRenderer.material.SetColor("_EmissionColor", (Color)value * Intensity);
         }
 
+        public Bounds RendererBounds
+        {
+            get => meshRenderer.bounds;
+        }
+
         private NetworkVariable<bool> ObjectEnabled = new(true);
         private NetworkVariable<Color32> ObjectTint = new(new Color32(255,255,255,255));
 
