@@ -14,6 +14,7 @@ namespace MultiplayerRunTime
         [SerializeField] private HudMP hud;
         [SerializeField] private PlayerManagerMP PlayerManagerMP;
         [SerializeField] private string displayedName;
+        [SerializeField] private byte ShipPrefabIndex;
         private bool Paused = true;
 
         public string DisplayedName
@@ -158,7 +159,7 @@ namespace MultiplayerRunTime
             if (PlayerManagerMP != null)
             {
                 PlayerManagerMP.DisplayedName = displayedName;
-                PlayerManagerMP.SpawnShipServerRpc(PlayerManagerMP.transform.position, 0);
+                PlayerManagerMP.SpawnShipServerRpc(PlayerManagerMP.transform.position, ShipPrefabIndex);
             }
         }
 
