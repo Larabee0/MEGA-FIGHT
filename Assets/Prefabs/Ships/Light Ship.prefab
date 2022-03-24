@@ -652,8 +652,8 @@ MonoBehaviour:
   engineGlows:
   - {fileID: 5370216097562148012}
   - {fileID: 4182439120632572003}
-  baseColour: {r: 0.86666673, g: 0, b: 0, a: 0.1764706}
-  emissionColour: {r: 1, g: 0, b: 0, a: 1}
+  baseColour: {r: 0.83921576, g: 0.7411765, b: 0.08235294, a: 0.1764706}
+  emissionColour: {r: 0.9450981, g: 0.9960785, b: 0.023529414, a: 1}
   intesntiyMin: 15
   intensityMax: 65
 --- !u!114 &3905754645607304687
@@ -669,6 +669,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laserPrefab: {fileID: 5787011605861934322, guid: 4ec1aec53441c734089109460ab1e8e5, type: 3}
+  laserColour:
+    serializedVersion: 2
+    rgba: 4278648561
 --- !u!114 &7916427166386909386
 MonoBehaviour:
   m_ObjectHideFlags: 0
