@@ -1222,6 +1222,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laserPrefab: {fileID: 5787011605861934322, guid: 4ec1aec53441c734089109460ab1e8e5, type: 3}
+  laserColour:
+    serializedVersion: 2
+    rgba: 4278190271
 --- !u!114 &2173042695768397383
 MonoBehaviour:
   m_ObjectHideFlags: 0

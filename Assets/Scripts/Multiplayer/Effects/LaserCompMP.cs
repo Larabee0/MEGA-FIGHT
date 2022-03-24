@@ -15,4 +15,11 @@ public class LaserCompMP : MonoBehaviour
         meshFilter.mesh.SetIndices(new int[] { 0, 1 }, MeshTopology.Lines, 0);
         Destroy(this.gameObject, 0.125f);
     }
+
+    public void Show(float3x2 point, Color32 laserColour)
+    {
+        Show(point);
+        meshRenderer.material.SetColor("_BaseColor",laserColour);
+        meshRenderer.material.SetColor("_EmissionColor", (Color)laserColour * 20f);
+    }
 }

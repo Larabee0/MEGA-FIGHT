@@ -47,11 +47,17 @@ namespace MultiplayerRunTime
         public delegate void PlayerLosesSpaceship();
         public PlayerGainsSpaceship OnShipGained;
         public PlayerLosesSpaceship OnShipLost;
+        private ShipUITracking UITrakcer;
 
         private void Awake()
         {
             displayedName = string.Empty;
             shipReference.OnValueChanged += ShipRefereceChanged;
+        }
+
+        private void Start()
+        {
+            UITrakcer = FindObjectOfType<ShipUITracking>();
         }
 
         private void ShipRefereceChanged(NetworkBehaviourReference previousValue, NetworkBehaviourReference newValue)
@@ -60,6 +66,7 @@ namespace MultiplayerRunTime
             {
                 OnShipGained?.Invoke(LocalSpaceship);
                 LocalSpaceship.OnShipDestroyed += HandleShipDestroyed;
+                UITrakcer.AddName(OwnerClientId,displayedName,LocalSpaceship.transform,LocalSpaceship.shipHealthManagerMP.ModelBounds);
             }
         }
 
@@ -87,6 +94,7 @@ namespace MultiplayerRunTime
         public void HandleShipDestroyed()
         {
             OnShipLost?.Invoke();
+            UITrakcer.RemoveName(OwnerClientId);
         }
     }
 }
