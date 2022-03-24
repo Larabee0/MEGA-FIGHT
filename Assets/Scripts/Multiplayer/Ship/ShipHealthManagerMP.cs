@@ -16,7 +16,6 @@ namespace MultiplayerRunTime
         public ShipHierarchyScriptableObject stats;
         public ShipHierarchy shipHierarchy;
 
-        private Bounds modelBounds;
         private List<ShipPartMP> parts;
 
         private NetworkList<float> partHealths;
@@ -81,11 +80,6 @@ namespace MultiplayerRunTime
             }
         }
 
-        public Bounds ModelBounds
-        {
-            get => modelBounds;
-        }
-
         private void Awake()
         {
             partHealths = new();
@@ -110,8 +104,6 @@ namespace MultiplayerRunTime
             }
 
             partHealths.OnListChanged += RecalculateEffiencies;
-
-            parts.ForEach(p => modelBounds.Encapsulate(p.RendererBounds));
         }
 
         private void RecalculateEffiencies(NetworkListEvent<float> changedValue)
