@@ -9,24 +9,25 @@ namespace MultiplayerRunTime
     public class LaserSpawnerMP : NetworkBehaviour
     {
         [SerializeField] private LaserCompMP laserPrefab;
+        [SerializeField] private Color32 laserColour;
 
         public void ClientLaserSpawnCall(float3x2 points)
         {
-            SpawnLaserServerRPC(points);
-            Instantiate(laserPrefab, transform).Show(points);
+            SpawnLaserServerRPC(points, laserColour);
+            Instantiate(laserPrefab, transform).Show(points, laserColour);
         }
 
         [ServerRpc(Delivery = RpcDelivery.Unreliable)]
-        private void SpawnLaserServerRPC(float3x2 points)
+        private void SpawnLaserServerRPC(float3x2 points, Color32 laserColour)
         {
-            SpawnLaserClientRPC(points);
+            SpawnLaserClientRPC(points, laserColour);
         }
 
         [ClientRpc(Delivery = RpcDelivery.Unreliable)]
-        private void SpawnLaserClientRPC(float3x2 points)
+        private void SpawnLaserClientRPC(float3x2 points, Color32 laserColour)
         {
             if (IsOwner) { return; }
-            Instantiate(laserPrefab, transform).Show(points);
+            Instantiate(laserPrefab, transform).Show(points, laserColour);
         }
     }
 }
