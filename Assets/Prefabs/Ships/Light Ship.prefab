@@ -611,11 +611,11 @@ MonoBehaviour:
   - {fileID: 5906115115387335202}
   laserSpawnerMP: {fileID: 3905754645607304687}
   shipHealthManagerMP: {fileID: 7916427166386909386}
-  thrust: 3750
-  turnTorque: {x: 630, y: 630, z: 630}
+  thrust: 4630
+  turnTorque: {x: 500, y: 360, z: 700}
   forceMult: 100
-  sensitivity: 5
-  aggressiveTurnAngle: 5
+  sensitivity: 4.5
+  aggressiveTurnAngle: 10
   controlInput: {x: 0, y: 0, z: 0}
 --- !u!114 &3004695792953479888
 MonoBehaviour:
