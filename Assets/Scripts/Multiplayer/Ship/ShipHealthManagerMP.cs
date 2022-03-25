@@ -299,7 +299,7 @@ namespace MultiplayerRunTime
             Destroy(parts[hierachyID]);
         }
 
-        [ServerRpc(Delivery = RpcDelivery.Reliable, RequireOwnership = true)]
+        [ServerRpc(Delivery = RpcDelivery.Reliable, RequireOwnership = false)]
         public void DestroyShipServerRpc()
         {
             Destroy(gameObject);
