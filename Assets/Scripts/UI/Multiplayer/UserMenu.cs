@@ -64,7 +64,7 @@ namespace MultiplayerRunTime
                     overlay.style.display = DisplayStyle.Flex;
                     break;
                 case false:
-                    inputControl.SetUIEnabled(false);
+                    //inputControl.SetUIEnabled(false);
                     overlay.style.display = DisplayStyle.None;
                     break;
             }

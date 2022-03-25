@@ -83,7 +83,19 @@ namespace MultiplayerRunTime
 
         public Bounds ModelBounds
         {
-            get => modelBounds;
+            get
+            {
+
+                if(parts.Count > 2)
+                {
+                    modelBounds = parts[0].RendererBounds;
+                    for (int i = 1; i < parts.Count; i++)
+                    {
+                        modelBounds.Encapsulate(parts[i].RendererBounds);
+                    }
+                }
+                return modelBounds;        
+            }
         }
 
         private void Awake()
@@ -111,7 +123,6 @@ namespace MultiplayerRunTime
 
             partHealths.OnListChanged += RecalculateEffiencies;
 
-            parts.ForEach(p => modelBounds.Encapsulate(p.RendererBounds));
         }
 
         private void RecalculateEffiencies(NetworkListEvent<float> changedValue)

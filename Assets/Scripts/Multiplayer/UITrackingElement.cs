@@ -4,122 +4,147 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UITrackingElement : MonoBehaviour
+namespace MultiplayerRunTime
 {
-    [SerializeField] private Text playerName;
-
-    public float rectanglePaddingMultiplier = 0.1f;
-    public string DisplayedName { set => playerName.text = value; }
-    public Transform ship;
-    public Bounds bounds;
-
-    private void Update()
+    public class UITrackingElement : MonoBehaviour
     {
-        if (ship == null) {return; }
-        Vector3 pos = ship.position;
-        //pos.z = 50f;
-        transform.position = pos;
-        ///Rect visualRect = TargetObjectBoundsToScreenSpace();
-        ///
-        ///RectTransform rt = GetComponent<RectTransform>();
-        ///rt.position = new Vector2(visualRect.xMax, visualRect.yMax);
-        ///
-        ///
-        ///for (int i = 0; i < transform.childCount; i++)
-        ///{
-        ///    Transform child = transform.GetChild(0);
-        ///    child.gameObject.SetActive(true);
-        ///
-        ///    float xPadding = visualRect.width * rectanglePaddingMultiplier;
-        ///    float yPadding = visualRect.height * rectanglePaddingMultiplier;
-        ///
-        ///    if (i == 0)
-        ///    {
-        ///        // Resize the tracker sprite rectangle
-        ///        rt = child.GetComponent<RectTransform>();
-        ///        rt.position = new Vector2(visualRect.xMin - xPadding, visualRect.yMin - yPadding);
-        ///        rt.sizeDelta = new Vector2(visualRect.width + xPadding * 2, visualRect.height + yPadding * 2);
-        ///    }
-        ///    else
-        ///    {
-        ///        // Reposition the other objects (texts and sprites) beside the tracker rectangle
-        ///        rt = child.GetComponent<RectTransform>();
-        ///        rt.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, rt.position.y);
-        ///    }
-        ///}
-        //foreach (Transform child in transform)
-        //{
-        //
-        //    // Make all child elements visible
-        //    // The parent UI components itself is always active, otherwise it does not receive update events
-        //    child.gameObject.SetActive(true);
-        //
-        //    float xPadding = visualRect.width * rectanglePaddingMultiplier;
-        //    float yPadding = visualRect.height * rectanglePaddingMultiplier;
-        //
-        //    if (child.name == "RectangleImage")
-        //    {
-        //        // Resize the tracker sprite rectangle
-        //        rt = child.GetComponent<RectTransform>();
-        //        rt.position = new Vector2(visualRect.xMin - xPadding, visualRect.yMin - yPadding);
-        //        rt.sizeDelta = new Vector2(visualRect.width + xPadding * 2, visualRect.height + yPadding * 2);
-        //    }
-        //    else
-        //    {
-        //        // Reposition the other objects (texts and sprites) beside the tracker rectangle
-        //        rt = child.GetComponent<RectTransform>();
-        //        rt.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, rt.position.y);
-        //    }
-        //}
-    }
+        [SerializeField] private Text playerName;
+        [SerializeField] private Text shipType;
 
-    private Rect TargetObjectBoundsToScreenSpace()
-    {
-        // Object visual rectangle in world space
-        Bounds b = bounds;
-
-        // Calculate the screen space rectangle surrounding the 3D object
-        Camera c = Camera.main;
-        Rect rect = Rect.zero;
-        Vector3 screenSpacePoint;
-
-        screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y + b.extents.y, b.center.z + b.extents.z));
-        AdjustRect(ref rect, screenSpacePoint, true);
-        screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y + b.extents.y, b.center.z - b.extents.z));
-        AdjustRect(ref rect, screenSpacePoint);
-        screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y - b.extents.y, b.center.z + b.extents.z));
-        AdjustRect(ref rect, screenSpacePoint);
-        screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y - b.extents.y, b.center.z - b.extents.z));
-        AdjustRect(ref rect, screenSpacePoint);
-        screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x - b.extents.x, b.center.y + b.extents.y, b.center.z + b.extents.z));
-        AdjustRect(ref rect, screenSpacePoint);
-        screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x - b.extents.x, b.center.y + b.extents.y, b.center.z - b.extents.z));
-        AdjustRect(ref rect, screenSpacePoint);
-        screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x - b.extents.x, b.center.y - b.extents.y, b.center.z + b.extents.z));
-        AdjustRect(ref rect, screenSpacePoint);
-        screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x - b.extents.x, b.center.y - b.extents.y, b.center.z - b.extents.z));
-        AdjustRect(ref rect, screenSpacePoint);
-
-        return rect;
-    }
-
-
-    private void AdjustRect(ref Rect rect, Vector3 pnt, bool firstCall = false)
-    {
-        if (firstCall)
+        public float rectanglePaddingMultiplier = 0.1f;
+        public string DisplayedName { set => playerName.text = value; }
+        public string ShipType { set => shipType.text = value; }
+        
+        public ShipHealthManagerMP HealthManagerMP
         {
-            rect.xMin = pnt.x;
-            rect.yMin = pnt.y;
-            rect.xMax = pnt.x;
-            rect.yMax = pnt.y;
+            set
+            {
+                healthManagerMP = value;
+                shipTransform = healthManagerMP.transform;
+                ShipType = healthManagerMP.shipHierarchy.Label;
+            }
         }
-        else
+
+        private ShipHealthManagerMP healthManagerMP;
+        public Transform shipTransform;
+        private RectTransform rootTransform;
+        private List<RectTransform> childRectTransformList = new();
+        private Camera c;
+
+        private void Awake()
+        {
+            c = Camera.main;
+            rootTransform = GetComponent<RectTransform>();
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform child = transform.GetChild(i);
+                childRectTransformList.Add(child.GetComponent<RectTransform>());
+            }
+        }
+
+        private void Start()
+        {
+            ResetState();
+        }
+
+        private void Update()
+        {
+            if (shipTransform == null)
+            {
+                ResetState();
+                return;
+            }
+            Vector3 screenPoint = c.WorldToViewportPoint(shipTransform.position);
+            if (screenPoint.z <= 0 || screenPoint.x <= 0 || screenPoint.x >= 1 || screenPoint.y <= 0 || screenPoint.y >= 1)
+            {
+                ResetState();
+                return;
+            }
+
+            Rect visualRect = TargetObjectBoundsToScreenSpace();
+
+            rootTransform.position = new Vector2(visualRect.xMax, visualRect.yMin);
+
+            for (int i = 0; i < childRectTransformList.Count; i++)
+            {
+                RectTransform child = childRectTransformList[i];
+                child.gameObject.SetActive(true);
+            
+                float xPadding = visualRect.width * rectanglePaddingMultiplier;
+                float yPadding = visualRect.height * rectanglePaddingMultiplier;
+            
+                if (i == 0)
+                {
+                    // Resize the tracker sprite rectangle
+                    child.position = new Vector2(visualRect.xMin - xPadding, visualRect.yMin - yPadding);
+                    child.sizeDelta = new Vector2(visualRect.width + xPadding * 2, visualRect.height + yPadding * 2);
+                }
+                else
+                {
+                    // Reposition the other objects (texts and sprites) beside the tracker rectangle
+                    child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, child.position.y);
+                }
+            }
+        }
+
+        private Rect TargetObjectBoundsToScreenSpace()
+        {
+            // Object visual rectangle in world space
+            Bounds b = healthManagerMP.ModelBounds;
+
+            // Calculate the screen space rectangle surrounding the 3D object
+            Rect rect = Rect.zero;
+            Vector3 screenSpacePoint;
+
+            screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y + b.extents.y, b.center.z + b.extents.z));
+            
+            rect.xMin = screenSpacePoint.x;
+            rect.yMin = screenSpacePoint.y;
+            rect.xMax = screenSpacePoint.x;
+            rect.yMax = screenSpacePoint.y;
+
+            screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y + b.extents.y, b.center.z - b.extents.z));
+            AdjustRect(ref rect, screenSpacePoint);
+            screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y - b.extents.y, b.center.z + b.extents.z));
+            AdjustRect(ref rect, screenSpacePoint);
+            screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y - b.extents.y, b.center.z - b.extents.z));
+            AdjustRect(ref rect, screenSpacePoint);
+            screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x - b.extents.x, b.center.y + b.extents.y, b.center.z + b.extents.z));
+            AdjustRect(ref rect, screenSpacePoint);
+            screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x - b.extents.x, b.center.y + b.extents.y, b.center.z - b.extents.z));
+            AdjustRect(ref rect, screenSpacePoint);
+            screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x - b.extents.x, b.center.y - b.extents.y, b.center.z + b.extents.z));
+            AdjustRect(ref rect, screenSpacePoint);
+            screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x - b.extents.x, b.center.y - b.extents.y, b.center.z - b.extents.z));
+            AdjustRect(ref rect, screenSpacePoint);
+
+            return rect;
+        }
+
+
+        private void AdjustRect(ref Rect rect, Vector3 pnt)
         {
             rect.xMin = Mathf.Min(rect.xMin, pnt.x);
             rect.yMin = Mathf.Min(rect.yMin, pnt.y);
             rect.xMax = Mathf.Max(rect.xMax, pnt.x);
             rect.yMax = Mathf.Max(rect.yMax, pnt.y);
         }
-    }
 
+        public void ResetState()
+        {
+            rootTransform.position = Vector2.zero;
+            rootTransform.anchorMax = Vector2.zero;
+            rootTransform.anchorMin = Vector2.zero;
+            rootTransform.pivot = Vector2.zero;
+
+            for (int i = 0; i < childRectTransformList.Count; i++)
+            {
+                RectTransform child = childRectTransformList[i];
+                child.gameObject.SetActive(false);
+                child.anchorMax = Vector2.zero;
+                child.anchorMin = Vector2.zero;
+                child.pivot = Vector2.zero;
+            }
+        }
+    }
 }

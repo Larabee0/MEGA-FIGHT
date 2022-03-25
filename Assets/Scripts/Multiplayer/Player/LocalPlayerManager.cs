@@ -160,7 +160,7 @@ namespace MultiplayerRunTime
             if (PlayerManagerMP != null)
             {
                 PlayerManagerMP.DisplayedName = displayedName;
-                PlayerManagerMP.SpawnShipServerRpc(PlayerManagerMP.transform.position, ShipPrefabIndex);
+                PlayerManagerMP.SpawnShipServerRpc(ShipPrefabIndex);
             }
         }
 

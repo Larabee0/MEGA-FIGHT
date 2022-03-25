@@ -41,6 +41,9 @@ namespace MultiplayerRunTime
         [SerializeField]
         [Tooltip("Camera of the first person camera")]
         private CinemachineVirtualCamera FPSVirtualCamera = null;
+        [SerializeField]
+        [Tooltip("Camera of the despawned player")]
+        private CinemachineVirtualCamera DeSpawnedVirtualCamera = null;
 
         [Header("Options")]
         [SerializeField]
@@ -118,6 +121,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
             inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
             FreezeMouseAim = inputControl.ControllerPresent;
+            DeSpawnedVirtualCamera.Priority = 8;
         }
 
         private void Update()
@@ -184,6 +188,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.CameraSwitch.canceled -= OnPerspectiveButtonPressed;
             spaceshipTransform = null;
             spaceshipController = null;
+            DeSpawnedVirtualCamera.Priority = 11;
         }
 
         public void SetShip(SpaceshipMP ship)

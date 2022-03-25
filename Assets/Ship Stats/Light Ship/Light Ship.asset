@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54bc352c9f3f7764a9be3046fb0c1fa6, type: 3}
   m_Name: Light Ship
   m_EditorClassIdentifier: 
-  ShipID: 0
-  label: 
+  ShipID: 1
+  label: Light Ship
   parts:
   - {fileID: 11400000, guid: b550c57162e94c9489816e6e539cfd6f, type: 2}
   - {fileID: 11400000, guid: a43c6750403735442b6ab43759720bf5, type: 2}

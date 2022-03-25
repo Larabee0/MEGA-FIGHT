@@ -4,45 +4,47 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
-public class ShipUITracking : MonoBehaviour
+namespace MultiplayerRunTime
 {
-    [SerializeField] private Canvas canvas;
-    [SerializeField] private UITrackingElement trackingElementPrefab;
-    private Dictionary<ulong, UITrackingElement> elements = new();
-
-    private void Start()
+    public class ShipUITracking : MonoBehaviour
     {
-        
-    }
+        [SerializeField] private Canvas canvas;
+        [SerializeField] private UITrackingElement trackingElementPrefab;
+        private Dictionary<ulong, UITrackingElement> elements = new();
 
-    private void Update()
-    {
-    }
+        private void Start()
+        {
 
-    public void AddName(ulong clientID, string displayedName, Transform ship, Bounds bounds)
-    {
-        if (clientID == NetworkManager.Singleton.LocalClientId)
-        { 
-            return; 
         }
 
-        Debug.LogFormat("Local ID: {0} Provided ID: {1}", NetworkManager.Singleton.LocalClientId, clientID);
-
-        if (!elements.ContainsKey(clientID))
+        private void Update()
         {
-            elements.Add(clientID, Instantiate(trackingElementPrefab,transform));
         }
-        elements[clientID].DisplayedName = displayedName;
-        elements[clientID].ship = ship;
-        elements[clientID].bounds = bounds;
-    }
 
-    public void RemoveName(ulong clientID)
-    {
-        if (elements.ContainsKey(clientID))
+        public void AddName(ulong clientID, string displayedName, ShipHealthManagerMP hMMP)
         {
-            Destroy(elements[clientID].gameObject);
-            elements.Remove(clientID);
+            if (clientID == NetworkManager.Singleton.LocalClientId)
+            {
+                return;
+            }
+
+            Debug.LogFormat("Local ID: {0} Provided ID: {1}", NetworkManager.Singleton.LocalClientId, clientID);
+
+            if (!elements.ContainsKey(clientID))
+            {
+                elements.Add(clientID, Instantiate(trackingElementPrefab, transform));
+            }
+            elements[clientID].DisplayedName = displayedName;
+            elements[clientID].HealthManagerMP = hMMP;
+        }
+
+        public void RemoveName(ulong clientID)
+        {
+            if (elements.ContainsKey(clientID))
+            {
+                Destroy(elements[clientID].gameObject);
+                elements.Remove(clientID);
+            }
         }
     }
 }
