@@ -17,7 +17,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collections": {
-      "version": "1.2.3-pre.1",
+      "version": "1.2.3",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -224,11 +224,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.transport": {
-      "version": "1.0.0-pre.14",
-      "depth": 1,
+      "version": "1.0.0-pre.16",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.collections": "1.1.0",
+        "com.unity.collections": "1.2.3",
         "com.unity.burst": "1.6.4",
         "com.unity.mathematics": "1.2.5"
       },
