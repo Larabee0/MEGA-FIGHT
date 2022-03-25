@@ -6,6 +6,7 @@ using System.Text;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 namespace MultiplayerRunTime
@@ -18,6 +19,7 @@ namespace MultiplayerRunTime
         private UIDocument document;
         private VisualElement rootVisualElement;
         private VisualElement overlay;
+        public InputControl inputControl;
 
         public ConnectionPopUp connectionPopUp;
         public PausePopUp pausePopUp;
@@ -36,6 +38,11 @@ namespace MultiplayerRunTime
             connectionPopUp = new ConnectionPopUp(this, rootVisualElement.Q("ConnectionPopUp"));
             pausePopUp = new PausePopUp(this, rootVisualElement.Q("PausePopUp"));
             spawnPopUp = new SpawnPopUp(this, rootVisualElement.Q("SpawnPopUp"));
+            
+        }
+
+        private void Start()
+        {
             ShowConnectionOverlay(true);
         }
 
@@ -44,6 +51,11 @@ namespace MultiplayerRunTime
             return new InGameInfo(mFCMP, rootVisualElement.Q("InGameInfo"));
         }
 
+        public void SetMenuSelection()
+        {
+            inputControl.SetUIEnabled(true);
+            FindObjectOfType<EventSystem>().SetSelectedGameObject(FindObjectOfType<PanelEventHandler>().gameObject);
+        }
         private void ShowOverlay(bool shown)
         {
             switch (shown)
@@ -52,6 +64,7 @@ namespace MultiplayerRunTime
                     overlay.style.display = DisplayStyle.Flex;
                     break;
                 case false:
+                    inputControl.SetUIEnabled(false);
                     overlay.style.display = DisplayStyle.None;
                     break;
             }
@@ -62,6 +75,7 @@ namespace MultiplayerRunTime
             switch (shown)
             {
                 case true:
+                    SetMenuSelection();
                     connectionPopUp.rootVisualElement.style.display = DisplayStyle.Flex;
                     ShowPauseOverlay(false, false);
                     ShowSpawnOverlay(false, false);
@@ -78,6 +92,7 @@ namespace MultiplayerRunTime
             switch (shown)
             {
                 case true:
+                    SetMenuSelection();
                     pausePopUp.rootVisualElement.style.display = DisplayStyle.Flex;
                     ShowConnectionOverlay(false);
                     ShowSpawnOverlay(false);
@@ -94,6 +109,7 @@ namespace MultiplayerRunTime
             switch (shown)
             {
                 case true:
+                    SetMenuSelection();
                     spawnPopUp.rootVisualElement.style.display = DisplayStyle.Flex;
                     ShowConnectionOverlay(false, false);
                     ShowPauseOverlay(false, false);
@@ -144,6 +160,10 @@ namespace MultiplayerRunTime
                 QuitButton.RegisterCallback<ClickEvent>(ev => OnQuitCallback());
                 HostButton.RegisterCallback<ClickEvent>(ev => OnHostCallback());
                 ConnectButton.RegisterCallback<ClickEvent>(ev => OnConnectCallback());
+
+                QuitButton.RegisterCallback<NavigationSubmitEvent>(ev => OnQuitCallback());
+                HostButton.RegisterCallback<NavigationSubmitEvent>(ev => OnHostCallback());
+                ConnectButton.RegisterCallback<NavigationSubmitEvent>(ev => OnConnectCallback());
             }
 
             private void OnQuitCallback()
@@ -187,6 +207,11 @@ namespace MultiplayerRunTime
                 RespawnButton.RegisterCallback<ClickEvent>(ev => RespawnButtonCallback());
                 MainMenuButton.RegisterCallback<ClickEvent>(ev => MainMenuButtonCallback());
                 CloseGameButton.RegisterCallback<ClickEvent>(ev => CloseGameButtonCallback());
+
+                ResumeButton.RegisterCallback<NavigationSubmitEvent>(ev => ResumeButtonCallback());
+                RespawnButton.RegisterCallback<NavigationSubmitEvent>(ev => RespawnButtonCallback());
+                MainMenuButton.RegisterCallback<NavigationSubmitEvent>(ev => MainMenuButtonCallback());
+                CloseGameButton.RegisterCallback<NavigationSubmitEvent>(ev => CloseGameButtonCallback());
             }
 
             private void ResumeButtonCallback()
@@ -243,6 +268,10 @@ namespace MultiplayerRunTime
                 SpawnButton.RegisterCallback<ClickEvent>(ev => SpawnButtonCallback());
                 LeaveButton.RegisterCallback<ClickEvent>(ev => LeaveButtonCallback());
                 QuitGameButton.RegisterCallback<ClickEvent>(ev => QuitGameButtonCallback());
+
+                SpawnButton.RegisterCallback<NavigationSubmitEvent>(ev => SpawnButtonCallback());
+                LeaveButton.RegisterCallback<NavigationSubmitEvent>(ev => LeaveButtonCallback());
+                QuitGameButton.RegisterCallback<NavigationSubmitEvent>(ev => QuitGameButtonCallback());
             }
 
             private void SpawnButtonCallback()

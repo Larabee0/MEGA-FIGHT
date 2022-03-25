@@ -84,3 +84,11 @@
 .unity-base-text-field {
     --unity-cursor-color: rgb(255, 255, 255);
 }
+
+.StandardButton:focus {
+    background-color: rgba(103, 103, 103, 255);
+    border-left-color: rgba(58, 121, 187, 255);
+    border-right-color: rgba(58, 121, 187, 255);
+    border-top-color: rgba(58, 121, 187, 255);
+    border-bottom-color: rgba(58, 121, 187, 255);
+}

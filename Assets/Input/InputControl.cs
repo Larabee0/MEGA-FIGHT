@@ -20,6 +20,14 @@ public class InputControl : MonoBehaviour
         get => playerActions.UI;
     }
 
+    public bool ControllerPresent
+    {
+        get
+        {
+            return Gamepad.current != null;
+        }
+    }
+
     private void Awake()
     {
         Singleton = this;

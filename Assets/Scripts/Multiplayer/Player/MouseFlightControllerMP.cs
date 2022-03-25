@@ -63,6 +63,8 @@ namespace MultiplayerRunTime
         private Vector3 frozenDirection = Vector3.forward;
         private bool isMouseAimFrozen = false;
 
+        public bool FreezeMouseAim{get => isMouseAimFrozen; set=>isMouseAimFrozen=value; }
+
         [Space]
         [Header("Player Input")]
 
@@ -115,6 +117,7 @@ namespace MultiplayerRunTime
             transform.parent = null;
             inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
             inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
+            FreezeMouseAim = inputControl.ControllerPresent;
         }
 
         private void Update()

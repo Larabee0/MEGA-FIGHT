@@ -40,6 +40,7 @@ namespace MultiplayerRunTime
             lobby.OnClientDisconnects += OnDisconnect;
             fireControl.inputControl = inputControl;
             mouseFlightController.inputControl = inputControl;
+            FindObjectOfType<UserMenu>().inputControl = inputControl;
         }
 
         private void OnEnable()
