@@ -36,10 +36,10 @@ namespace SinglePlayerRunTime
         [Tooltip("Angle at which airplane banks fully into target.")] public float aggressiveTurnAngle = 10f;
 
         [Header("Input")]
-        [SerializeField] [Range(-1f, 1f)] private float pitch = 0f;
-        [SerializeField] [Range(-1f, 1f)] private float yaw = 0f;
-        [SerializeField] [Range(-1f, 1f)] private float roll = 0f;
-        [SerializeField] [Range(-0.25f, 1f)] private float throttle = 0f;
+        [SerializeField][Range(-1f, 1f)] private float pitch = 0f;
+        [SerializeField][Range(-1f, 1f)] private float yaw = 0f;
+        [SerializeField][Range(-1f, 1f)] private float roll = 0f;
+        [SerializeField][Range(-0.25f, 1f)] private float throttle = 0f;
         [SerializeField] private float throttleSenstivity = 1f;
 
         public float Pitch { set { pitch = Mathf.Clamp(value, -1f, 1f); } get { return pitch; } }
@@ -47,7 +47,7 @@ namespace SinglePlayerRunTime
         public float Roll { set { roll = Mathf.Clamp(value, -1f, 1f); } get { return roll; } }
         public float Throttle { set { throttle = Drag = Mathf.Clamp(value, -0.25f, 1f); } get { return throttle; } }
 
-        private float Drag { set { rigid.drag = Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
+        private float Drag { set { rigid.drag = Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value) * 1.2f), 1f, 5f); } }
 
         private Rigidbody rigid;
 
@@ -86,7 +86,7 @@ namespace SinglePlayerRunTime
             }
 
             float keyboardYaw = Input.GetAxis("Yaw");
-            if(Mathf.Abs(keyboardYaw) > .25f)
+            if (Mathf.Abs(keyboardYaw) > .25f)
             {
                 yawOverride = true;
                 pitchOverride = true;

@@ -98,7 +98,6 @@ namespace MultiplayerRunTime
             FlashColour = normalFlashColour;
         }
 
-
         public int CompareTo(ShipPartMP other)
         {
             if (other == null)

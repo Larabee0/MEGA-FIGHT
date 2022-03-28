@@ -28,17 +28,20 @@ namespace MultiplayerRunTime
             return Mathf.Lerp(intesntiyMin, intensityMax, throttle);
         }
 
-        private float ABSThrottle
-        {
-            get
-            {
-                return Mathf.Abs(throttleSim);
-            }
-        }
+        private float ABSThrottle => Mathf.Abs(throttleSim);
 
         private void Awake()
         {
             spaceship = GetComponent<SpaceshipMP>();
+        }
+
+        private void Start()
+        {
+            if (IsOwner)
+            {
+                SetSettings();
+                UserCustomisableSettings.instance.OnUserSettingsChanged += SetSettings;
+            }
         }
 
         private void Update()
@@ -73,6 +76,27 @@ namespace MultiplayerRunTime
             }
         }
 
+        public override void OnDestroy()
+        {
+            if (IsOwner)
+            {
+                UserCustomisableSettings.instance.OnUserSettingsChanged -= SetSettings;
+            }
+        }
+
+        private void SetSettings()
+        {
+            UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
+            if (userSettings.userSettings.OverrideEngineColour)
+            {
+                Color32 userColour = userSettings.userSettings.PlayerEngineColour;
+                SetEngineColourServerRPC(userColour);
+                baseColour = userColour;
+                baseColour.a = 45;
+                emissionColour = userColour;
+            }
+        }
+
         [ServerRpc(Delivery = RpcDelivery.Unreliable)]
         private void SetThrottleServerRPC(float value)
         {
@@ -89,17 +113,23 @@ namespace MultiplayerRunTime
                     break;
             }
         }
-        //private void OnDrawGizmos()
-        //{
-        //
-        //    Color calBase = baseColour;
-        //    calBase.a = ABSThrottle != 0f ? baseColour.a : 0;
-        //    for (int i = 0; i < engineGlows.Length; i++)
-        //    {
-        //        Material sharedmaterial = engineGlows[i].sharedMaterial;
-        //        sharedmaterial.SetColor("_BaseColor", calBase);
-        //        sharedmaterial.SetColor("_EmissionColor", emissionColour * Intensity);
-        //    }
-        //}
+
+        [ServerRpc(Delivery = RpcDelivery.Reliable)]
+        private void SetEngineColourServerRPC(Color32 colour)
+        {
+            SetEngineColourClientRPC(colour);
+            baseColour = colour;
+            baseColour.a = 45;
+            emissionColour = colour;
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void SetEngineColourClientRPC(Color32 colour)
+        {
+            if (IsOwner) { return; }
+            baseColour = colour;
+            baseColour.a = 45;
+            emissionColour = colour;
+        }
     }
 }

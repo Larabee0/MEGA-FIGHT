@@ -15,22 +15,11 @@ namespace MultiplayerRunTime
         [SerializeField] private string displayedName;
         private bool useSpawnPoints = true;
         private NetworkVariable<NetworkBehaviourReference> shipReference = new();
-        //private SpaceshipMP localSpaceship;
+
         public SpaceshipMP LocalSpaceship
         {
             get { shipReference.Value.TryGet(out SpaceshipMP ship); return ship; }
-            private set
-            {
-                shipReference.Value = value;
-                //if (value != null)
-                //{
-                //    OnShipGained?.Invoke(LocalSpaceship);
-                //}
-                //else
-                //{
-                //    OnShipLost?.Invoke();
-                //}
-            }
+            private set { shipReference.Value = value; }
         }
 
         public string DisplayedName
@@ -121,7 +110,7 @@ namespace MultiplayerRunTime
         {
             if (useSpawnPoints)
             {
-                List<SpawnPoint> points = new List<SpawnPoint>();
+                List<SpawnPoint> points = new();
                 for (int i = 0; i < spawnPoints.Length; i++)
                 {
                     if (spawnPoints[i].SpawnEmpty)

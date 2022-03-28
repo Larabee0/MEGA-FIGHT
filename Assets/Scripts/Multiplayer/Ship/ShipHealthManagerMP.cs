@@ -43,10 +43,10 @@ namespace MultiplayerRunTime
             get
             {
                 float efficiency = 0f;
-                
+
                 if (functionalityEfficiencies.ContainsKey(Functionality.Piloting))
                 {
-                    efficiency+= functionalityEfficiencies[Functionality.Piloting];
+                    efficiency += functionalityEfficiencies[Functionality.Piloting];
                 }
                 else
                 {
@@ -85,16 +85,19 @@ namespace MultiplayerRunTime
         {
             get
             {
-
-                if(parts.Count > 2)
+                if (parts.Count > 2)
                 {
                     modelBounds = parts[0].RendererBounds;
                     for (int i = 1; i < parts.Count; i++)
                     {
+                        if (shipHierarchy.parts[parts[i].HierarchyID].Destroyed)
+                        {
+                            continue;
+                        }
                         modelBounds.Encapsulate(parts[i].RendererBounds);
                     }
                 }
-                return modelBounds;        
+                return modelBounds;
             }
         }
 
@@ -122,13 +125,17 @@ namespace MultiplayerRunTime
             }
 
             partHealths.OnListChanged += RecalculateEffiencies;
-
         }
 
         private void RecalculateEffiencies(NetworkListEvent<float> changedValue)
         {
             int hierarchyID = changedValue.Index;
             Functionality[] effectedFunctions = shipHierarchy.parts[hierarchyID].tags;
+
+            if (changedValue.Value <= 0 && !IsHost && !IsServer)
+            {
+                shipHierarchy.parts[hierarchyID].Destroyed = true;
+            }
 
             for (int i = 0; i < effectedFunctions.Length; i++)
             {
@@ -153,7 +160,6 @@ namespace MultiplayerRunTime
                 ammount = damage,
                 PartLabel = shipHierarchy.parts[hierarchyID].label
             };
-            
         }
 
         private float CalculateTagEfficiency(Functionality tag)
@@ -193,7 +199,7 @@ namespace MultiplayerRunTime
             List<RequiredFunctionality> requiredFunctions = ShipHierarchy.RequiredFunctionality;
             for (int i = 0; i < requiredFunctions.Count; i++)
             {
-                if(CalculateTagEfficiency(requiredFunctions[i].function)< requiredFunctions[i].minEfficiency)
+                if (CalculateTagEfficiency(requiredFunctions[i].function) < requiredFunctions[i].minEfficiency)
                 {
                     return true;
                 }
@@ -203,7 +209,6 @@ namespace MultiplayerRunTime
 
         private void DestroyChildren(byte hierachyID)
         {
-            
             ShipPartRecord part = shipHierarchy.parts[hierachyID];
             if (part.Destroyed)
             {
@@ -233,7 +238,6 @@ namespace MultiplayerRunTime
             }
             if (partHealths[hierachyID] <= 0)
             {
-                
                 damage += partHealths[hierachyID];
                 partHealths[hierachyID] = 0;
                 if (!shipHierarchy.parts[hierachyID].Destroyed)
@@ -248,12 +252,6 @@ namespace MultiplayerRunTime
                 // apply any functionality changes
                 float proportion = partHealths[hierachyID] / shipHierarchy.parts[hierachyID].maxHitPoints;
                 parts[hierachyID].SetObjectTintServerRpc((byte)math.lerp(0, 255, proportion));
-
-                // Functionality[] effectedFunctions = shipHierarchy.parts[hierachyID].tags;
-                // for (int i = 0; i < effectedFunctions.Length; i++)
-                // {
-                //     functionalityEfficiencies[effectedFunctions[i]] = CalculateTagEfficiency(effectedFunctions[i]);
-                // }
             }
 
             if (ShouldBeDead())
@@ -299,7 +297,7 @@ namespace MultiplayerRunTime
         private void DetachPartClientRPC(byte hierachyID)
         {
             parts[hierachyID].gameObject.AddComponent<Rigidbody>().mass = 100f;
-            
+
             Collider[] collidables = parts[hierachyID].gameObject.GetComponentsInChildren<Collider>();
             for (int i = 0; i < collidables.Length; i++)
             {
@@ -479,7 +477,6 @@ namespace MultiplayerRunTime
         }
     }
 
-    
     public class ShipPartRecord : IComparable<ShipPartRecord>
     {
         public byte HierarchyIndex;
@@ -511,7 +508,7 @@ namespace MultiplayerRunTime
 
         public int CompareTo(ShipPartRecord other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return 1;
             }

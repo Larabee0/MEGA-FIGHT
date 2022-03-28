@@ -51,7 +51,7 @@ namespace MultiplayerRunTime
         private float throttle = 0f;
         public float Throttle { set { throttle = Mathf.Clamp(value, -0.25f, 1f); Drag = throttle; } get { return throttle; } }
 
-        private float Drag { set { rigid.drag = value == 0 ? 2.5f : Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value)*1.2f), 1f, 5f); } }
+        private float Drag { set { rigid.drag = value == 0 ? 2.5f : Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value) * 1.2f), 1f, 5f); } }
 
         public Vector3 controlInput;
 

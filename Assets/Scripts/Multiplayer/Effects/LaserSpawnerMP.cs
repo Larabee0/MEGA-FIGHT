@@ -11,6 +11,31 @@ namespace MultiplayerRunTime
         [SerializeField] private LaserCompMP laserPrefab;
         [SerializeField] private Color32 laserColour;
 
+        private void Start()
+        {
+            if (IsOwner)
+            {
+                UserCustomisableSettings.instance.OnUserSettingsChanged += SetLaserColour;
+            }
+        }
+
+        public override void OnDestroy()
+        {
+            if (IsOwner)
+            {
+                UserCustomisableSettings.instance.OnUserSettingsChanged-= SetLaserColour;
+            }
+        }
+
+        private void SetLaserColour()
+        {
+            UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
+            if (userSettings.userSettings.OverrideLaserColour)
+            {
+                laserColour = userSettings.userSettings.PlayerLaserColour;
+            }
+        }
+
         public void ClientLaserSpawnCall(float3x2 points)
         {
             SpawnLaserServerRPC(points, laserColour);

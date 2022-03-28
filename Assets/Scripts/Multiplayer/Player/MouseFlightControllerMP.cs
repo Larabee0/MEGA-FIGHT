@@ -26,9 +26,11 @@ namespace MultiplayerRunTime
 
         private UserMenu.InGameInfo inGameInfo;
 
-        [SerializeField] [Tooltip("Transform of the object the mouse rotates to generate MouseAim position")]
+        [SerializeField]
+        [Tooltip("Transform of the object the mouse rotates to generate MouseAim position")]
         private Transform mouseAim = null;
-        [SerializeField] [Tooltip("Transform of the object on the rig which the camera is attached to")]
+        [SerializeField]
+        [Tooltip("Transform of the object on the rig which the camera is attached to")]
         private Transform cameraRig = null;
         [SerializeField]
         [Tooltip("Transform of the third person camera")]
@@ -51,22 +53,25 @@ namespace MultiplayerRunTime
         private Perspective perspective = Perspective.ThridPerson;
         private bool EnableFPS = true;
 
-        [SerializeField] [Tooltip("How quickly the camera tracks the mouse aim point.")]
+        [SerializeField]
+        [Tooltip("How quickly the camera tracks the mouse aim point.")]
         private float camSmoothSpeed = 5f;
 
-        [SerializeField] [Tooltip("Mouse sensitivity for the mouse flight target")]
+        [SerializeField]
+        [Tooltip("Mouse sensitivity for the mouse flight target")]
         private float mouseSensitivity = 3f;
 
         private float AimDistance => fireControl.TargetDistance;
 
         [Space]
-        [SerializeField] [Tooltip("How far the boresight and mouse flight are from the aircraft")]
+        [SerializeField]
+        [Tooltip("How far the boresight and mouse flight are from the aircraft")]
         private bool showDebugInfo = false;
 
         private Vector3 frozenDirection = Vector3.forward;
         private bool isMouseAimFrozen = false;
 
-        public bool FreezeMouseAim{get => isMouseAimFrozen; set=>isMouseAimFrozen=value; }
+        public bool FreezeMouseAim { get => isMouseAimFrozen; set => isMouseAimFrozen = value; }
 
         [Space]
         [Header("Player Input")]
@@ -94,7 +99,7 @@ namespace MultiplayerRunTime
         {
             get
             {
-                if (mouseAim != null && spaceshipController!= null)
+                if (mouseAim != null && spaceshipController != null)
                 {
                     return isMouseAimFrozen
                         ? GetFrozenMouseAimPos()
@@ -106,22 +111,22 @@ namespace MultiplayerRunTime
                 }
             }
         }
-
         private void OnEnable()
         {
             if (mouseAim == null)
                 Debug.LogError(name + "MouseFlightController - No mouse aim transform assigned!");
             if (cameraRig == null)
                 Debug.LogError(name + "MouseFlightController - No camera rig transform assigned!");
-
+            UserCustomisableSettings.instance.OnUserSettingsChanged += SetSettings;
             // To work correctly, the entire rig must not be parented to anything.
             // When parented to something (such as an aircraft) it will inherit those
             // rotations causing unintended rotations as it gets dragged around.
             transform.parent = null;
             inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
             inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
-            FreezeMouseAim = inputControl.ControllerPresent;
+            //FreezeMouseAim = inputControl.ControllerPresent;
             DeSpawnedVirtualCamera.Priority = 8;
+            SetSettings();
         }
 
         private void Update()
@@ -185,10 +190,25 @@ namespace MultiplayerRunTime
 
         private void OnDisable()
         {
+            UserCustomisableSettings.instance.OnUserSettingsChanged -= SetSettings;
             inputControl.FlightActions.CameraSwitch.canceled -= OnPerspectiveButtonPressed;
             spaceshipTransform = null;
             spaceshipController = null;
             DeSpawnedVirtualCamera.Priority = 11;
+        }
+
+        private void SetSettings()
+        {
+            UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
+            throttleSenstivity = userSettings.userSettings.ThrottleSenstivity;
+            mouseSensitivity = userSettings.userSettings.FlightTargetSensitivity;
+            camSmoothSpeed = userSettings.userSettings.ThirdPersonCameraSensitivity;
+            if (!userSettings.userSettings.ThirdPersonIsDefaultCamera)
+            {
+                perspective = Perspective.FirstPerson;
+            }
+
+            SetVirtualCameraTarget();
         }
 
         public void SetShip(SpaceshipMP ship)
@@ -213,7 +233,7 @@ namespace MultiplayerRunTime
         {
             float axisValue = inputControl.FlightActions.Throttle.ReadValue<float>();
 
-            axisValue = axisValue != 0 ? math.clamp(spaceshipController.Throttle + (axisValue * (throttleSenstivity * Time.deltaTime)),0f,1f) : spaceshipController.Throttle;
+            axisValue = axisValue != 0 ? math.clamp(spaceshipController.Throttle + (axisValue * (throttleSenstivity * Time.deltaTime)), 0f, 1f) : spaceshipController.Throttle;
             axisValue -= inputControl.FlightActions.ReverseThrottle.IsPressed() ? throttleSenstivity * Time.deltaTime : 0;
             axisValue = math.clamp(axisValue, -0.25f, 1f);
             spaceshipController.Throttle = axisValue;

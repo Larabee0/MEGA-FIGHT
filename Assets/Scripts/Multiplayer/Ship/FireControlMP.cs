@@ -39,8 +39,21 @@ namespace MultiplayerRunTime
             }
         }
 
+
+
         private void OnEnable()
         {
+            UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
+            if (userSettings == null)
+            {
+                Debug.LogError(name + "MouseFlightController - No User Customisable Settings Instance");
+                enabled = false;
+                return;
+            }
+
+            targetDistance = userSettings.userSettings.DefaultAimDistance;
+            dstSenstivity = userSettings.userSettings.AimDistanceSenstivity;
+
             inputControl.FlightActions.Shoot.canceled += ResetFireInterval;
             inputControl.FlightActions.Shoot.canceled += ToggleOffFire;
             inputControl.FlightActions.Shoot.started += ToggleOnFire;
