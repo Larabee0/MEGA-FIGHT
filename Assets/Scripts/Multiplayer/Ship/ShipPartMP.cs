@@ -20,13 +20,29 @@ namespace MultiplayerRunTime
         public Color32 TintColour
         {
             get => meshRenderer.material.GetColor("_BaseColor");
-            set => meshRenderer.material.SetColor("_BaseColor", value);
+            set
+            {
+
+                if (meshRenderer != null)
+                {
+                    return;
+                }
+                meshRenderer.material.SetColor("_BaseColor", value);
+            }
         }
 
         public Color32 FlashColour
         {
             get => meshRenderer.material.GetColor("_EmissionColor");
-            set => meshRenderer.material.SetColor("_EmissionColor", (Color)value * Intensity);
+            set
+            {
+
+                if (meshRenderer != null)
+                {
+                    return;
+                }
+                meshRenderer.material.SetColor("_EmissionColor", (Color)value * Intensity);
+            }
         }
 
         public Bounds RendererBounds
@@ -45,6 +61,10 @@ namespace MultiplayerRunTime
 
         private void OnEnable()
         {
+            if(meshRenderer != null)
+            {
+                return;
+            }
             meshRenderer.enabled =  ObjectEnabled.Value;
             TintColour = ObjectTint.Value;
             ObjectEnabled.OnValueChanged += OnObjectEnabledChanged;
@@ -53,6 +73,10 @@ namespace MultiplayerRunTime
 
         private void OnObjectEnabledChanged(bool oldValue, bool newValue)
         {
+            if (meshRenderer != null)
+            {
+                return;
+            }
             meshRenderer.enabled = newValue;
         }
 
@@ -88,6 +112,10 @@ namespace MultiplayerRunTime
         [ClientRpc(Delivery = RpcDelivery.Unreliable)]
         public void FlashPartClientRpc()
         {
+            if (meshRenderer != null)
+            {
+                return;
+            }
             StartCoroutine(Flash());
         }
 

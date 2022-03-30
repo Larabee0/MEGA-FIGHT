@@ -61,8 +61,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dee08b4f6b715f4bac3179047c533c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPoints: []
   SpawnableShips:
   - {fileID: -7639359252223520313, guid: d6bf3d4486cf04540bb26d4250f781e2, type: 3}
-  - {fileID: 3004695792953479888, guid: afd3d6c7a68c6ee47893a0ad81a4df42, type: 3}
+  - {fileID: 459139855999263267, guid: a0476616f52842c44b5f6e12f3596034, type: 3}
   LPM: {fileID: 0}
   displayedName: 
