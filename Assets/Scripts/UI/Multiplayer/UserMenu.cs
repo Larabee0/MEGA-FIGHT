@@ -420,6 +420,7 @@ namespace MultiplayerRunTime
             private readonly TextField PlayerDisplayedName;
             private readonly Toggle DisableFlyAroundCamera;
             private readonly Toggle DefaultFlightCamera;
+
             private readonly Slider ThirdPersonCamSpeed;
             private readonly Slider MouseFlightTargetSens;
             private readonly Slider DefaultAimDistance;
@@ -433,6 +434,16 @@ namespace MultiplayerRunTime
             private readonly Button SaveAndCloseButton;
             private readonly Button CloseButton;
             private readonly Button ResetButton;
+
+            private readonly Button MinusThirdPersonCamSpeedButton;
+            private readonly Button MinusMouseFlightTargetSensButton;
+            private readonly Button MinusDefaultAimDistanceButton;
+            private readonly Button MinusAimDistanceSensButton;
+
+            private readonly Button PlusThirdPersonCamSpeedButton;
+            private readonly Button PlusMouseFlightTargetSensButton;
+            private readonly Button PlusDefaultAimDistanceButton;
+            private readonly Button PlusAimDistanceSensButton;
 
             public OnCloseOpenWindow onCloseOpenWindow = OnCloseOpenWindow.SettingsPopUp;
 
@@ -461,6 +472,16 @@ namespace MultiplayerRunTime
                 CloseButton = rootVisualElement.Q<Button>("CloseButton");
                 ResetButton = rootVisualElement.Q<Button>("ResetButton");
 
+                MinusThirdPersonCamSpeedButton = rootVisualElement.Q<Button>("TPCSMinus");
+                MinusMouseFlightTargetSensButton = rootVisualElement.Q<Button>("MFTSMinus");
+                MinusDefaultAimDistanceButton = rootVisualElement.Q<Button>("DADMinus");
+                MinusAimDistanceSensButton = rootVisualElement.Q<Button>("ADSMinus");
+
+                PlusThirdPersonCamSpeedButton = rootVisualElement.Q<Button>("TPCSPlus");
+                PlusMouseFlightTargetSensButton = rootVisualElement.Q<Button>("MFTSPlus");
+                PlusDefaultAimDistanceButton = rootVisualElement.Q<Button>("DADPlus");
+                PlusAimDistanceSensButton = rootVisualElement.Q<Button>("ADSPlus");
+
                 SaveAndCloseButton.RegisterCallback<ClickEvent>(ev => SaveAndClose());
                 CloseButton.RegisterCallback<ClickEvent>(ev => Close());
                 ResetButton.RegisterCallback<ClickEvent>(ev => Reset(true));
@@ -469,12 +490,77 @@ namespace MultiplayerRunTime
                 CloseButton.RegisterCallback<NavigationSubmitEvent>(ev => Close());
                 ResetButton.RegisterCallback<NavigationSubmitEvent>(ev => Reset(true));
 
+
+                MinusThirdPersonCamSpeedButton.RegisterCallback<ClickEvent>(ev=> PlusMinusButton(ButtonName.ThirdPersonCamSpeed, true));
+                MinusMouseFlightTargetSensButton.RegisterCallback<ClickEvent>(ev => PlusMinusButton(ButtonName.MouseFlightTargetSens, true));
+                MinusDefaultAimDistanceButton.RegisterCallback<ClickEvent>(ev => PlusMinusButton(ButtonName.DefaultAimDistance, true));
+                MinusAimDistanceSensButton.RegisterCallback<ClickEvent>(ev => PlusMinusButton(ButtonName.AimDistanceSens, true));
+
+                PlusThirdPersonCamSpeedButton.RegisterCallback<ClickEvent>(ev => PlusMinusButton(ButtonName.ThirdPersonCamSpeed));
+                PlusMouseFlightTargetSensButton.RegisterCallback<ClickEvent>(ev => PlusMinusButton(ButtonName.MouseFlightTargetSens));
+                PlusDefaultAimDistanceButton.RegisterCallback<ClickEvent>(ev => PlusMinusButton(ButtonName.DefaultAimDistance));
+                PlusAimDistanceSensButton.RegisterCallback<ClickEvent>(ev => PlusMinusButton(ButtonName.AimDistanceSens));
+
+                MinusThirdPersonCamSpeedButton.RegisterCallback<NavigationSubmitEvent>(ev => PlusMinusButton(ButtonName.ThirdPersonCamSpeed, true));
+                MinusMouseFlightTargetSensButton.RegisterCallback<NavigationSubmitEvent>(ev => PlusMinusButton(ButtonName.MouseFlightTargetSens, true));
+                MinusDefaultAimDistanceButton.RegisterCallback<NavigationSubmitEvent>(ev => PlusMinusButton(ButtonName.DefaultAimDistance, true));
+                MinusAimDistanceSensButton.RegisterCallback<NavigationSubmitEvent>(ev => PlusMinusButton(ButtonName.AimDistanceSens, true));
+
+                PlusThirdPersonCamSpeedButton.RegisterCallback<NavigationSubmitEvent>(ev => PlusMinusButton(ButtonName.ThirdPersonCamSpeed));
+                PlusMouseFlightTargetSensButton.RegisterCallback<NavigationSubmitEvent>(ev => PlusMinusButton(ButtonName.MouseFlightTargetSens));
+                PlusDefaultAimDistanceButton.RegisterCallback<NavigationSubmitEvent>(ev => PlusMinusButton(ButtonName.DefaultAimDistance));
+                PlusAimDistanceSensButton.RegisterCallback<NavigationSubmitEvent>(ev => PlusMinusButton(ButtonName.AimDistanceSens));
+
                 ThirdPersonCamSpeed.RegisterValueChangedCallback(ev => OnTPSCamSpeedValueChange(ev.newValue));
                 MouseFlightTargetSens.RegisterValueChangedCallback(ev => MouseFlightTargetSensValueChange(ev.newValue));
                 DefaultAimDistance.RegisterValueChangedCallback(ev => DefaultAimDistanceValueChange(ev.newValue));
                 AimDistanceSens.RegisterValueChangedCallback(ev => AimDistanceSenstivityValueChange(ev.newValue));
 
                 Reset();
+            }
+
+            private enum ButtonName
+            {
+                ThirdPersonCamSpeed,
+                MouseFlightTargetSens,
+                DefaultAimDistance,
+                AimDistanceSens
+            }
+
+            private void PlusMinusButton(ButtonName button, bool minus = false)
+            {
+                float Value = GetModifier(button);
+                if (minus)
+                {
+                    Value = -Value;
+                }
+                switch (button)
+                {
+                    case ButtonName.ThirdPersonCamSpeed:
+                        ThirdPersonCamSpeed.value += Value;
+                        break;
+                    case ButtonName.MouseFlightTargetSens:
+                        MouseFlightTargetSens.value += Value;
+                        break;
+                    case ButtonName.DefaultAimDistance:
+                        DefaultAimDistance.value += Value;
+                        break;
+                    case ButtonName.AimDistanceSens:
+                        AimDistanceSens.value += Value;
+                        break;
+                }
+            }
+
+            private float GetModifier(ButtonName button)
+            {
+                return button switch
+                {
+                    ButtonName.ThirdPersonCamSpeed => 0.5f,
+                    ButtonName.MouseFlightTargetSens => 0.01f,
+                    ButtonName.DefaultAimDistance => 10f,
+                    ButtonName.AimDistanceSens => 1f,
+                    _ => 1f,
+                };
             }
 
             public void SaveAndClose()
@@ -527,22 +613,22 @@ namespace MultiplayerRunTime
 
             public void OnTPSCamSpeedValueChange(float newValue)
             {
-                ThirdPersonCamSpeedValue.text = newValue.ToString();
+                ThirdPersonCamSpeedValue.text = newValue.ToString("N1");
             }
 
             public void MouseFlightTargetSensValueChange(float newValue)
             {
-                MouseFlightTargetSensValue.text = newValue.ToString();
+                MouseFlightTargetSensValue.text = newValue.ToString("N2");
             }
 
             public void DefaultAimDistanceValueChange(float newValue)
             {
-                DefaultAimDst.text = newValue.ToString();
+                DefaultAimDst.text = newValue.ToString("N0");
             }
 
             public void AimDistanceSenstivityValueChange(float newValue)
             {
-                AimDstValue.text = newValue.ToString();
+                AimDstValue.text = newValue.ToString("N0");
             }
         }
     }

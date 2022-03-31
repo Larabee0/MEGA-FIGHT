@@ -47,7 +47,7 @@ namespace MultiplayerRunTime
     public class UserSettingsSaveData
     {
         public float ThirdPersonCameraSensitivity = 5f;
-        public float FlightTargetSensitivity = 0.15f;
+        public float FlightTargetSensitivity = 0.3f;
         public float ThrottleSenstivity = 1f;
         public bool ThirdPersonIsDefaultCamera = true;
 
