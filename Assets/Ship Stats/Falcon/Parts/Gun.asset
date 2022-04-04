@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dcc52779ce406945b56cca6a2dc6759, type: 3}
   m_Name: Gun
   m_EditorClassIdentifier: 
-  PartID: 0
-  label: 
-  hitPoints: 0
-  tags: 
+  PartID: 11
+  label: Gun
+  hitPoints: 50
+  tags: 02

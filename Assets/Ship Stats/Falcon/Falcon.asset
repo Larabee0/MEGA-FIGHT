@@ -15,9 +15,97 @@ MonoBehaviour:
   ShipID: 0
   label: 
   parts:
-  - {fileID: 11400000, guid: c9320498549bf5148931ba8db922c585, type: 2}
+  - {fileID: 11400000, guid: 246c086a4c5176843ac122f50cc5c4aa, type: 2}
+  - {fileID: 11400000, guid: 7954e0ab58719aa4997d184cdd529ab7, type: 2}
+  - {fileID: 11400000, guid: b3797b2a0a7510e43b775d46d983c5ea, type: 2}
+  - {fileID: 11400000, guid: 9365ac56a14aad6409a924913a2b2438, type: 2}
+  - {fileID: 11400000, guid: d09abfb49d589754486388871f580f2c, type: 2}
+  - {fileID: 11400000, guid: 720fe665940ebc94fb1fedb38f7bc8d7, type: 2}
+  - {fileID: 11400000, guid: 6e152c34475917f43b37227faf0d4001, type: 2}
+  - {fileID: 11400000, guid: f37c6e87454dd3c4c874de7700b35bb5, type: 2}
+  - {fileID: 11400000, guid: 8c4d9c455d2f9ca4d85c20c72ba6d592, type: 2}
+  - {fileID: 11400000, guid: bd5ebb397bb9b8244b30de0b708bd3fd, type: 2}
+  - {fileID: 11400000, guid: d91f002ae1e975d44b9089c625e51fcd, type: 2}
+  - {fileID: 11400000, guid: c2628031511fa9b40bad44965d0add97, type: 2}
+  - {fileID: 11400000, guid: 0c98bd41851d3b14abcebfb84ccf3ba2, type: 2}
   root:
-    PartID: 0
+    PartID: 12
     HierachyID: 0
-    customLabel: 
-    children: []
+    customLabel: Root
+    children:
+    - PartID: 9
+      HierachyID: 1
+      customLabel: Front Upper Hull Extension
+      children: []
+    - PartID: 9
+      HierachyID: 2
+      customLabel: Front Lower Hull Extension
+      children: []
+    - PartID: 2
+      HierachyID: 3
+      customLabel: Front Left Hull
+      children:
+      - PartID: 7
+        HierachyID: 11
+        customLabel: Comm Dish
+        children: []
+      - PartID: 10
+        HierachyID: 12
+        customLabel: Front Left Landing Gear Hull
+        children: []
+      - PartID: 8
+        HierachyID: 13
+        customLabel: Front Left Extension
+        children: []
+    - PartID: 2
+      HierachyID: 4
+      customLabel: Front Right Hull
+      children:
+      - PartID: 10
+        HierachyID: 14
+        customLabel: Front Right Landing Gear Hull
+        children: []
+      - PartID: 5
+        HierachyID: 15
+        customLabel: Cockpit Corridor
+        children:
+        - PartID: 6
+          HierachyID: 16
+          customLabel: Cockpit
+          children: []
+      - PartID: 8
+        HierachyID: 19
+        customLabel: Front Right Extension
+        children: []
+    - PartID: 4
+      HierachyID: 5
+      customLabel: Left Entrance Section
+      children: []
+    - PartID: 4
+      HierachyID: 6
+      customLabel: Right Entrance Section
+      children: []
+    - PartID: 0
+      HierachyID: 7
+      customLabel: Gun Pod
+      children:
+      - PartID: 11
+        HierachyID: 17
+        customLabel: Upper Gun
+        children: []
+      - PartID: 11
+        HierachyID: 18
+        customLabel: Lower Gun
+        children: []
+    - PartID: 1
+      HierachyID: 8
+      customLabel: Rear Left Hull
+      children: []
+    - PartID: 1
+      HierachyID: 9
+      customLabel: Rear Right Hull
+      children: []
+    - PartID: 3
+      HierachyID: 10
+      customLabel: Engine
+      children: []

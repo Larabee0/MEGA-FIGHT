@@ -215,6 +215,7 @@ namespace MultiplayerRunTime
         {
             spaceshipTransform = ship.transform;
             spaceshipController = ship;
+            TPSCamPos.localPosition = ship.TPSCameraPosition;
             TPSVirtualCamera.Follow = TPSCamPos;
             if (spaceshipController.FPSCamPos == null)
             {

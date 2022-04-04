@@ -87,18 +87,55 @@ namespace MultiplayerRunTime
             {
                 if (parts.Count > 2)
                 {
-                    modelBounds = parts[0].RendererBounds;
-                    for (int i = 1; i < parts.Count; i++)
+                    ShipPartRecord part = shipHierarchy.parts[parts[0].HierarchyID];
+                    try
                     {
-                        if (shipHierarchy.parts[parts[i].HierarchyID].Destroyed)
+                        modelBounds = parts[0].RendererBounds;
+                        for (int i = 1; i < parts.Count; i++)
                         {
-                            continue;
+                            part = shipHierarchy.parts[parts[i].HierarchyID];
+                            if (part.Destroyed)
+                            {
+                                continue;
+                            }
+                            try
+                            {
+                                modelBounds.Encapsulate(parts[i].RendererBounds);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.LogErrorFormat("Part: {0} \nCaused Exception {1} \nIs Destroyed? {2}\nFirst Destroyed Parent: {3}", part.label, ex.Message, part.Destroyed,
+                                LogDestroyedParentOrRoot(part).label);
+                            }
                         }
-                        modelBounds.Encapsulate(parts[i].RendererBounds);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogErrorFormat("Part: {0} \nCaused Exception {1} \nIs Destroyed? {2}\nFirst Destroyed Parent: {3}", part.label, ex.Message, part.Destroyed,
+                        LogDestroyedParentOrRoot(part).label);
                     }
                 }
                 return modelBounds;
             }
+        }
+
+        private ShipPartRecord LogDestroyedParentOrRoot(ShipPartRecord source)
+        {
+            if(source == null)
+            {
+                return source;
+            }
+            if(source.Parent == null)
+            {
+                return source;
+            }
+            ShipPartRecord parent = source.Parent;
+            //Debug.LogFormat("Parent {0} to {1} is Destroy? {2}", parent.label, source.label, parent.Destroyed);
+            if(!parent.Destroyed && parent != shipHierarchy.root)
+            {
+                return LogDestroyedParentOrRoot(source);
+            }
+            return parent;
         }
 
         private void Awake()
@@ -129,12 +166,12 @@ namespace MultiplayerRunTime
 
         private void RecalculateEffiencies(NetworkListEvent<float> changedValue)
         {
-            int hierarchyID = changedValue.Index;
-            Functionality[] effectedFunctions = shipHierarchy.parts[hierarchyID].tags;
+            byte hierachyID = (byte)changedValue.Index;
+            Functionality[] effectedFunctions = shipHierarchy.parts[hierachyID].tags;
 
             if (changedValue.Value <= 0 && !IsHost && !IsServer)
             {
-                shipHierarchy.parts[hierarchyID].Destroyed = true;
+                shipHierarchy.parts[hierachyID].Destroyed = true;
             }
 
             for (int i = 0; i < effectedFunctions.Length; i++)
@@ -147,6 +184,18 @@ namespace MultiplayerRunTime
                 else
                 {
                     Debug.LogWarningFormat("Hiercarchy Missing function {0}", effectedFunctions[i].ToString());
+                }
+            }
+            if (IsServer)
+            {
+                if (!shipHierarchy.parts[hierachyID].Destroyed)
+                {
+                    DestroyChildren(hierachyID);
+                    DetachPartClientRPC(hierachyID);
+                }
+                if (ShouldBeDead())
+                {
+                    DestroyShipServerRpc();
                 }
             }
         }
@@ -210,6 +259,7 @@ namespace MultiplayerRunTime
         private void DestroyChildren(byte hierachyID)
         {
             ShipPartRecord part = shipHierarchy.parts[hierachyID];
+            Debug.LogFormat("Destroy? {0} Children: {1}", part.Destroyed, part.Children == null ? 0 : part.Children.Count);
             if (part.Destroyed)
             {
                 return;
@@ -240,11 +290,6 @@ namespace MultiplayerRunTime
             {
                 damage += partHealths[hierachyID];
                 partHealths[hierachyID] = 0;
-                if (!shipHierarchy.parts[hierachyID].Destroyed)
-                {
-                    DestroyChildren(hierachyID);
-                    DetachPartClientRPC(hierachyID);
-                }
                 // destroy part OwnerClientId
             }
             else
