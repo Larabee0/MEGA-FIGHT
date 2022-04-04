@@ -8,6 +8,7 @@
     "com.unity.multiplayer.tools": "1.0.0-pre.6",
     "com.unity.netcode.adapter.utp": "1.0.0-pre.6",
     "com.unity.netcode.gameobjects": "1.0.0-pre.6",
+    "com.unity.probuilder": "5.0.4",
     "com.unity.render-pipelines.universal": "12.1.6",
     "com.unity.services.relay": "1.0.1-pre.6",
     "com.unity.test-framework": "1.1.31",
