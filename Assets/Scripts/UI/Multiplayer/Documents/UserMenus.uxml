@@ -20,11 +20,11 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="overlay" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.69); align-items: center; justify-content: center; display: flex;">
-        <ui:VisualElement name="ConnectionPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgb(56, 56, 56); display: none; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
+        <ui:VisualElement name="ConnectionPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgb(56, 56, 56); display: flex; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
             <ui:VisualElement style="flex-direction: row;">
                 <ui:VisualElement name="ConnectSide" style="margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); width: 200px;">
                     <ui:Label text="Connect" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
-                    <ui:TextField picking-mode="Ignore" label="Join Code" name="JoinCode" style="flex-direction: column; -unity-text-align: upper-center; display: none;" />
+                    <ui:TextField picking-mode="Ignore" label="Join Code" name="JoinCode" style="flex-direction: column; -unity-text-align: upper-center; display: flex;" />
                     <ui:Button text="Connect" display-tooltip-when-elided="true" name="ClientConnectButton" class="StandardButton" />
                 </ui:VisualElement>
                 <ui:VisualElement name="HostSide" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; width: 200px;">
@@ -58,7 +58,7 @@
                 <ui:Button text="Close Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 5px;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="SettingsPopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: flex;">
+        <ui:VisualElement name="SettingsPopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: none;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:VisualElement name="Buttons" style="flex-direction: row; justify-content: center; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 1px;">
                     <ui:Button text="Save &amp; Close " display-tooltip-when-elided="true" name="SaveAndCloseButton" class="StandardButton" style="margin-top: 5px; width: 100px;" />
@@ -69,7 +69,7 @@
                     <ui:VisualElement style="width: 270px; flex-direction: row; justify-content: flex-end;">
                         <ui:Label text="Player In Game Name:" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); border-right-width: 1px; border-right-color: rgb(255, 255, 255);" />
                     </ui:VisualElement>
-                    <ui:TextField picking-mode="Ignore" name="PlayerDisplayedName" value="Player" text="Player" max-length="16" style="flex-direction: column; -unity-text-align: upper-center; display: none; width: 190px;" />
+                    <ui:TextField picking-mode="Ignore" name="PlayerDisplayedName" value="Player" text="Player" max-length="16" style="flex-direction: column; -unity-text-align: upper-center; display: flex; width: 210px;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:VisualElement style="width: 270px; flex-direction: row; justify-content: flex-end;">

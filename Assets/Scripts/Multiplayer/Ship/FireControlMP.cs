@@ -13,7 +13,8 @@ namespace MultiplayerRunTime
         private LaserSpawnerMP laserSpawnerMP;
         private SpaceshipMP spaceship;
 
-        private ShipPartMP[] WeaponOutputPoints;
+        //private ShipPartMP[] WeaponOutputPoints;
+        private WeaponOutputPoint[] WeaponOutputPoints;
         private Transform TargetPoint;
 
         [SerializeField] private float dstSenstivity = 1f;
@@ -79,7 +80,7 @@ namespace MultiplayerRunTime
         {
             spaceship = ship;
             laserSpawnerMP = spaceship.laserSpawnerMP;
-            WeaponOutputPoints = spaceship.WeaponOutputPoints;
+            WeaponOutputPoints = GetWeaponOutputPoints(spaceship.WeaponOutputPoints);
             TargetPoint = spaceship.TargetPoint;
             TargetDistance = TargetDistance;
             enabled = true;
@@ -110,14 +111,14 @@ namespace MultiplayerRunTime
             {
                 case <= 0f:
                     fireInterval = UnityEngine.Random.Range(fireIntervalMin, fireIntervalMax);
-                    if (WeaponOutputPoints[currentWeaponIndex] == null)
+                    if (WeaponOutputPoints[currentWeaponIndex].weaponSource == null)
                     {
                         currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
                         break;
                     }
-                    Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].AnimationPoint.position;
+                    Vector3 direciton = TargetPoint.position - WeaponOutputPoints[currentWeaponIndex].point.position;
 
-                    Ray ray = new(WeaponOutputPoints[currentWeaponIndex].AnimationPoint.position, direciton);
+                    Ray ray = new(WeaponOutputPoints[currentWeaponIndex].point.position, direciton);
 
                     Vector3 endPoint;
 
@@ -128,6 +129,9 @@ namespace MultiplayerRunTime
                             switch (hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
                             {
                                 case true:
+                                    Debug.Log(part);
+                                    Debug.Log(part.owner);
+                                    Debug.Log(part.owner.shipHealthManagerMP);
                                     float angleWeight = Mathf.InverseLerp(90f, 0f, Mathf.Abs(Mathf.DeltaAngle(Vector3.Angle(hit.normal, ray.direction), 90f)));
                                     //Debug.LogFormat("Hit Daamge: {0}", damage * angleWeight);
                                     part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID, LocalClientId, damage * angleWeight);
@@ -139,7 +143,7 @@ namespace MultiplayerRunTime
                             break;
                     }
 
-                    laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].AnimationPoint.position), spaceship.transform.InverseTransformPoint(endPoint)));
+                    laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].point.position), spaceship.transform.InverseTransformPoint(endPoint)));
                     //Debug.DrawLine(WeaponOutputPoints[currentWeaponIndex].position, endPoint, Color.red, 0.25f);
                     currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
                     break;
@@ -154,6 +158,53 @@ namespace MultiplayerRunTime
 
             WeaponOutputPoints = null;
             TargetPoint = null;
+        }
+
+        private WeaponOutputPoint[] GetWeaponOutputPoints(ShipPartMP[] weapons)
+        {
+            int pointCount = weapons.Length;
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                ShipPartMP weapon = weapons[i];
+                if (weapon.MultiPoint)
+                {
+                    pointCount += weapon.AnimationPoints.Length - 1;
+                }
+            }
+
+            WeaponOutputPoint[] points = new WeaponOutputPoint[pointCount];
+
+            for (int i = 0,p = 0; i < weapons.Length; i++,p++)
+            {
+                ShipPartMP weapon = weapons[i];
+                if (weapon.MultiPoint)
+                {
+                    for (int j = 0; j < weapon.AnimationPoints.Length; j++, p++)
+                    {
+                        points[p] = new WeaponOutputPoint
+                        {
+                            weaponSource = weapon,
+                            point = weapon.AnimationPoints[j]
+                        };
+                    }
+                    p--;
+                }
+                else
+                {
+                    points[p] = new WeaponOutputPoint
+                    {
+                        weaponSource = weapon,
+                        point = weapon.AnimationPoint
+                    };
+                }
+            }
+            return points;
+        }
+
+        public class WeaponOutputPoint
+        {
+            public ShipPartMP weaponSource;
+            public Transform point;
         }
     }
 }

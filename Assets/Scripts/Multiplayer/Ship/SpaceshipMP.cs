@@ -19,6 +19,7 @@ namespace MultiplayerRunTime
     public class SpaceshipMP : NetworkBehaviour
     {
         [Header("Local Components")]
+        public Vector3 TPSCameraPosition = new(0, 9, -35.2f);
         public Transform FPSCamPos;
         public Transform TargetPoint;
         public ShipPartMP[] WeaponOutputPoints;

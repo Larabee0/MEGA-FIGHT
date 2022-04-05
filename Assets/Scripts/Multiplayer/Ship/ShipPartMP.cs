@@ -16,6 +16,8 @@ namespace MultiplayerRunTime
         private float Intensity = 10f;
         [SerializeField] private float FlashTime = 0.25f;
         public Transform AnimationPoint;
+        public Transform[] AnimationPoints;
+        public bool MultiPoint = false;
 
         public Color32 TintColour
         {
@@ -23,7 +25,7 @@ namespace MultiplayerRunTime
             set
             {
 
-                if (meshRenderer != null)
+                if (meshRenderer == null)
                 {
                     return;
                 }
@@ -37,7 +39,7 @@ namespace MultiplayerRunTime
             set
             {
 
-                if (meshRenderer != null)
+                if (meshRenderer == null)
                 {
                     return;
                 }
@@ -61,7 +63,7 @@ namespace MultiplayerRunTime
 
         private void OnEnable()
         {
-            if(meshRenderer != null)
+            if(meshRenderer == null)
             {
                 return;
             }
@@ -73,7 +75,7 @@ namespace MultiplayerRunTime
 
         private void OnObjectEnabledChanged(bool oldValue, bool newValue)
         {
-            if (meshRenderer != null)
+            if (meshRenderer == null)
             {
                 return;
             }
@@ -112,7 +114,7 @@ namespace MultiplayerRunTime
         [ClientRpc(Delivery = RpcDelivery.Unreliable)]
         public void FlashPartClientRpc()
         {
-            if (meshRenderer != null)
+            if (meshRenderer == null)
             {
                 return;
             }
