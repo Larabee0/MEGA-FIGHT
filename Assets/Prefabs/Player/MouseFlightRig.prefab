@@ -79,12 +79,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spaceshipController: {fileID: 0}
+  inputControl: {fileID: 0}
   fireControl: {fileID: 595201830}
   mouseAim: {fileID: 4145331850755762}
   cameraRig: {fileID: 4543348934785170}
   TPSCamPos: {fileID: 4696854366641388}
   TPSVirtualCamera: {fileID: 0}
   FPSVirtualCamera: {fileID: 0}
+  DeSpawnedVirtualCamera: {fileID: 0}
   perspective: 0
   camSmoothSpeed: 5
   mouseSensitivity: 0.15
@@ -102,12 +104,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54c0594f5d6ed540af9a0f7940e3142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputControl: {fileID: 0}
   dstSenstivity: 25
   minDst: 100
-  maxDst: 500
+  maxDst: 1000
   targetDistance: 500
   fireIntervalMin: 0.1
   fireIntervalMax: 0.2
+  laserRange: 2000
+  damage: 100
 --- !u!1 &1411132086413374
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,7 +137,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411132086413374}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 9, z: -30}
+  m_LocalPosition: {x: 0, y: 9, z: -35.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

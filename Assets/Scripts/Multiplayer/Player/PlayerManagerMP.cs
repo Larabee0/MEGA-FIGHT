@@ -13,7 +13,7 @@ namespace MultiplayerRunTime
         [SerializeField] private NetworkObject[] SpawnableShips;
         [HideInInspector] public LocalPlayerManager LPM;
         [SerializeField] private string displayedName;
-        private bool useSpawnPoints = true;
+        public bool useSpawnPoints = true;
         private NetworkVariable<NetworkBehaviourReference> shipReference = new();
 
         public SpaceshipMP LocalSpaceship
@@ -53,18 +53,17 @@ namespace MultiplayerRunTime
 
             if (IsHost || IsServer)
             {
-                if (spawnPoints == null)
-                {
-                    useSpawnPoints = false;
-                    Debug.LogWarning("Missing Spawn Points! Player's Will be spawned at World Origin");
-                }
-
-                if (useSpawnPoints)
+                if (useSpawnPoints && spawnPoints != null && spawnPoints.Length != 0)
                 {
                     for (int i = 0; i < spawnPoints.Length; i++)
                     {
                         spawnPoints[i].IsServer = true;
                     }
+                }
+                else
+                {
+                    Debug.LogWarning("Map is not configured for Spawn Points! Player's will be spawned at world origin!");
+                    useSpawnPoints = false;
                 }
             }
         }

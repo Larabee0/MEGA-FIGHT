@@ -12,9 +12,9 @@ namespace MultiplayerRunTime
         [SerializeField] private MouseFlightControllerMP mouseFlightController;
         [SerializeField] private FireControlMP fireControl;
         [SerializeField] private HudMP hud;
-        [SerializeField] private PlayerManagerMP PlayerManagerMP;
         [SerializeField] private string displayedName;
         [SerializeField] private byte ShipPrefabIndex;
+        private PlayerManagerMP PlayerManagerMP;
         private bool Paused = true;
 
         public string DisplayedName

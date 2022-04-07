@@ -19,7 +19,7 @@ namespace MultiplayerRunTime
     {
         [Header("Components")]
         [HideInInspector] public SpaceshipMP spaceshipController;
-        public InputControl inputControl;
+        [HideInInspector] public InputControl inputControl;
         private Transform spaceshipTransform = null;
 
         public FireControlMP fireControl;
@@ -125,7 +125,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
             inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
             //FreezeMouseAim = inputControl.ControllerPresent;
-            DeSpawnedVirtualCamera.Priority = 8;
+            if (DeSpawnedVirtualCamera != null) DeSpawnedVirtualCamera.Priority = 8;
             SetSettings();
         }
 
@@ -194,7 +194,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.CameraSwitch.canceled -= OnPerspectiveButtonPressed;
             spaceshipTransform = null;
             spaceshipController = null;
-            DeSpawnedVirtualCamera.Priority = 11;
+            if (DeSpawnedVirtualCamera != null) DeSpawnedVirtualCamera.Priority = 11;
         }
 
         private void SetSettings()

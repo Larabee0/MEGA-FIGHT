@@ -13,7 +13,7 @@ namespace MultiplayerRunTime
     public class PasswordLobbyMP : MonoBehaviour
     {
         public static PasswordLobbyMP Singleton;
-        public UserMenu menu;
+        [HideInInspector] public UserMenu menu;
 
         public ClientConnects OnClientConnects;
         public ClientDisconnects OnClientDisconnects;

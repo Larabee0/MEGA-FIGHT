@@ -20,13 +20,12 @@ namespace MultiplayerRunTime
             SettingsPopUp
         }
 
-        [SerializeField] private NetworkManager networkManager;
         [SerializeField] private PasswordLobbyMP lobby;
         [SerializeField] private LocalPlayerManager localPlayerManager;
         private UIDocument document;
         private VisualElement rootVisualElement;
         private VisualElement overlay;
-        public InputControl inputControl;
+        [HideInInspector] public InputControl inputControl;
 
         public ConnectionPopUp connectionPopUp;
         public PausePopUp pausePopUp;
@@ -175,6 +174,7 @@ namespace MultiplayerRunTime
         {
             UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
             Cinemachine.CinemachineDollyCart camCart = FindObjectOfType<Cinemachine.CinemachineDollyCart>();
+            if (camCart == null) return;
             camCart.enabled = !userSettings.userSettings.DisableFlyAroundCamera;//21000
             if (userSettings.userSettings.DisableFlyAroundCamera)
             {

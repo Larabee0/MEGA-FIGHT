@@ -9,7 +9,7 @@ namespace MultiplayerRunTime
 {
     public class FireControlMP : MonoBehaviour
     {
-        public InputControl inputControl;
+        [HideInInspector] public InputControl inputControl;
         private LaserSpawnerMP laserSpawnerMP;
         private SpaceshipMP spaceship;
 
