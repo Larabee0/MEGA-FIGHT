@@ -64,6 +64,7 @@ MonoBehaviour:
   spawnPoints: []
   SpawnableShips:
   - {fileID: -7639359252223520313, guid: d6bf3d4486cf04540bb26d4250f781e2, type: 3}
-  - {fileID: 459139855999263267, guid: a0476616f52842c44b5f6e12f3596034, type: 3}
+  - {fileID: 4857360922940806564, guid: 3898d9a66f3e4b545815f080a30c0dde, type: 3}
   LPM: {fileID: 0}
   displayedName: 
+  useSpawnPoints: 1

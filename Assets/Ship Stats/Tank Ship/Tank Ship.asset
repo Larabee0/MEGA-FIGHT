@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54bc352c9f3f7764a9be3046fb0c1fa6, type: 3}
+  m_Name: Tank Ship
+  m_EditorClassIdentifier: 
+  ShipID: 0
+  label: Tank Ship
+  parts:
+  - {fileID: 11400000, guid: 28b6a370f29e4c34fa586eeec630434d, type: 2}
+  - {fileID: 11400000, guid: 03fe31bc3f97b504bb1f38d6c3164de4, type: 2}
+  - {fileID: 11400000, guid: 5f7f6913d59de4c468922f13f1d50d37, type: 2}
+  - {fileID: 11400000, guid: abc47c8a3b036e340aecbb5ceb8a63d1, type: 2}
+  - {fileID: 11400000, guid: 72744563d58d56a4887ce63a98664f9d, type: 2}
+  - {fileID: 11400000, guid: 042e85efa783f694fb3cb3bd72e43061, type: 2}
+  - {fileID: 11400000, guid: 610c787d0fba3fe40a55a5444e3a29ad, type: 2}
+  - {fileID: 11400000, guid: 06005d0ea9bd8f5489541824f021c8f2, type: 2}
+  root:
+    PartID: 0
+    HierachyID: 0
+    customLabel: 
+    children:
+    - PartID: 1
+      HierachyID: 1
+      customLabel: 
+      children: []
+    - PartID: 2
+      HierachyID: 2
+      customLabel: Laser 3
+      children: []
+    - PartID: 2
+      HierachyID: 3
+      customLabel: Laser 6
+      children: []
+    - PartID: 3
+      HierachyID: 4
+      customLabel: Left Elevator
+      children:
+      - PartID: 5
+        HierachyID: 8
+        customLabel: Left Rudder
+        children: []
+    - PartID: 3
+      HierachyID: 5
+      customLabel: Right Elevator
+      children:
+      - PartID: 5
+        HierachyID: 9
+        customLabel: Right Rudder
+        children: []
+    - PartID: 4
+      HierachyID: 6
+      customLabel: Left Wing
+      children:
+      - PartID: 6
+        HierachyID: 10
+        customLabel: Left Wing Spur
+        children:
+        - PartID: 2
+          HierachyID: 12
+          customLabel: Laser 1
+          children: []
+        - PartID: 2
+          HierachyID: 13
+          customLabel: Laser 4
+          children: []
+        - PartID: 7
+          HierachyID: 14
+          customLabel: Engine 1
+          children: []
+        - PartID: 7
+          HierachyID: 15
+          customLabel: Engine 2
+          children: []
+    - PartID: 4
+      HierachyID: 7
+      customLabel: Right Wing
+      children:
+      - PartID: 6
+        HierachyID: 11
+        customLabel: Right WIng Spur
+        children:
+        - PartID: 2
+          HierachyID: 16
+          customLabel: Laser 2
+          children: []
+        - PartID: 2
+          HierachyID: 17
+          customLabel: Laser 5
+          children: []
+        - PartID: 7
+          HierachyID: 18
+          customLabel: Engine 3
+          children: []
+        - PartID: 7
+          HierachyID: 19
+          customLabel: Engine 4
+          children: []
