@@ -169,7 +169,7 @@ namespace MultiplayerRunTime
             byte hierachyID = (byte)changedValue.Index;
             Functionality[] effectedFunctions = shipHierarchy.parts[hierachyID].tags;
 
-            if (changedValue.Value <= 0 && !IsHost && !IsServer)
+            if (changedValue.Value <= 0 && shipHierarchy.parts[hierachyID].Destroyed == false)
             {
                 shipHierarchy.parts[hierachyID].Destroyed = true;
             }
@@ -346,9 +346,14 @@ namespace MultiplayerRunTime
             Collider[] collidables = parts[hierachyID].gameObject.GetComponentsInChildren<Collider>();
             for (int i = 0; i < collidables.Length; i++)
             {
-                collidables[i].gameObject.layer = 2;
+                collidables[i].gameObject.layer = 6;
             }
             parts[hierachyID].transform.parent = null;
+            ShipPartMP[] childParts = parts[hierachyID].gameObject.GetComponentsInChildren<ShipPartMP>();
+            for (int i = 0; i < childParts.Length; i++)
+            {
+                Destroy(childParts[i]);
+            }
             Destroy(parts[hierachyID].gameObject, 30f);
             Destroy(parts[hierachyID]);
         }

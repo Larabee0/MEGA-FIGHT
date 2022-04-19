@@ -1910,7 +1910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e946167ebeec36b4ba8790dfd1d98cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TPSCameraPosition: {x: 0, y: 11.59, z: -60}
+  TPSCameraPosition: {x: 0, y: 60, z: -225}
   FPSCamPos: {fileID: 7088323277249671737}
   TargetPoint: {fileID: 7072160391735370633}
   WeaponOutputPoints:
@@ -1924,7 +1924,7 @@ MonoBehaviour:
   shipHealthManagerMP: {fileID: 1973887052172790783}
   thrust: 4250
   turnTorque: {x: 2000, y: 1200, z: 3000}
-  forceMult: 100
+  forceMult: 200
   sensitivity: 4.5
   aggressiveTurnAngle: 10
   controlInput: {x: 0, y: 0, z: 0}
