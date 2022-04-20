@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Falcon
   m_EditorClassIdentifier: 
   ShipID: 0
-  label: 
+  label: Millennium Falcon
   parts:
   - {fileID: 11400000, guid: 246c086a4c5176843ac122f50cc5c4aa, type: 2}
   - {fileID: 11400000, guid: 7954e0ab58719aa4997d184cdd529ab7, type: 2}

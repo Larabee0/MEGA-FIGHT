@@ -10,11 +10,17 @@ namespace MultiplayerRunTime
     {
         [SerializeField] private Text playerName;
         [SerializeField] private Text shipType;
+        [SerializeField] private Text distance;
 
         public float rectanglePaddingMultiplier = 0.1f;
         public string DisplayedName { set => playerName.text = value; }
         public string ShipType { set => shipType.text = value; }
-        
+
+        public float Distance
+        {
+            set => distance.text = string.Format("{0}km", (value / 1000f).ToString("F2"));
+        }
+
         public ShipHealthManagerMP HealthManagerMP
         {
             set
@@ -25,8 +31,10 @@ namespace MultiplayerRunTime
             }
         }
 
+        private LocalPlayerManager playerManager;
         private ShipHealthManagerMP healthManagerMP;
         public Transform shipTransform;
+        public Transform localShipTransform;
         private RectTransform rootTransform;
         private List<RectTransform> childRectTransformList = new();
         private Camera c;
@@ -34,6 +42,7 @@ namespace MultiplayerRunTime
         private void Awake()
         {
             c = Camera.main;
+            playerManager = c.GetComponent<LocalPlayerManager>();
             rootTransform = GetComponent<RectTransform>();
             for (int i = 0; i < transform.childCount; i++)
             {
@@ -61,27 +70,46 @@ namespace MultiplayerRunTime
                 return;
             }
 
+            if (localShipTransform == null)
+            {
+                GetLocalPlayerShip();
+            }
+            else
+            {
+                Vector3 dst = localShipTransform.position - shipTransform.position;
+                Distance = dst.magnitude;
+            }
+
             Rect visualRect = TargetObjectBoundsToScreenSpace();
 
             rootTransform.position = new Vector2(visualRect.xMax, visualRect.yMin);
+
+            RectTransform image = childRectTransformList[0];
 
             for (int i = 0; i < childRectTransformList.Count; i++)
             {
                 RectTransform child = childRectTransformList[i];
                 child.gameObject.SetActive(true);
-            
+
                 float xPadding = visualRect.width * rectanglePaddingMultiplier;
                 float yPadding = visualRect.height * rectanglePaddingMultiplier;
-            
+
                 if (i == 0)
                 {
                     // Resize the tracker sprite rectangle
                     child.position = new Vector2(visualRect.xMin - xPadding, visualRect.yMin - yPadding);
                     child.sizeDelta = new Vector2(visualRect.width + xPadding * 2, visualRect.height + yPadding * 2);
                 }
+                else if (i == 3)
+                {
+                    // Reposition the other objects (texts and sprites) beside the tracker rectangle
+                    //child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, child.position.y);
+                    child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, visualRect.yMin + visualRect.height - yPadding);
+                }
                 else
                 {
                     // Reposition the other objects (texts and sprites) beside the tracker rectangle
+                    // child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, child.position.y);
                     child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, child.position.y);
                 }
             }
@@ -97,7 +125,7 @@ namespace MultiplayerRunTime
             Vector3 screenSpacePoint;
 
             screenSpacePoint = c.WorldToScreenPoint(new Vector3(b.center.x + b.extents.x, b.center.y + b.extents.y, b.center.z + b.extents.z));
-            
+
             rect.xMin = screenSpacePoint.x;
             rect.yMin = screenSpacePoint.y;
             rect.xMax = screenSpacePoint.x;
@@ -144,6 +172,14 @@ namespace MultiplayerRunTime
                 child.anchorMax = Vector2.zero;
                 child.anchorMin = Vector2.zero;
                 child.pivot = Vector2.zero;
+            }
+        }
+
+        private void GetLocalPlayerShip()
+        {
+            if (playerManager != null && playerManager.LocalShip != null)
+            {
+                localShipTransform = playerManager.LocalShip.transform;
             }
         }
     }

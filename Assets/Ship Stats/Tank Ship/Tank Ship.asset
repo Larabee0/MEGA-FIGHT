@@ -26,7 +26,7 @@ MonoBehaviour:
   root:
     PartID: 0
     HierachyID: 0
-    customLabel: 
+    customLabel: Heavy Ship
     children:
     - PartID: 1
       HierachyID: 1

@@ -421,7 +421,7 @@ namespace MultiplayerRunTime
             {
                 set
                 {
-                    SpeedLabel.text = (value * 1.8f).ToString("F0");
+                    SpeedLabel.text = (value * 3.6f).ToString("F0");
                 }
             }
 

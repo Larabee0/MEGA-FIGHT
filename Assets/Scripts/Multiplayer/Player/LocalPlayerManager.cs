@@ -26,6 +26,18 @@ namespace MultiplayerRunTime
             }
         }
 
+        public SpaceshipMP LocalShip
+        {
+            get
+            {
+                if(PlayerManagerMP != null)
+                {
+                    return PlayerManagerMP.LocalSpaceship;
+                }
+                return null;
+            }
+        }
+
         private void Awake()
         {
             if(mouseFlightController == null)
