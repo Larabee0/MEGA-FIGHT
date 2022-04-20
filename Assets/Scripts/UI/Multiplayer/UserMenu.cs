@@ -270,6 +270,7 @@ namespace MultiplayerRunTime
                 MainMenuButton.RegisterCallback<NavigationSubmitEvent>(ev => MainMenuButtonCallback());
                 CloseGameButton.RegisterCallback<NavigationSubmitEvent>(ev => CloseGameButtonCallback());
                 SettingsButton.RegisterCallback<NavigationSubmitEvent>(ev => ShowSettings());
+
             }
 
             private void ResumeButtonCallback()
@@ -305,6 +306,11 @@ namespace MultiplayerRunTime
             private readonly UserMenu menu;
             public readonly VisualElement rootVisualElement;
 
+            private readonly RadioButton LightShipRadioButton;
+            private readonly RadioButton TankShipRadioButton;
+            private readonly RadioButton XWingRadioButton;
+            private readonly RadioButton FalconRadioButton;
+
             private readonly Button SpawnButton;
             private readonly Button LeaveButton;
             private readonly Button QuitGameButton;
@@ -331,6 +337,11 @@ namespace MultiplayerRunTime
 
                 DisplayedNameTextField = rootVisualElement.Q<TextField>("DisplayedName");
 
+                LightShipRadioButton = rootVisualElement.Q<RadioButton>("LightShip");
+                TankShipRadioButton = rootVisualElement.Q<RadioButton>("TankShip");
+                XWingRadioButton = rootVisualElement.Q<RadioButton>("XWing");
+                FalconRadioButton = rootVisualElement.Q<RadioButton>("Falcon");
+
                 SpawnButton.RegisterCallback<ClickEvent>(ev => SpawnButtonCallback());
                 LeaveButton.RegisterCallback<ClickEvent>(ev => LeaveButtonCallback());
                 QuitGameButton.RegisterCallback<ClickEvent>(ev => QuitGameButtonCallback());
@@ -344,9 +355,31 @@ namespace MultiplayerRunTime
 
             private void SpawnButtonCallback()
             {
+                Debug.LogFormat("Ship Index: {0}", GetIndexFromButton());
+                menu.localPlayerManager.ShipPrefabIndex = GetIndexFromButton();
                 menu.localPlayerManager.DisplayedName = DisplayedNameTextField.value;
                 menu.localPlayerManager.Spawn();
                 menu.ShowSpawnOverlay(false);
+            }
+
+            private byte GetIndexFromButton()
+            {
+                if (LightShipRadioButton.value)
+                {
+                    return 0;
+                }
+                else if (TankShipRadioButton.value)
+                {
+                    return 1;
+                }
+                else if (XWingRadioButton.value)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 3;
+                }
             }
 
             private void LeaveButtonCallback()
