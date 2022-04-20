@@ -63,7 +63,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 479ee884edf2adb40b095c3ad75adfbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 0}
   lobby: {fileID: 313136623173481681}
   localPlayerManager: {fileID: 0}
   inputControl: {fileID: 0}
