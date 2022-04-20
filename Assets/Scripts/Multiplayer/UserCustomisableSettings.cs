@@ -32,11 +32,20 @@ namespace MultiplayerRunTime
                 StreamReader file = new(userSettingsPath);
                 userSettings = (UserSettingsSaveData)reader.Deserialize(file);
                 file.Close();
+                if(userSettings == null)
+                {
+                    Debug.LogWarning("Read User Settings file, but failed to deserialize it!");
+                    userSettings = new UserSettingsSaveData();
+                }
             }
         }
 
         private void OnDestroy()
         {
+            if(userSettings == null)
+            {
+                userSettings = new UserSettingsSaveData();
+            }
             XmlSerializer writer = new(typeof(UserSettingsSaveData));
             FileStream file = File.Create(userSettingsPath);
             writer.Serialize(file, userSettings);
