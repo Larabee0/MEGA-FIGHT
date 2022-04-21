@@ -106,3 +106,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bffe03588fc83db4f88fbd3c20254a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RelayNetworkManager: {fileID: 7119634000478322061, guid: 2b6e386bf236ecf4eae6358665e1664c, type: 3}
+  PTPNetworkManager: {fileID: 1648595504085717359, guid: 418498e223a21ca418c23b7ddd30576a, type: 3}

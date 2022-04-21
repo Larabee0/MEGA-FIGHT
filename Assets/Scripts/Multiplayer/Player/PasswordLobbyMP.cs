@@ -106,16 +106,29 @@ namespace MultiplayerRunTime
         
         public void Host()
         {
-            //StopAllCoroutines();
-            //StartCoroutine(StartHost());
-            networkManager.StartHost();
+            if (UserCustomisableSettings.UseLocal)
+            {
+                networkManager.StartHost();
+            }
+            else
+            {
+                StopAllCoroutines();
+                StartCoroutine(StartHost());
+            }
         }
 
         public void Client(string joinCode)
         {
-            //StopAllCoroutines();
-            //StartCoroutine(StartClient(joinCode));
-            networkManager.StartClient();
+            if (UserCustomisableSettings.UseLocal)
+            {
+                networkManager.GetComponent<UNetTransport>().ConnectAddress = joinCode;
+                networkManager.StartClient();
+            }
+            else
+            {
+                StopAllCoroutines();
+                StartCoroutine(StartClient(joinCode));
+            }
         }
 
         public void Leave()

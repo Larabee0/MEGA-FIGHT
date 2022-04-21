@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UNET;
 using UnityEngine;
 
 namespace MultiplayerRunTime
@@ -9,7 +11,8 @@ namespace MultiplayerRunTime
     public class UserCustomisableSettings : MonoBehaviour
     {
         public UserSettingsSaveData userSettings;
-
+        
+        public static bool UseLocal = false;
         public static UserCustomisableSettings instance;
 
         private string userSettingsPath;
@@ -17,8 +20,12 @@ namespace MultiplayerRunTime
         public delegate void SettingsChanged();
         public SettingsChanged OnUserSettingsChanged;
 
+        [SerializeField] private GameObject RelayNetworkManager;
+        [SerializeField] private GameObject PTPNetworkManager;
+        
         private void Awake()
         {
+            PrepareScene();
             userSettingsPath = Path.Combine(Application.persistentDataPath, "userSettings.xml");
             instance = this;
             userSettings = new UserSettingsSaveData();
@@ -50,6 +57,18 @@ namespace MultiplayerRunTime
             FileStream file = File.Create(userSettingsPath);
             writer.Serialize(file, userSettings);
             file.Close();
+        }
+
+        private void PrepareScene()
+        {
+            if (UseLocal)
+            {
+                Instantiate(PTPNetworkManager);
+            }
+            else
+            {
+                Instantiate(RelayNetworkManager);
+            }
         }
     }
 

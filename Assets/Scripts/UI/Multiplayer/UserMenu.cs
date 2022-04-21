@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UNET;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
@@ -191,8 +193,12 @@ namespace MultiplayerRunTime
             private readonly Button ConnectButton;
             private readonly Button HostButton;
             private readonly Button SettingsButton;
-
+            private readonly Label JoinCodeDisplay;
             private readonly TextField JoinCodeTextField;
+            string relayLabel = "Join Code for Connecting Players\nProvided in Respawn Lobby";
+            string relayTextField = "Join Code";
+            string PTPTextField = "IP";
+            
 
             public ConnectionPopUp(UserMenu Menu, VisualElement RootVisualElement)
             {
@@ -203,6 +209,7 @@ namespace MultiplayerRunTime
                 HostButton = rootVisualElement.Q<Button>("HostStartButton");
                 SettingsButton = rootVisualElement.Q<Button>("SettingsButton");
                 JoinCodeTextField = rootVisualElement.Q<TextField>("JoinCode");
+                JoinCodeDisplay = rootVisualElement.Q<Label>("JoinCodeDisplay");
 
                 QuitButton.RegisterCallback<ClickEvent>(ev => OnQuitCallback());
                 HostButton.RegisterCallback<ClickEvent>(ev => OnHostCallback());
@@ -213,6 +220,18 @@ namespace MultiplayerRunTime
                 HostButton.RegisterCallback<NavigationSubmitEvent>(ev => OnHostCallback());
                 ConnectButton.RegisterCallback<NavigationSubmitEvent>(ev => OnConnectCallback());
                 SettingsButton.RegisterCallback<NavigationSubmitEvent>(ev => ShowSettings());
+
+                if (UserCustomisableSettings.UseLocal)
+                {
+                    JoinCodeTextField.label = PTPTextField;
+                    SetIPText();
+                    JoinCodeTextField.RegisterValueChangedCallback(ev=>OnIPChanged(ev.newValue));
+                }
+                else
+                {
+                    JoinCodeTextField.label = relayTextField;
+                    JoinCodeDisplay.text = relayLabel;
+                }
             }
 
             private void OnQuitCallback()
@@ -227,13 +246,68 @@ namespace MultiplayerRunTime
 
             private void OnConnectCallback()
             {
-                menu.lobby.Client(JoinCodeTextField.value);
+                if (UserCustomisableSettings.UseLocal)
+                {
+                    if (ValidateIP(JoinCodeTextField.value, out IPAddress address))
+                    {
+                        menu.lobby.Client(address.ToString());
+                    }
+                    else
+                    {
+                        JoinCodeTextField.value = "Invalid IP!";
+                        return;
+                    }
+                }
+                else
+                {
+                    menu.lobby.Client(JoinCodeTextField.value);
+                }
             }
 
             private void ShowSettings()
             {
                 menu.settingsPopUp.onCloseOpenWindow = OnCloseOpenWindow.ConnectionPopUp;
                 menu.ShowSettingsOverlay(true);
+            }
+
+            private void SetIPText()
+            {
+                
+                string internalIP = Dns.GetHostAddresses(Dns.GetHostName())[1].ToString();
+                
+                string externalIP = GetPublicIPAddress();
+
+                JoinCodeDisplay.text = string.Format("Local IP: {0}\nExternal IP: {1}", internalIP, externalIP);
+            }
+            private static string GetPublicIPAddress()
+            {
+                string url = "http://checkip.dyndns.org";
+                WebRequest req = WebRequest.Create(url);
+                WebResponse resp = req.GetResponse();
+                StreamReader sr = new(resp.GetResponseStream());
+                string response = sr.ReadToEnd().Trim();
+                string[] ipAddressWithText = response.Split(':');
+                string ipAddressWithHTMLEnd = ipAddressWithText[1].Substring(1);
+                string[] ipAddress = ipAddressWithHTMLEnd.Split('<');
+                string mainIP = ipAddress[0];
+                return mainIP;
+            }
+
+            private bool ValidateIP(string IP, out IPAddress iPAddress)
+            {
+                return IPAddress.TryParse(IP, out iPAddress);
+            }
+
+            private void OnIPChanged(string newValue)
+            {
+                if (ValidateIP(newValue, out _))
+                {
+                    menu.MakeTextFieldWhite(JoinCodeTextField);
+                }
+                else
+                {
+                    menu.MakeTextFieldRed(JoinCodeTextField);
+                }
             }
         }
 

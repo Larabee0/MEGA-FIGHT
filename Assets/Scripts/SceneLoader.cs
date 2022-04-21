@@ -3,23 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using MultiplayerRunTime;
+using UnityEngine.EventSystems;
 
 public class SceneLoader : MonoBehaviour
 {
     private UIDocument document;
     private ProgressBar progressBar;
+    private Button relayButton;
+    private Button PeerToPeerButton;
+    private VisualElement ButtonPanel;
+    private VisualElement LoadingBarPanel;
 
     // Start is called before the first frame update
     private void Start()
     {
         document = GetComponent<UIDocument>();
         progressBar = document.rootVisualElement.Q<ProgressBar>("ProgressBar");
+        relayButton = document.rootVisualElement.Q<Button>("RelayButton");
+        PeerToPeerButton = document.rootVisualElement.Q<Button>("PeerToPeerButton");
+        ButtonPanel = document.rootVisualElement.Q<VisualElement>("ButtonPanel");
+        LoadingBarPanel = document.rootVisualElement.Q<VisualElement>("LoadingBar");
+        relayButton.RegisterCallback<ClickEvent>(ev => OnRelayClicked());
+        PeerToPeerButton.RegisterCallback<ClickEvent>(ev => OnPeerToPeerClicked());
+        relayButton.RegisterCallback<NavigationSubmitEvent>(ev => OnRelayClicked());
+        PeerToPeerButton.RegisterCallback<NavigationSubmitEvent>(ev => OnPeerToPeerClicked());
+        LoadingBarPanel.style.display = DisplayStyle.None;
+        ButtonPanel.style.display = DisplayStyle.Flex;
+
+        FindObjectOfType<EventSystem>().SetSelectedGameObject(FindObjectOfType<PanelEventHandler>().gameObject);
+    }
+
+    private void OnRelayClicked()
+    {
+        UserCustomisableSettings.UseLocal = false;
+        StartCoroutine(LoadMainScene());
+    }
+
+    private void OnPeerToPeerClicked()
+    {
+        UserCustomisableSettings.UseLocal = true;
         StartCoroutine(LoadMainScene());
     }
 
     private IEnumerator LoadMainScene()
     {
-        yield return new WaitForSeconds(2.5f);
+        LoadingBarPanel.style.display = DisplayStyle.Flex;
+        ButtonPanel.style.display = DisplayStyle.None;
+        //yield return new WaitForSeconds(2.5f);
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
         while (!asyncLoad.isDone)
         {

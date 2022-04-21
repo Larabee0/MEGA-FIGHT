@@ -20,7 +20,7 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="overlay" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.69); align-items: center; justify-content: center; display: flex;">
-        <ui:VisualElement name="ConnectionPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgb(56, 56, 56); display: none; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
+        <ui:VisualElement name="ConnectionPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgb(56, 56, 56); display: flex; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
             <ui:VisualElement style="flex-direction: row;">
                 <ui:VisualElement name="ConnectSide" style="margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); width: 200px;">
                     <ui:Label text="Connect" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
@@ -36,7 +36,7 @@
             <ui:Button text="Settings" display-tooltip-when-elided="true" name="SettingsButton" class="StandardButton" style="margin-top: 5px;" />
             <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 2px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: flex;">
+        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: none;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:Label text="Respawn?" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
                 <ui:VisualElement style="border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);">
