@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/UI/Multiplayer/Documents/MainMenuStyleSheet.uss?fileID=7433441132597879392&amp;guid=572322021726fdc4487c24c6a2dc06fc&amp;type=3#MainMenuStyleSheet" />
+    <ui:VisualElement style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; justify-content: center;">
+        <ui:Label text="MEGA-FIGHT" display-tooltip-when-elided="true" style="font-size: 28px; color: rgba(255, 255, 255, 255); -unity-text-align: upper-center; -unity-font-style: bold;" />
+    </ui:VisualElement>
+    <ui:VisualElement style="align-items: stretch; position: absolute; left: 0; top: 0; right: 0; bottom: 0; justify-content: flex-end;">
+        <ui:VisualElement>
+            <ui:Label text="Loading..." display-tooltip-when-elided="true" style="-unity-text-align: middle-center; color: rgb(255, 255, 255);" />
+            <ui:ProgressBar high-value="1" name="ProgressBar" style="flex-direction: column;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
