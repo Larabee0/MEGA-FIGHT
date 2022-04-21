@@ -104,10 +104,15 @@ namespace MultiplayerRunTime
             }
         }
         
-        public void Host()
+        public void Host(int port = int.MinValue)
         {
             if (UserCustomisableSettings.UseLocal)
             {
+                if(port != int.MinValue)
+                {
+                    UNetTransport transport = networkManager.GetComponent<UNetTransport>();
+                    transport.ConnectPort = transport.ServerListenPort = port;
+                }
                 networkManager.StartHost();
             }
             else
@@ -121,7 +126,11 @@ namespace MultiplayerRunTime
         {
             if (UserCustomisableSettings.UseLocal)
             {
-                networkManager.GetComponent<UNetTransport>().ConnectAddress = joinCode;
+                string[] ipAndPort = joinCode.Split(':');
+
+                UNetTransport transport = networkManager.GetComponent<UNetTransport>();
+                transport.ConnectAddress = ipAndPort[0];
+                transport.ConnectPort = transport.ServerListenPort = int.Parse(ipAndPort[1]);
                 networkManager.StartClient();
             }
             else

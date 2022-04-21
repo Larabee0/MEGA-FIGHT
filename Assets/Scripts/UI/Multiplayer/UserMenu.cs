@@ -195,6 +195,8 @@ namespace MultiplayerRunTime
             private readonly Button SettingsButton;
             private readonly Label JoinCodeDisplay;
             private readonly TextField JoinCodeTextField;
+            private readonly TextField ConnectPortTextField;
+            private readonly TextField ServerPortTextField;
             string relayLabel = "Join Code for Connecting Players\nProvided in Respawn Lobby";
             string relayTextField = "Join Code";
             string PTPTextField = "IP";
@@ -209,6 +211,8 @@ namespace MultiplayerRunTime
                 HostButton = rootVisualElement.Q<Button>("HostStartButton");
                 SettingsButton = rootVisualElement.Q<Button>("SettingsButton");
                 JoinCodeTextField = rootVisualElement.Q<TextField>("JoinCode");
+                ConnectPortTextField = rootVisualElement.Q<TextField>("ConnectPort");
+                ServerPortTextField = rootVisualElement.Q<TextField>("ServerPort");
                 JoinCodeDisplay = rootVisualElement.Q<Label>("JoinCodeDisplay");
 
                 QuitButton.RegisterCallback<ClickEvent>(ev => OnQuitCallback());
@@ -225,12 +229,21 @@ namespace MultiplayerRunTime
                 {
                     JoinCodeTextField.label = PTPTextField;
                     SetIPText();
-                    JoinCodeTextField.RegisterValueChangedCallback(ev=>OnIPChanged(ev.newValue));
+                    ConnectPortTextField.style.display = DisplayStyle.Flex;
+                    ServerPortTextField.style.display = DisplayStyle.Flex;
+                    UNetTransport transport = FindObjectOfType<UNetTransport>();
+                    ConnectPortTextField.value = ServerPortTextField.value = transport.ConnectPort.ToString();
+                    //JoinCodeTextField.value = transport.ConnectAddress.ToString();
+                    JoinCodeTextField.RegisterValueChangedCallback(ev => OnIPChanged(ev.newValue));
+                    ConnectPortTextField.RegisterValueChangedCallback(ev => OnPortChanged(ev.newValue, ConnectPortTextField));
+                    ServerPortTextField.RegisterValueChangedCallback(ev => OnPortChanged(ev.newValue, ServerPortTextField));
                 }
                 else
                 {
                     JoinCodeTextField.label = relayTextField;
                     JoinCodeDisplay.text = relayLabel;
+                    ConnectPortTextField.style.display = DisplayStyle.None;
+                    ServerPortTextField.style.display = DisplayStyle.None;
                 }
             }
 
@@ -241,7 +254,22 @@ namespace MultiplayerRunTime
 
             private void OnHostCallback()
             {
-                menu.lobby.Host();
+                if (UserCustomisableSettings.UseLocal)
+                {
+                    if (int.TryParse(ConnectPortTextField.value, out int port))
+                    {
+                        menu.lobby.Host(port);
+                    }
+                    else
+                    {
+                        ConnectPortTextField.value = "Invalid Port!";
+                        return;
+                    }
+                }
+                else
+                {
+                    menu.lobby.Host();
+                }
             }
 
             private void OnConnectCallback()
@@ -250,7 +278,15 @@ namespace MultiplayerRunTime
                 {
                     if (ValidateIP(JoinCodeTextField.value, out IPAddress address))
                     {
-                        menu.lobby.Client(address.ToString());
+                        if(int.TryParse(ConnectPortTextField.value, out _))
+                        {
+                            menu.lobby.Client(address.ToString()+':'+ConnectPortTextField.value);
+                        }
+                        else
+                        {
+                            ConnectPortTextField.value = "Invalid Port!";
+                            return;
+                        }
                     }
                     else
                     {
@@ -281,16 +317,20 @@ namespace MultiplayerRunTime
             }
             private static string GetPublicIPAddress()
             {
-                string url = "http://checkip.dyndns.org";
-                WebRequest req = WebRequest.Create(url);
-                WebResponse resp = req.GetResponse();
-                StreamReader sr = new(resp.GetResponseStream());
-                string response = sr.ReadToEnd().Trim();
-                string[] ipAddressWithText = response.Split(':');
-                string ipAddressWithHTMLEnd = ipAddressWithText[1].Substring(1);
-                string[] ipAddress = ipAddressWithHTMLEnd.Split('<');
-                string mainIP = ipAddress[0];
-                return mainIP;
+                try
+                {
+                    string url = "http://checkip.dyndns.org";
+                    WebRequest req = WebRequest.Create(url);
+                    WebResponse resp = req.GetResponse();
+                    StreamReader sr = new(resp.GetResponseStream());
+                    string response = sr.ReadToEnd().Trim();
+                    string[] ipAddressWithText = response.Split(':');
+                    string ipAddressWithHTMLEnd = ipAddressWithText[1].Substring(1);
+                    string[] ipAddress = ipAddressWithHTMLEnd.Split('<');
+                    string mainIP = ipAddress[0];
+                    return mainIP;
+                }
+                catch { return "Uknown"; }
             }
 
             private bool ValidateIP(string IP, out IPAddress iPAddress)
@@ -307,6 +347,18 @@ namespace MultiplayerRunTime
                 else
                 {
                     menu.MakeTextFieldRed(JoinCodeTextField);
+                }
+            }
+
+            private void OnPortChanged(string newValue,TextField textField)
+            {
+                if(int.TryParse(newValue,out _))
+                {
+                    menu.MakeTextFieldWhite(textField);
+                }
+                else
+                {
+                    menu.MakeTextFieldRed(textField);
                 }
             }
         }
