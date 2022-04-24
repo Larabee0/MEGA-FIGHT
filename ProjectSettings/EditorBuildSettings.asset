@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Loading Scene.unity
     guid: da73027401778d34eb4a8ad7e3d142b6
   - enabled: 1
-    path: Assets/Scenes/MultiplayerBuildScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/Scenes/MultiplayerBuildScene Mini.unity
+    guid: 7b41f7f55b148794ea30dedc734b51e9
   m_configObjects: {}
