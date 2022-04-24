@@ -11,9 +11,12 @@
     </ui:VisualElement>
     <ui:VisualElement name="ButtonPanel" style="justify-content: space-around; align-items: center; position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex;">
         <ui:VisualElement />
-        <ui:VisualElement style="flex-direction: row; height: 30px; justify-content: center;">
-            <ui:Button text="Unity Relay Online" display-tooltip-when-elided="true" name="RelayButton" class="StandardButton" style="width: 140px;" />
-            <ui:Button text="Direct Peer To Peer" display-tooltip-when-elided="true" name="PeerToPeerButton" class="StandardButton" style="width: 140px;" />
+        <ui:VisualElement style="flex-direction: column; height: 57px; justify-content: center; align-items: center;">
+            <ui:VisualElement style="flex-direction: row; justify-content: center;">
+                <ui:Button text="Unity Relay Online" display-tooltip-when-elided="true" name="RelayButton" class="StandardButton" style="width: 140px;" />
+                <ui:Button text="Direct Peer To Peer" display-tooltip-when-elided="true" name="PeerToPeerButton" class="StandardButton" style="width: 140px;" />
+            </ui:VisualElement>
+            <ui:Button text="Close Game" display-tooltip-when-elided="true" name="QuitButton" class="StandardButton" style="width: 140px; margin-top: 4px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

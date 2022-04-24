@@ -20,6 +20,11 @@ public class InputControl : MonoBehaviour
         get => playerActions.UI;
     }
 
+    public Player.AlwaysOnControlsActions AlwaysOn
+    {
+        get => playerActions.AlwaysOnControls;
+    }
+
     public bool ControllerPresent
     {
         get
@@ -33,6 +38,7 @@ public class InputControl : MonoBehaviour
         Singleton = this;
         playerActions = new Player();
         SetUIEnabled(true);
+        SetAlwaysOnEnabled(true);
     }
 
     //private void FixedUpdate()
@@ -68,6 +74,19 @@ public class InputControl : MonoBehaviour
                 break;
             case false:
                 playerActions.UI.Disable();
+                break;
+        }
+    }
+
+    public void SetAlwaysOnEnabled(bool enabled)
+    {
+        switch (enabled)
+        {
+            case true:
+                playerActions.AlwaysOnControls.Enable();
+                break;
+            case false:
+                playerActions.AlwaysOnControls.Disable();
                 break;
         }
     }

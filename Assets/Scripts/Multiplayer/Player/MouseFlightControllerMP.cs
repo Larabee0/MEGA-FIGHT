@@ -68,8 +68,8 @@ namespace MultiplayerRunTime
         [Tooltip("How far the boresight and mouse flight are from the aircraft")]
         private bool showDebugInfo = false;
 
-        private Vector3 frozenDirection = Vector3.forward;
-        private bool isMouseAimFrozen = false;
+        public Vector3 frozenDirection = Vector3.forward;
+        public bool isMouseAimFrozen = false;
 
         public bool FreezeMouseAim { get => isMouseAimFrozen; set => isMouseAimFrozen = value; }
 
@@ -123,6 +123,8 @@ namespace MultiplayerRunTime
             // rotations causing unintended rotations as it gets dragged around.
             transform.parent = null;
             inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
+            inputControl.FlightActions.FreeCam.started += OnFreeCamButton;
+            inputControl.FlightActions.FreeCam.canceled += OnFreeCamButton;
             inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
             //FreezeMouseAim = inputControl.ControllerPresent;
             if (DeSpawnedVirtualCamera != null) DeSpawnedVirtualCamera.Priority = 8;
@@ -192,6 +194,8 @@ namespace MultiplayerRunTime
         {
             UserCustomisableSettings.instance.OnUserSettingsChanged -= SetSettings;
             inputControl.FlightActions.CameraSwitch.canceled -= OnPerspectiveButtonPressed;
+            inputControl.FlightActions.FreeCam.started -= OnFreeCamButton;
+            inputControl.FlightActions.FreeCam.canceled -= OnFreeCamButton;
             spaceshipTransform = null;
             spaceshipController = null;
             if (DeSpawnedVirtualCamera != null) DeSpawnedVirtualCamera.Priority = 11;
@@ -230,12 +234,21 @@ namespace MultiplayerRunTime
             SetVirtualCameraTarget();
         }
 
+        public void SetDeathCamera(SpaceshipMP target)
+        {
+            TPSCamPos.localPosition = target.TPSCameraPosition;
+            TPSVirtualCamera.Follow = TPSCamPos;
+            perspective = Perspective.ThridPerson;
+
+        }
+
         private void ThrottleInput()
         {
             float axisValue = inputControl.FlightActions.Throttle.ReadValue<float>();
-
+            bool reverse = inputControl.FlightActions.ReverseThrottle.IsPressed();
             axisValue = axisValue != 0 ? math.clamp(spaceshipController.Throttle + (axisValue * (throttleSenstivity * Time.deltaTime)), 0f, 1f) : spaceshipController.Throttle;
-            axisValue -= inputControl.FlightActions.ReverseThrottle.IsPressed() ? throttleSenstivity * Time.deltaTime : 0;
+            axisValue = axisValue > 0 && reverse ? 0 : axisValue;
+            axisValue -= reverse ? throttleSenstivity * Time.deltaTime : 0;
             axisValue = math.clamp(axisValue, -0.25f, 1f);
             spaceshipController.Throttle = axisValue;
         }
@@ -244,6 +257,20 @@ namespace MultiplayerRunTime
         {
             perspective = EnableFPS ? perspective.Next() : Perspective.ThridPerson;
             SetVirtualCameraTarget();
+        }
+
+        private void OnFreeCamButton(InputAction.CallbackContext context)
+        {
+            if (isMouseAimFrozen)
+            {
+                isMouseAimFrozen = false;
+                mouseAim.forward = frozenDirection;
+            }
+            else
+            {
+                isMouseAimFrozen = true;
+                frozenDirection = mouseAim.forward;
+            }
         }
 
 
@@ -268,20 +295,8 @@ namespace MultiplayerRunTime
             if (mouseAim == null || TPSCamPos == null || cameraRig == null)
                 return;
 
-            // Freeze the mouse aim direction when the free look key is pressed.
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                isMouseAimFrozen = true;
-                frozenDirection = mouseAim.forward;
-            }
-            else if (Input.GetKeyUp(KeyCode.C))
-            {
-                isMouseAimFrozen = false;
-                mouseAim.forward = frozenDirection;
-            }
-
             // Mouse input.
-            Vector2 rawAxis = inputControl.FlightActions.Mouse.ReadValue<Vector2>();
+            Vector2 rawAxis = inputControl.AlwaysOn.Mouse.ReadValue<Vector2>();
             float mouseX = rawAxis.x * mouseSensitivity;
             float mouseY = -rawAxis.y * mouseSensitivity;
 

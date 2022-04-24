@@ -58,6 +58,11 @@ namespace MultiplayerRunTime
 
         private Rigidbody rigid;
 
+        public bool Kinematic
+        {
+            set => rigid.isKinematic = value;
+        }
+
         public float Velocity
         {
             get => rigid.velocity.magnitude;
@@ -85,7 +90,7 @@ namespace MultiplayerRunTime
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
-            switch (IsOwner)
+            switch (IsOwner||IsServer)
             {
                 case true:
                     OnShipDestroyed?.Invoke();

@@ -12,13 +12,17 @@ namespace MultiplayerRunTime
         [SerializeField] private UITrackingElement trackingElementPrefab;
         private Dictionary<ulong, UITrackingElement> elements = new();
 
-        private void Start()
+        public void GetExistingShips()
         {
-
-        }
-
-        private void Update()
-        {
+            Debug.Log("Getting Existing Ships");
+            PlayerManagerMP[] existingShips = FindObjectsOfType<PlayerManagerMP>();
+            for (int i = 0; i < existingShips.Length; i++)
+            {
+                if (existingShips[i].ShipSpawned)
+                {
+                    AddName(existingShips[i].OwnerClientId, existingShips[i].DisplayedName, existingShips[i].LocalSpaceship.shipHealthManagerMP);
+                }
+            }
         }
 
         public void AddName(ulong clientID, string displayedName, ShipHealthManagerMP hMMP)

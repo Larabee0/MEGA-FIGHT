@@ -294,7 +294,9 @@ MonoBehaviour:
   playerName: {fileID: 7779974276887999632}
   shipType: {fileID: 1698770000651915897}
   distance: {fileID: 1272475745187057035}
+  image: {fileID: 6432054670233497518}
   rectanglePaddingMultiplier: 0.2
+  defaultColour: {r: 1, g: 1, b: 1, a: 1}
   shipTransform: {fileID: 0}
   localShipTransform: {fileID: 0}
 --- !u!1 &7779974276887999638

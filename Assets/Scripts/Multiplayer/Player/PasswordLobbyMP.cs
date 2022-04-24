@@ -16,6 +16,7 @@ namespace MultiplayerRunTime
         [HideInInspector] public UserMenu menu;
 
         public ClientConnects OnClientConnects;
+        public ClientConnects OnClientConnectsServer;
         public ClientDisconnects OnClientDisconnects;
 
         public delegate void ClientConnects(GameObject ClientObject);
@@ -53,6 +54,28 @@ namespace MultiplayerRunTime
             networkManager = NetworkManager.Singleton;
             networkManager.OnClientConnectedCallback +=HandleClientConnected;
             networkManager.OnClientDisconnectCallback +=HandleClientDisconnected;
+        }
+
+        float timeOutTime = 30f;
+        float timeOutCurrnet = 0;
+        bool allowTextMod = false;
+        private void FixedUpdate()
+        {
+            if (allowTextMod&&networkManager.IsClient && !(networkManager.IsServer || networkManager.IsHost)&& !networkManager.IsConnectedClient)
+            {
+                //Debug.LogFormat("No Connection, {0}s till timeout!",(timeOutTime-timeOutCurrnet).ToString("F0"));
+                menu.connectionPopUp.JoinCodeText = string.Format("Timing out in {0}s", (timeOutTime - timeOutCurrnet).ToString("F0"));
+                timeOutCurrnet += Time.fixedDeltaTime;
+            }
+            if (allowTextMod&&timeOutCurrnet >= timeOutTime)
+            {
+                //Debug.LogFormat("Timed out after {0}s", timeOutCurrnet.ToString("F0"));
+                menu.connectionPopUp.EnableButtons = true;
+                menu.connectionPopUp.JoinCodeText = string.Format("Timed out after {0}s", timeOutCurrnet.ToString("F0"));
+                networkManager.Shutdown();
+                allowTextMod = false;
+                timeOutCurrnet = 0;
+            }
         }
 
         private void OnDestroy()
@@ -124,6 +147,7 @@ namespace MultiplayerRunTime
 
         public void Client(string joinCode)
         {
+            allowTextMod = true;
             if (UserCustomisableSettings.UseLocal)
             {
                 string[] ipAndPort = joinCode.Split(':');
@@ -157,6 +181,8 @@ namespace MultiplayerRunTime
             {
                 networkManager.Shutdown();
                 menu.ShowConnectionOverlay(true);
+                allowTextMod = false;
+                menu.connectionPopUp.JoinCodeText = "";
                 Cursor.lockState = CursorLockMode.None;
             }
             clientData = new();
@@ -169,6 +195,14 @@ namespace MultiplayerRunTime
             {
                 menu.ShowConnectionOverlay(false);
                 OnClientConnects?.Invoke(networkManager.SpawnManager.GetLocalPlayerObject().gameObject);
+            }
+            if (networkManager.IsServer || networkManager.IsHost)
+            {
+                if (!networkManager.gameObject.TryGetComponent<LastManStanding>(out _))
+                {
+                    networkManager.gameObject.AddComponent<LastManStanding>();
+                }
+                OnClientConnectsServer?.Invoke(networkManager.SpawnManager.GetPlayerNetworkObject(clientId).gameObject);
             }
         }
 

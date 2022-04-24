@@ -33,6 +33,7 @@ namespace MultiplayerRunTime
         public PausePopUp pausePopUp;
         public SpawnPopUp spawnPopUp;
         public SettingsPopUp settingsPopUp;
+        public InfoPopUp infoPopUp;
 
         private void Awake()
         {
@@ -54,6 +55,7 @@ namespace MultiplayerRunTime
             pausePopUp = new PausePopUp(this, rootVisualElement.Q("PausePopUp"));
             spawnPopUp = new SpawnPopUp(this, rootVisualElement.Q("SpawnPopUp"));
             settingsPopUp = new SettingsPopUp(this, rootVisualElement.Q("SettingsPopUp"));
+            infoPopUp = new InfoPopUp(this, rootVisualElement.Q("InfoPopUp"));
             ShowConnectionOverlay(true);
             SetSettings();
             UserCustomisableSettings.instance.OnUserSettingsChanged += SetSettings;
@@ -91,9 +93,11 @@ namespace MultiplayerRunTime
                 case true:
                     SetMenuSelection();
                     connectionPopUp.rootVisualElement.style.display = DisplayStyle.Flex;
+                    connectionPopUp.EnableButtons = true;
                     ShowPauseOverlay(false, false);
                     ShowSpawnOverlay(false, false);
                     ShowSettingsOverlay(false, false);
+                    ShowInfoOverlay(false, false);
                     break;
                 case false:
                     connectionPopUp.rootVisualElement.style.display = DisplayStyle.None;
@@ -112,6 +116,7 @@ namespace MultiplayerRunTime
                     ShowConnectionOverlay(false, false);
                     ShowSpawnOverlay(false, false);
                     ShowSettingsOverlay(false, false);
+                    ShowInfoOverlay(false, false);
                     break;
                 case false:
                     pausePopUp.rootVisualElement.style.display = DisplayStyle.None;
@@ -130,6 +135,7 @@ namespace MultiplayerRunTime
                     ShowConnectionOverlay(false, false);
                     ShowPauseOverlay(false, false);
                     ShowSettingsOverlay(false, false);
+                    ShowInfoOverlay(false, false);
                     break;
                 case false:
                     spawnPopUp.rootVisualElement.style.display = DisplayStyle.None;
@@ -148,9 +154,29 @@ namespace MultiplayerRunTime
                     ShowConnectionOverlay(false, false);
                     ShowPauseOverlay(false, false);
                     ShowSpawnOverlay(false, false);
+                    ShowInfoOverlay(false, false);
                     break;
                 case false:
                     settingsPopUp.rootVisualElement.style.display = DisplayStyle.None;
+                    break;
+            }
+            if (BackgroundTo) ShowOverlay(shown);
+        }
+
+        public void ShowInfoOverlay(bool shown, bool BackgroundTo = true)
+        {
+            switch (shown)
+            {
+                case true:
+                    SetMenuSelection();
+                    infoPopUp.rootVisualElement.style.display = DisplayStyle.Flex;
+                    ShowConnectionOverlay(false, false);
+                    ShowPauseOverlay(false, false);
+                    ShowSpawnOverlay(false, false);
+                    ShowSettingsOverlay(false, false);
+                    break;
+                case false:
+                    infoPopUp.rootVisualElement.style.display = DisplayStyle.None;
                     break;
             }
             if (BackgroundTo) ShowOverlay(shown);
@@ -201,6 +227,20 @@ namespace MultiplayerRunTime
             string relayTextField = "Join Code";
             string PTPTextField = "IP";
             
+            public string JoinCodeText { set { JoinCodeTextField.value = value; } }
+
+            public bool EnableButtons
+            {
+                set
+                {
+                    ConnectButton.SetEnabled(value);
+                    HostButton.SetEnabled(value);
+                    SettingsButton.SetEnabled(value);
+                    //JoinCodeTextField.SetEnabled(value);
+                    ConnectPortTextField.SetEnabled(value);
+                    ServerPortTextField.SetEnabled(value);
+                }
+            }
 
             public ConnectionPopUp(UserMenu Menu, VisualElement RootVisualElement)
             {
@@ -280,6 +320,7 @@ namespace MultiplayerRunTime
                     {
                         if(int.TryParse(ConnectPortTextField.value, out _))
                         {
+                            EnableButtons = false;
                             menu.lobby.Client(address.ToString()+':'+ConnectPortTextField.value);
                         }
                         else
@@ -296,6 +337,7 @@ namespace MultiplayerRunTime
                 }
                 else
                 {
+                    EnableButtons = false;
                     menu.lobby.Client(JoinCodeTextField.value);
                 }
             }
@@ -788,6 +830,41 @@ namespace MultiplayerRunTime
             public void AimDistanceSenstivityValueChange(float newValue)
             {
                 AimDstValue.text = newValue.ToString("N0");
+            }
+        }
+
+        public class InfoPopUp
+        {
+            public readonly VisualElement rootVisualElement;
+            private readonly UserMenu menu;
+
+            private readonly Label InfoLabelA;
+            private readonly Label InfoLabelB;
+
+            public string UpperLabel { set => InfoLabelA.text = value; }
+            public string LowerLabel { set => InfoLabelB.text = value; }
+
+            public InfoPopUp(UserMenu Menu,VisualElement RootVisualElement)
+            {
+                rootVisualElement = RootVisualElement;
+                menu = Menu;
+
+                InfoLabelA = rootVisualElement.Q<Label>("InfoDisplayA");
+                InfoLabelB = rootVisualElement.Q<Label>("InfoDisplayB");
+            }
+
+            public void MakeRed()
+            {
+                StyleColor textColor = InfoLabelA.style.color;
+                textColor.value = Color.red;
+                InfoLabelA.style.color = InfoLabelB.style.color = textColor;
+            }
+
+            public void MakeWhite()
+            {
+                StyleColor textColor = InfoLabelA.style.color;
+                textColor.value = Color.white;
+                InfoLabelA.style.color = InfoLabelB.style.color = textColor;
             }
         }
     }

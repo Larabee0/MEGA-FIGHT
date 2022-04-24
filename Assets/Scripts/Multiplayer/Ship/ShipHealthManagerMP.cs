@@ -13,6 +13,10 @@ namespace MultiplayerRunTime
 {
     public class ShipHealthManagerMP : NetworkBehaviour
     {
+        public delegate void ShipHit();
+        public ShipHit OnShipHit;
+        public static bool PVPEnabled = false;
+
         public ShipHierarchyScriptableObject stats;
         public ShipHierarchy shipHierarchy;
 
@@ -280,6 +284,10 @@ namespace MultiplayerRunTime
         [ServerRpc(Delivery = RpcDelivery.Reliable, RequireOwnership = false)]
         public void HitServerRpc(byte hierachyID, ulong instigatorClientID, float damage)
         {
+            if (!PVPEnabled)
+            {
+                return;
+            }
             if (partHealths[hierachyID] > 0)
             {
                 partHealths[hierachyID] -= damage;
@@ -303,11 +311,17 @@ namespace MultiplayerRunTime
             {
                 DestroyShipServerRpc();
             }
-
+            InvokeHitEventClientRPC();
             ClientRpcParams clientRpcParams = new() { Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } } };
             AlertHitClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
             clientRpcParams.Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { instigatorClientID } };
             AlertInstigatorClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(OwnerClientId).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
+        }
+
+        [ClientRpc(Delivery = RpcDelivery.Reliable)]
+        private void InvokeHitEventClientRPC()
+        {
+            OnShipHit?.Invoke();
         }
 
         [ClientRpc(Delivery = RpcDelivery.Reliable)]

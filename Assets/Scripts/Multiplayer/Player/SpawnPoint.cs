@@ -13,6 +13,9 @@ public class SpawnPoint : MonoBehaviour
         private set { spawnEmpty = value; }
     }
 
+    public Vector3 Position => transform.position;
+    public Vector3 Forward => transform.forward;
+
     private void OnTriggerEnter(Collider other)
     {
         if (IsServer && other.TryGetComponent<SpawnDetector>(out _))

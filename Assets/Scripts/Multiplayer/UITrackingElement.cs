@@ -11,10 +11,24 @@ namespace MultiplayerRunTime
         [SerializeField] private Text playerName;
         [SerializeField] private Text shipType;
         [SerializeField] private Text distance;
+        [SerializeField] private Image image;
 
         public float rectanglePaddingMultiplier = 0.1f;
         public string DisplayedName { set => playerName.text = value; }
         public string ShipType { set => shipType.text = value; }
+        public Color defaultColour = Color.white;
+        private Color32 flashColour = new(187, 191, 41, 255);
+        [SerializeField] private float FlashTime = 0.25f;
+        public Color ElementColours
+        {
+            set
+            {
+                playerName.color = value;
+                shipType.color = value;
+                distance.color = value;
+                image.color = value;
+            }
+        }
 
         public float Distance
         {
@@ -28,6 +42,7 @@ namespace MultiplayerRunTime
                 healthManagerMP = value;
                 shipTransform = healthManagerMP.transform;
                 ShipType = healthManagerMP.shipHierarchy.Label;
+                healthManagerMP.OnShipHit += FlashTracker;
             }
         }
 
@@ -42,6 +57,7 @@ namespace MultiplayerRunTime
         private void Awake()
         {
             c = Camera.main;
+            ElementColours = defaultColour;
             playerManager = c.GetComponent<LocalPlayerManager>();
             rootTransform = GetComponent<RectTransform>();
             for (int i = 0; i < transform.childCount; i++)
@@ -103,8 +119,8 @@ namespace MultiplayerRunTime
                 else if (i == 3)
                 {
                     // Reposition the other objects (texts and sprites) beside the tracker rectangle
-                    //child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, child.position.y);
-                    child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, visualRect.yMin + visualRect.height - yPadding);
+                    child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, child.position.y);
+                    //child.position = new Vector2(visualRect.xMin + visualRect.width + xPadding, visualRect.yMin + visualRect.height - yPadding);
                 }
                 else
                 {
@@ -149,7 +165,6 @@ namespace MultiplayerRunTime
             return rect;
         }
 
-
         private void AdjustRect(ref Rect rect, Vector3 pnt)
         {
             rect.xMin = Mathf.Min(rect.xMin, pnt.x);
@@ -182,5 +197,18 @@ namespace MultiplayerRunTime
                 localShipTransform = playerManager.LocalShip.transform;
             }
         }
+
+        public void FlashTracker()
+        {
+            StartCoroutine(Flash());
+        }
+
+        private IEnumerator Flash()
+        {
+            ElementColours = flashColour;
+            yield return new WaitForSeconds(FlashTime);
+            ElementColours = defaultColour;
+        }
+
     }
 }

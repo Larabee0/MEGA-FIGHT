@@ -89,6 +89,15 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""FreeCam"",
+                    ""type"": ""Button"",
+                    ""id"": ""1d6a6b15-da00-4ba2-b77a-5f866ee78682"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -452,6 +461,17 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
                     ""action"": ""ScrollWheel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bc366ff2-055f-4fba-8b1d-6a709471563e"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FreeCam"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1003,6 +1023,89 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""AlwaysOnControls"",
+            ""id"": ""d4c88ac4-8a18-4e52-b6bc-ca9106dabaa1"",
+            ""actions"": [
+                {
+                    ""name"": ""Mouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""f5a535d3-e619-4ffa-b215-40769cf55b7b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""InvertVector2(invertX=false,invertY=false)"",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b5ee3447-416a-46d2-9049-0ef0d9654e2e"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""3c558f2d-0ccb-413d-9695-246788cdb166"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": ""InvertVector2(invertX=false)"",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e756429f-601f-4f09-8973-5d6801d5c613"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""ca9513c1-ded1-449e-809f-fe3237a1a5b1"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""3ae7042f-9c4c-4f6f-a2f2-e83912ddc299"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""6cc0f5d7-54e8-4f29-b869-2c1d49d939d7"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1044,6 +1147,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_Flight_CameraSwitch = m_Flight.FindAction("CameraSwitch", throwIfNotFound: true);
         m_Flight_Mouse = m_Flight.FindAction("Mouse", throwIfNotFound: true);
         m_Flight_ScrollWheel = m_Flight.FindAction("ScrollWheel", throwIfNotFound: true);
+        m_Flight_FreeCam = m_Flight.FindAction("FreeCam", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1057,6 +1161,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
+        // AlwaysOnControls
+        m_AlwaysOnControls = asset.FindActionMap("AlwaysOnControls", throwIfNotFound: true);
+        m_AlwaysOnControls_Mouse = m_AlwaysOnControls.FindAction("Mouse", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1123,6 +1230,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
     private readonly InputAction m_Flight_CameraSwitch;
     private readonly InputAction m_Flight_Mouse;
     private readonly InputAction m_Flight_ScrollWheel;
+    private readonly InputAction m_Flight_FreeCam;
     public struct FlightActions
     {
         private @Player m_Wrapper;
@@ -1134,6 +1242,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         public InputAction @CameraSwitch => m_Wrapper.m_Flight_CameraSwitch;
         public InputAction @Mouse => m_Wrapper.m_Flight_Mouse;
         public InputAction @ScrollWheel => m_Wrapper.m_Flight_ScrollWheel;
+        public InputAction @FreeCam => m_Wrapper.m_Flight_FreeCam;
         public InputActionMap Get() { return m_Wrapper.m_Flight; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1164,6 +1273,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @ScrollWheel.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnScrollWheel;
                 @ScrollWheel.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnScrollWheel;
                 @ScrollWheel.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnScrollWheel;
+                @FreeCam.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnFreeCam;
+                @FreeCam.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnFreeCam;
+                @FreeCam.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnFreeCam;
             }
             m_Wrapper.m_FlightActionsCallbackInterface = instance;
             if (instance != null)
@@ -1189,6 +1301,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @ScrollWheel.started += instance.OnScrollWheel;
                 @ScrollWheel.performed += instance.OnScrollWheel;
                 @ScrollWheel.canceled += instance.OnScrollWheel;
+                @FreeCam.started += instance.OnFreeCam;
+                @FreeCam.performed += instance.OnFreeCam;
+                @FreeCam.canceled += instance.OnFreeCam;
             }
         }
     }
@@ -1306,6 +1421,39 @@ public partial class @Player : IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // AlwaysOnControls
+    private readonly InputActionMap m_AlwaysOnControls;
+    private IAlwaysOnControlsActions m_AlwaysOnControlsActionsCallbackInterface;
+    private readonly InputAction m_AlwaysOnControls_Mouse;
+    public struct AlwaysOnControlsActions
+    {
+        private @Player m_Wrapper;
+        public AlwaysOnControlsActions(@Player wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Mouse => m_Wrapper.m_AlwaysOnControls_Mouse;
+        public InputActionMap Get() { return m_Wrapper.m_AlwaysOnControls; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(AlwaysOnControlsActions set) { return set.Get(); }
+        public void SetCallbacks(IAlwaysOnControlsActions instance)
+        {
+            if (m_Wrapper.m_AlwaysOnControlsActionsCallbackInterface != null)
+            {
+                @Mouse.started -= m_Wrapper.m_AlwaysOnControlsActionsCallbackInterface.OnMouse;
+                @Mouse.performed -= m_Wrapper.m_AlwaysOnControlsActionsCallbackInterface.OnMouse;
+                @Mouse.canceled -= m_Wrapper.m_AlwaysOnControlsActionsCallbackInterface.OnMouse;
+            }
+            m_Wrapper.m_AlwaysOnControlsActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Mouse.started += instance.OnMouse;
+                @Mouse.performed += instance.OnMouse;
+                @Mouse.canceled += instance.OnMouse;
+            }
+        }
+    }
+    public AlwaysOnControlsActions @AlwaysOnControls => new AlwaysOnControlsActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1333,6 +1481,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         void OnCameraSwitch(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
         void OnScrollWheel(InputAction.CallbackContext context);
+        void OnFreeCam(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1347,5 +1496,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+    }
+    public interface IAlwaysOnControlsActions
+    {
+        void OnMouse(InputAction.CallbackContext context);
     }
 }

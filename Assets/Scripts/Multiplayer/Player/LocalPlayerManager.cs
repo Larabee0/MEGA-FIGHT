@@ -100,6 +100,7 @@ namespace MultiplayerRunTime
         private void SetBasedOffPause()
         {
             Cursor.lockState = Paused ? CursorLockMode.None : CursorLockMode.Locked;
+
             lobby.menu.ShowPauseOverlay(Paused);
             inputControl.SetFlightEnabled(!Paused);
         }
@@ -153,7 +154,10 @@ namespace MultiplayerRunTime
             mouseFlightController.enabled = false;
             fireControl.enabled = false;
             enabled = false;
-            lobby.menu.ShowSpawnOverlay(true);
+            if (PlayerManagerMP.AllowRespawn)
+            {
+                lobby.menu.ShowSpawnOverlay(true);
+            }
         }
 
 
