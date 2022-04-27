@@ -124,6 +124,8 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
   AnimationPoint: {fileID: 0}
+  AnimationPoints: []
+  MultiPoint: 0
 --- !u!1 &1422673606546477110
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +243,8 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
   AnimationPoint: {fileID: 1139807501458933352}
+  AnimationPoints: []
+  MultiPoint: 0
 --- !u!1 &2257035912199802530
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,6 +363,8 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
   AnimationPoint: {fileID: 0}
+  AnimationPoints: []
+  MultiPoint: 0
 --- !u!1 &2682769594672550640
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,8 +472,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2698706444543835733}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.59, y: -3.729, z: 2.94}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalPosition: {x: 0.38, y: -1.44, z: -0.63}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1101369505681095795}
@@ -584,7 +590,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3004695792953479902}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 110
   m_Drag: 5
   m_AngularDrag: 7
   m_UseGravity: 0
@@ -604,6 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e946167ebeec36b4ba8790dfd1d98cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TPSCameraPosition: {x: 0, y: 9, z: -35.2}
   FPSCamPos: {fileID: 3004695793008553369}
   TargetPoint: {fileID: 3004695792657850417}
   WeaponOutputPoints:
@@ -611,8 +618,8 @@ MonoBehaviour:
   - {fileID: 5906115115387335202}
   laserSpawnerMP: {fileID: 3905754645607304687}
   shipHealthManagerMP: {fileID: 7916427166386909386}
-  thrust: 4630
-  turnTorque: {x: 500, y: 360, z: 700}
+  thrust: 1995
+  turnTorque: {x: 200, y: 144, z: 280}
   forceMult: 100
   sensitivity: 4.5
   aggressiveTurnAngle: 10
@@ -689,6 +696,11 @@ MonoBehaviour:
     ShipID: 0
     Label: 
     tags: 
+  explosionData:
+    Radius: 0
+    Force: 0
+    ForceMult: 0
+    Damage: 0
 --- !u!114 &10459044717671340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -871,7 +883,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3004695793008553382}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.898, z: -2.835}
   m_LocalScale: {x: 0.31, y: 0.31, z: 0.31}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -893,7 +905,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3004695793008553382}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1236,6 +1248,8 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
   AnimationPoint: {fileID: 5632618455637277747}
+  AnimationPoints: []
+  MultiPoint: 0
 --- !u!1 &6536709163703131632
 GameObject:
   m_ObjectHideFlags: 0
@@ -1521,3 +1535,5 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   FlashTime: 0.25
   AnimationPoint: {fileID: 0}
+  AnimationPoints: []
+  MultiPoint: 0

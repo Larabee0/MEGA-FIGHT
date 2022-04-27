@@ -27,6 +27,7 @@ namespace MultiplayerRunTime
 
         private NetworkManager networkManager;
 
+        [SerializeField] private GameObject[] ExplsionPrefabs;
         public string JoinCode
         {
             get
@@ -219,6 +220,10 @@ namespace MultiplayerRunTime
         }
 
 
+        public void SpawnExplosion(Vector3 position,Transform parent)
+        {
+            Instantiate(ExplsionPrefabs[UnityEngine.Random.Range(0, ExplsionPrefabs.Length)], position, Quaternion.identity, parent);
+        }
         //private void ApprovalCheck(byte[] connectionData, ulong clientID, NetworkManager.ConnectionApprovedDelegate callback)
         //{
         //    string password = Encoding.ASCII.GetString(connectionData);

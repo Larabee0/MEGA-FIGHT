@@ -200,9 +200,14 @@ namespace MultiplayerRunTime
         public void AllowRespawnClientRpc(bool respawn)
         {
             AllowRespawn = respawn;
-            if (AllowRespawn)
+
+            if (!ShipSpawned && AllowRespawn)
             {
                 OnShipLost?.Invoke();
+            }
+            else if(ShipSpawned && AllowRespawn && IsOwner)
+            {
+                LocalSpaceship.shipHealthManagerMP.DestroyShipServerRpc();
             }
         }
 

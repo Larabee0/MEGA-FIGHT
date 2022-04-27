@@ -18,6 +18,7 @@ namespace MultiplayerRunTime
     [RequireComponent(typeof(Rigidbody))]
     public class SpaceshipMP : NetworkBehaviour
     {
+        const float k_NullInput = 0.01f;
         [Header("Local Components")]
         public Vector3 TPSCameraPosition = new(0, 9, -35.2f);
         public Transform FPSCamPos;
@@ -50,7 +51,7 @@ namespace MultiplayerRunTime
 
         [Header("Client Authroative Input")]
         private float throttle = 0f;
-        public float Throttle { set { throttle = Mathf.Clamp(value, -0.25f, 1f); Drag = throttle; } get { return throttle; } }
+        public float Throttle { set { throttle = Mathf.Clamp(value, -0.25f, 1f); } get { return throttle; } }
 
         private float Drag { set { rigid.drag = value == 0 ? 2.5f : Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value) * 1.2f), 1f, 5f); } }
 
@@ -81,8 +82,8 @@ namespace MultiplayerRunTime
                     // Ultra simple flight where the plane just gets pushed forward and manipulated
                     // with torques to turn.
                     rigid.AddRelativeForce(forceMult * Throttle * thrust * shipHealthManagerMP.ThrustEfficiency * Vector3.forward, ForceMode.Force);
-
-                    rigid.AddRelativeTorque(shipHealthManagerMP.ManeourveEfficiency * forceMult * new Vector3(turnTorque.x * controlInput.y, turnTorque.y * controlInput.z, -turnTorque.z * controlInput.x), ForceMode.Force);
+                    
+                    rigid.AddRelativeTorque(shipHealthManagerMP.ManeourveEfficiency * forceMult * new Vector3(turnTorque.x * controlInput.y, turnTorque.y * controlInput.z, -turnTorque.z * controlInput.x), ForceMode.Force);                    
                     break;
             }
         }

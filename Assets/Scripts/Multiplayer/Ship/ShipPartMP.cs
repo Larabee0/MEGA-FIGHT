@@ -73,6 +73,18 @@ namespace MultiplayerRunTime
             ObjectTint.OnValueChanged += OnTintColourChanged;
         }
 
+        private void OnCollisionEnter(Collision collision)
+        {
+            switch (IsOwner)
+            {
+                case false:
+
+                    return;
+            }
+
+            Debug.LogFormat("Relative Impact Velcoity {0} m/s, Part ID {1}", collision.relativeVelocity.magnitude.ToString("F0"), HierarchyID);
+        }
+
         private void OnObjectEnabledChanged(bool oldValue, bool newValue)
         {
             if (meshRenderer == null)

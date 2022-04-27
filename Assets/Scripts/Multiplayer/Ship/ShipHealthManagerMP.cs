@@ -19,7 +19,7 @@ namespace MultiplayerRunTime
 
         public ShipHierarchyScriptableObject stats;
         public ShipHierarchy shipHierarchy;
-
+        [SerializeField] private ExplosionData explosionData;
         private Bounds modelBounds;
         private List<ShipPartMP> parts;
 
@@ -288,6 +288,7 @@ namespace MultiplayerRunTime
             {
                 return;
             }
+            ClientRpcParams clientRpcParams = new() { Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } } };
             if (partHealths[hierachyID] > 0)
             {
                 partHealths[hierachyID] -= damage;
@@ -312,7 +313,6 @@ namespace MultiplayerRunTime
                 DestroyShipServerRpc();
             }
             InvokeHitEventClientRPC();
-            ClientRpcParams clientRpcParams = new() { Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } } };
             AlertHitClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(instigatorClientID).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
             clientRpcParams.Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { instigatorClientID } };
             AlertInstigatorClientRPC(NetworkManager.SpawnManager.GetPlayerNetworkObject(OwnerClientId).GetComponent<PlayerManagerMP>(), hierachyID, damage, clientRpcParams);
@@ -355,7 +355,13 @@ namespace MultiplayerRunTime
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void DetachPartClientRPC(byte hierachyID)
         {
-            parts[hierachyID].gameObject.AddComponent<Rigidbody>().mass = 100f;
+            Rigidbody body = parts[hierachyID].gameObject.AddComponent<Rigidbody>();
+            body.mass = 10000f;
+            body.drag = 7;
+            body.angularDrag = 7;
+            Vector3 point = parts[hierachyID].gameObject.GetComponent<Collider>().bounds.center;
+            PartExplosion explosion = parts[hierachyID].gameObject.AddComponent<PartExplosion>();
+            explosion.StartCoroutine(explosion.Explode(point, explosionData));
 
             Collider[] collidables = parts[hierachyID].gameObject.GetComponentsInChildren<Collider>();
             for (int i = 0; i < collidables.Length; i++)

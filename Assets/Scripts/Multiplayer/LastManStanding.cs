@@ -48,7 +48,7 @@ namespace MultiplayerRunTime
             {
                 PreStartGame();
             }
-            if (GameState == GameState.InGame && spawnedPlayers == 1)
+            if (GameState == GameState.InGame && spawnedPlayers <= 1)
             {
                 EndGame();
             }
