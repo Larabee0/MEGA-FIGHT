@@ -12,10 +12,16 @@ namespace MultiplayerRunTime
         [HideInInspector] public InputControl inputControl;
         private LaserSpawnerMP laserSpawnerMP;
         private SpaceshipMP spaceship;
+        private MouseFlightControllerMP controller;
 
         //private ShipPartMP[] WeaponOutputPoints;
         private WeaponOutputPoint[] WeaponOutputPoints;
         private Transform TargetPoint;
+        public Vector3 lastTargetPointPos;
+        public bool locked = false;
+        public float lockTime = 1f;
+        public float unlockTime = 0.5f;
+        public float currentLockTime = 0f;
 
         [SerializeField] private float dstSenstivity = 1f;
         [SerializeField] private float minDst;
@@ -36,15 +42,22 @@ namespace MultiplayerRunTime
             get => targetDistance;
             set
             {
-                spaceship.TargetDistance = targetDistance = math.clamp(value, minDst, maxDst);
+                targetDistance = math.clamp(value, minDst, maxDst);
+                LocalTargetPointPos = new(TargetPoint.localPosition.x, TargetPoint.localPosition.y, targetDistance);
             }
         }
 
+        private Vector3 LocalTargetPointPos { set => TargetPoint.localPosition = value; get => TargetPoint.localPosition; }
 
+        private void Awake()
+        {
+            controller = GetComponent<MouseFlightControllerMP>();
+        }
 
         private void OnEnable()
         {
-            UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
+            currentLockTime = 0f;
+               UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
             if (userSettings == null)
             {
                 Debug.LogError(name + "MouseFlightController - No User Customisable Settings Instance");
@@ -54,12 +67,13 @@ namespace MultiplayerRunTime
 
             targetDistance = userSettings.userSettings.DefaultAimDistance;
             dstSenstivity = userSettings.userSettings.AimDistanceSenstivity;
-
+            
             inputControl.FlightActions.Shoot.canceled += ResetFireInterval;
             inputControl.FlightActions.Shoot.canceled += ToggleOffFire;
             inputControl.FlightActions.Shoot.started += ToggleOnFire;
             inputControl.FlightActions.ScrollWheel.performed += SetTargetDistance;
             LocalClientId = NetworkManager.Singleton.LocalClientId;
+            lastTargetPointPos = LocalTargetPointPos;
         }
         private void OnDisable()
         {
@@ -88,19 +102,21 @@ namespace MultiplayerRunTime
 
         private void SetTargetDistance(InputAction.CallbackContext context)
         {
-            TargetDistance += inputControl.FlightActions.ScrollWheel.ReadValue<Vector2>().y * dstSenstivity * Time.deltaTime;
+            if (!locked)
+            {
+                TargetDistance += inputControl.FlightActions.ScrollWheel.ReadValue<Vector2>().y * dstSenstivity * Time.deltaTime;
+            }
         }
 
         private void Update()
         {
+            AutoTarget();
             switch (fire)
             {
                 case true:
                     Fire();
                     break;
             }
-
-            //Debug.DrawRay(WeaponOutputPoints[0].position, TargetPoint.position - WeaponOutputPoints[0].position);
         }
 
         private void Fire()
@@ -129,11 +145,7 @@ namespace MultiplayerRunTime
                             switch (hit.collider.gameObject.TryGetComponent(out ShipPartMP part))
                             {
                                 case true:
-                                    Debug.Log(part);
-                                    Debug.Log(part.owner);
-                                    Debug.Log(part.owner.shipHealthManagerMP);
                                     float angleWeight = Mathf.InverseLerp(90f, 0f, Mathf.Abs(Mathf.DeltaAngle(Vector3.Angle(hit.normal, ray.direction), 90f)));
-                                    //Debug.LogFormat("Hit Daamge: {0}", damage * angleWeight);
                                     part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID, LocalClientId, damage * angleWeight);
                                     break;
                             }
@@ -144,9 +156,48 @@ namespace MultiplayerRunTime
                     }
 
                     laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].point.position), spaceship.transform.InverseTransformPoint(endPoint)));
-                    //Debug.DrawLine(WeaponOutputPoints[currentWeaponIndex].position, endPoint, Color.red, 0.25f);
                     currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
                     break;
+            }
+        }
+
+        private void AutoTarget()
+        {
+            Ray mousePosRay = Camera.main.ScreenPointToRay(Camera.main.WorldToScreenPoint(controller.MouseAimPos));
+            if (Physics.SphereCast(mousePosRay, 12.5f, out RaycastHit hitInfo))
+            {
+                if (hitInfo.transform.root.TryGetComponent(out SpaceshipMP targetShip))
+                {
+                    if (!locked)
+                    {
+                        currentLockTime += lockTime * Time.deltaTime;
+                        if(currentLockTime > lockTime)
+                        {
+                            Debug.LogFormat("Locked {0}", targetShip.shipHealthManagerMP.shipHierarchy.Label);
+                            locked = true;
+                            lastTargetPointPos = LocalTargetPointPos;
+                        }
+                    }
+                    else
+                    {
+                        TargetPoint.position = targetShip.transform.position;
+                    }
+
+                    
+                }
+            }
+            else
+            {
+                if (locked)
+                {
+                    currentLockTime -= unlockTime * Time.deltaTime;
+                    if(currentLockTime <= 0)
+                    {
+                        Debug.Log("Lost Target");
+                        locked = false;
+                        LocalTargetPointPos = lastTargetPointPos;
+                    }
+                }
             }
         }
 

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 //
 
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -18,7 +19,10 @@ namespace MultiplayerRunTime
     [RequireComponent(typeof(Rigidbody))]
     public class SpaceshipMP : NetworkBehaviour
     {
-        const float k_NullInput = 0.01f;
+        const float minImpactVelocity = 30f;
+        const float maxImpactVelocity = 350f;
+        const float minImpactDamage = 1f;
+        const float maxImpactDamage = 200f;
         [Header("Local Components")]
         public Vector3 TPSCameraPosition = new(0, 9, -35.2f);
         public Transform FPSCamPos;
@@ -32,13 +36,13 @@ namespace MultiplayerRunTime
 
         public Vector3 AimOffset { get => FPSCamPos != null ? new Vector3(0f, FPSCamPos.localPosition.y) : Vector3.zero; }
 
-        public float TargetDistance
-        {
-            set
-            {
-                TargetPoint.localPosition = new(TargetPoint.localPosition.x, TargetPoint.localPosition.y, value);
-            }
-        }
+        //public float TargetDistance
+        //{
+        //    set
+        //    {
+        //        TargetPoint.localPosition = new(TargetPoint.localPosition.x, TargetPoint.localPosition.y, value);
+        //    }
+        //}
 
         [Header("Physics")]
         [Tooltip("Force to push plane forwards with")] public float thrust = 100f;
@@ -87,6 +91,63 @@ namespace MultiplayerRunTime
                     break;
             }
         }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            switch (IsOwner)
+            {
+                case false:
+
+                    return;
+            }
+            float relativeVelocity = collision.relativeVelocity.magnitude;
+
+            float damage = Mathf.Lerp(minImpactDamage, maxImpactDamage, Mathf.InverseLerp(minImpactVelocity, maxImpactVelocity, relativeVelocity));
+
+            if(relativeVelocity < minImpactVelocity)
+            {
+                return;
+            }
+            ContactPoint[] contacts = collision.contacts;
+            HashSet<InternalCollisionHandler> unquieParts = new HashSet<InternalCollisionHandler>();
+            for (int i = 0; i < contacts.Length; i++)
+            {
+                ContactPoint point = contacts[i];
+                if(point.thisCollider.gameObject.TryGetComponent(out ShipPartMP part1))
+                {
+                    unquieParts.Add(new(part1));
+                }
+                if (point.otherCollider.gameObject.TryGetComponent(out ShipPartMP part2))
+                {
+                    unquieParts.Add(new(part2));
+                }
+            }
+
+            InternalCollisionHandler[] unquieCollisions = new InternalCollisionHandler[unquieParts.Count];
+            unquieParts.CopyTo(unquieCollisions);
+
+            for (int i = 0; i < unquieCollisions.Length; i++)
+            {
+                InternalCollisionHandler part = unquieCollisions[i];
+                if(part.owner == OwnerClientId)
+                {
+                    Debug.LogFormat("Part ID {0} hit at {1}m/s, takes {2} damage", part.HierarchyID, relativeVelocity, damage);
+                    shipHealthManagerMP.HitServerRpc(part.HierarchyID, OwnerClientId, damage);
+                }
+            }
+        }
+
+        private struct InternalCollisionHandler
+        {
+            public ulong owner;
+            public byte HierarchyID;
+            public InternalCollisionHandler(ShipPartMP part)
+            {
+                owner = part.OwnerClientId;
+                HierarchyID = part.HierarchyID;
+            }
+        }
+
 
         public override void OnNetworkDespawn()
         {

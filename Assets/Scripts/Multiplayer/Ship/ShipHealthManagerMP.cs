@@ -170,6 +170,7 @@ namespace MultiplayerRunTime
 
         private void RecalculateEffiencies(NetworkListEvent<float> changedValue)
         {
+            Debug.Log("Recaulating Effiencies");
             byte hierachyID = (byte)changedValue.Index;
             Functionality[] effectedFunctions = shipHierarchy.parts[hierachyID].tags;
 
@@ -357,8 +358,8 @@ namespace MultiplayerRunTime
         {
             Rigidbody body = parts[hierachyID].gameObject.AddComponent<Rigidbody>();
             body.mass = 10000f;
-            body.drag = 7;
-            body.angularDrag = 7;
+            body.drag = 1;
+            body.angularDrag = 3;
             Vector3 point = parts[hierachyID].gameObject.GetComponent<Collider>().bounds.center;
             PartExplosion explosion = parts[hierachyID].gameObject.AddComponent<PartExplosion>();
             explosion.StartCoroutine(explosion.Explode(point, explosionData));
