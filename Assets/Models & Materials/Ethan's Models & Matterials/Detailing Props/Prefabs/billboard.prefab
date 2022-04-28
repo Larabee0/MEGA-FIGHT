@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 3480320434737295258}
   - component: {fileID: 1704722097044740944}
   - component: {fileID: 5921873729011717228}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: billboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &568385302029377599
 Transform:
@@ -26,9 +26,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 912154602356603525}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1831, y: 174.00003, z: 395.12625}
-  m_LocalScale: {x: 0.01, y: 0.0063005253, z: 0.01}
+  m_LocalScale: {x: 0.052864425, y: 0.039119113, z: 0.052864425}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -73,13 +73,13 @@ MeshRenderer:
   m_ScaleInLightmap: 1
   m_ReceiveGI: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 1
-  m_AutoUVMaxAngle: 90
+  m_AutoUVMaxDistance: 10
+  m_AutoUVMaxAngle: 180
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0

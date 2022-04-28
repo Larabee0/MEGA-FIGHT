@@ -42,7 +42,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Ad_Rotate_speed: 1
+    - _Ad_Rotate_speed: 0.15
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Scroll_Speed: 0.05

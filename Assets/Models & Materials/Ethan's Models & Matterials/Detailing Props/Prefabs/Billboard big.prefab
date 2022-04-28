@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 1997326988933450369}
   - component: {fileID: 6196105714668439252}
   - component: {fileID: 4881100141597580283}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pasted__pasted__polySurface5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5307121850265744515
 Transform:
@@ -74,13 +74,13 @@ MeshRenderer:
   m_ScaleInLightmap: 1
   m_ReceiveGI: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 1
-  m_AutoUVMaxAngle: 90
+  m_AutoUVMaxDistance: 10
+  m_AutoUVMaxAngle: 180
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
@@ -108,12 +108,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8371131447813221881}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Billboard big
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8371131447813221881
 Transform:
@@ -122,9 +122,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9180564885970515779}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1815, y: 363.72836, z: 765}
-  m_LocalScale: {x: 0.01, y: 0.0132835405, z: 0.01}
+  m_LocalScale: {x: 0.024701847, y: 0.028460339, z: 0.024701847}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5307121850265744515}
