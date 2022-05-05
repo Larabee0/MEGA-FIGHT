@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dcc52779ce406945b56cca6a2dc6759, type: 3}
   m_Name: Light Ship Cockpit
   m_EditorClassIdentifier: 
-  PartID: 0
-  label: 
+  label: Cockpit
   hitPoints: 100
   tags: 0300

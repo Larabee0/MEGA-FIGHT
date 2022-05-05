@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dcc52779ce406945b56cca6a2dc6759, type: 3}
   m_Name: Light Ship Wing
   m_EditorClassIdentifier: 
-  PartID: 1
-  label: 
+  label: Wing
   hitPoints: 100
   tags: 000105
