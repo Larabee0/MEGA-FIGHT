@@ -134,7 +134,6 @@ namespace MultiplayerRunTime
                 return source;
             }
             ShipPartRecord parent = source.Parent;
-            //Debug.LogFormat("Parent {0} to {1} is Destroy? {2}", parent.label, source.label, parent.Destroyed);
             if(!parent.Destroyed && parent != shipHierarchy.root)
             {
                 return LogDestroyedParentOrRoot(source);
@@ -145,7 +144,17 @@ namespace MultiplayerRunTime
         private void Awake()
         {
             partHealths = new();
-            shipHierarchy = new(stats);
+
+            parts = new(GetComponentsInChildren<ShipPartMP>());
+            for (int i = 0; i < parts.Count; i++)
+            {
+                if(parts[i].parent == null)
+                {
+                    shipHierarchy = new(stats,parts[i]);
+                    break;
+                }
+            }
+            
             if (IsServer)
             {
                 for (int i = 0; i < shipHierarchy.parts.Count; i++)
@@ -157,7 +166,6 @@ namespace MultiplayerRunTime
 
         private void Start()
         {
-            parts = new(GetComponentsInChildren<ShipPartMP>());
             parts.Sort();
             for (int i = 0; i < shipHierarchy.tags.Count; i++)
             {
@@ -193,7 +201,7 @@ namespace MultiplayerRunTime
             }
             if (IsServer)
             {
-                if (!shipHierarchy.parts[hierachyID].Destroyed)
+                if (!shipHierarchy.parts[hierachyID].Destroyed && partHealths[hierachyID] <= 0f)
                 {
                     DestroyChildren(hierachyID);
                     DetachPartClientRPC(hierachyID);
@@ -210,7 +218,6 @@ namespace MultiplayerRunTime
             return new DamageInfo
             {
                 HierarchyID = hierarchyID,
-                partID = shipHierarchy.parts[hierarchyID].PartID,
                 ammount = damage,
                 PartLabel = shipHierarchy.parts[hierarchyID].label
             };
@@ -245,7 +252,7 @@ namespace MultiplayerRunTime
             float num = 1f;
             float num3 = partHealths[part.HierarchyIndex] / part.maxHitPoints;
             num *= num3;
-            return math.max(num, 0f);
+            return part.Destroyed ? 0f : math.max(num, 0f);
         }
 
         private bool ShouldBeDead()
@@ -270,7 +277,7 @@ namespace MultiplayerRunTime
                 return;
             }
             part.Destroyed = true;
-            partHealths[hierachyID] = 0;
+            //partHealths[hierachyID] = 0;
             if (part.Children != null && part.Children.Count > 0)
             {
                 for (int i = 0; i < part.Children.Count; i++)
@@ -300,11 +307,9 @@ namespace MultiplayerRunTime
             {
                 damage += partHealths[hierachyID];
                 partHealths[hierachyID] = 0;
-                // destroy part OwnerClientId
             }
             else
             {
-                // apply any functionality changes
                 float proportion = partHealths[hierachyID] / shipHierarchy.parts[hierachyID].maxHitPoints;
                 parts[hierachyID].SetObjectTintServerRpc((byte)math.lerp(0, 255, proportion));
             }
@@ -439,14 +444,14 @@ namespace MultiplayerRunTime
         public List<Functionality> tags;
         public ShipPartRecord root;
 
-        public ShipHierarchy(ShipHierarchyScriptableObject hierarchy)
+        public ShipHierarchy(ShipHierarchyScriptableObject hierarchy, ShipPartMP rootPart)
         {
             ShipID = hierarchy.ShipID;
             Label = hierarchy.label;
-            _ = new HierarchyBuilder(this, hierarchy);
+            _ = new HierarchyBuilder(this, hierarchy,rootPart);
             tags = new List<Functionality>();
-            parts.Sort();
             CacheDataRecursive(root);
+            parts.Sort();
             for (int i = 0; i < RequiredFunctionality.Count; i++)
             {
                 if (!tags.Contains(RequiredFunctionality[i].function))
@@ -489,69 +494,66 @@ namespace MultiplayerRunTime
             yield break;
         }
 
-
         private class HierarchyBuilder
         {
             private readonly ShipHierarchy Target;
             private readonly Dictionary<byte, ShipPartRecord> partsDict;
-
-            public HierarchyBuilder(ShipHierarchy target, ShipHierarchyScriptableObject source)
+            private readonly Dictionary<string, ShipPartRecord> stringPartsDict;
+            private byte index = 0;
+            public HierarchyBuilder(ShipHierarchy target, ShipHierarchyScriptableObject source, ShipPartMP root)
             {
-                Target = target;
-                partsDict = new();
+                Target=target;
+                stringPartsDict = new();
                 for (int i = 0; i < source.parts.Length; i++)
                 {
-                    partsDict.TryAdd(source.parts[i].PartID, new(source.parts[i]));
+                    stringPartsDict.TryAdd(source.parts[i].label, new(source.parts[i]));
                 }
-                Target.parts = new List<ShipPartRecord>(partsDict.Count);
-                Target.root = new(partsDict[source.root.PartID]);
-                Target.root.HierarchyIndex = source.root.HierachyID;
-                if (!string.IsNullOrEmpty(source.root.customLabel))
+                Target.parts = new List<ShipPartRecord>(stringPartsDict.Count);
+                Target.root = new(stringPartsDict[root.PartName]);
+                if (!string.IsNullOrEmpty(root.CustomLabel))
                 {
-                    Target.root.label = source.root.customLabel;
+                    Target.root.label = root.CustomLabel;
                 }
-                //Target.root.Ship = Target;
                 Target.parts.Add(Target.root);
-                RecusiveBodyPartCreator(Target.root, source.root.children);
+
+                RecusiveBodyPartCreator(Target.root,root.children);
             }
 
-            private void RecusiveBodyPartCreator(ShipPartRecord parent, ShipPartID[] childIDs)
+            private void RecusiveBodyPartCreator(ShipPartRecord parent, List<ShipPartMP> childParts)
             {
-                for (int i = 0; i < childIDs.Length; i++)
+                for (int i = 0; i < childParts.Count; i++)
                 {
-                    if (!partsDict.ContainsKey(childIDs[i].PartID))
+                    if (!stringPartsDict.ContainsKey(childParts[i].PartName))
                     {
-                        Debug.LogError("Missing Part with ID: " + childIDs[i].PartID);
+                        Debug.LogError("Missing Part with Name: " + childParts[i].PartName);
                         return;
                     }
-                    ShipPartRecord childPart = new(partsDict[childIDs[i].PartID]);
-                    if (childIDs[i].children != null || childIDs[i].children.Length > 0)
+                    ShipPartRecord childPart = new(stringPartsDict[childParts[i].PartName]);
+                    if (childParts[i].children != null || childParts[i].children.Count > 0)
                     {
-                        RecusiveBodyPartCreator(childPart, childIDs[i].children);
+                        RecusiveBodyPartCreator(childPart, childParts[i].children);
                     }
                     if (parent.Children == null)
                     {
                         parent.Children = new List<ShipPartRecord>();
                     }
-
-                    childPart.HierarchyIndex = childIDs[i].HierachyID;
-                    if (!string.IsNullOrEmpty(childIDs[i].customLabel))
+                    
+                    childPart.HierarchyIndex = index += 1;
+                    if (!string.IsNullOrEmpty(childParts[i].CustomLabel))
                     {
-                        childPart.label = childIDs[i].customLabel;
+                        childPart.label = childParts[i].CustomLabel;
                     }
                     childPart.Parent = parent;
                     parent.Children.Add(childPart);
                     Target.parts.Add(childPart);
                 }
             }
-
         }
     }
 
     public class ShipPartRecord : IComparable<ShipPartRecord>
     {
         public byte HierarchyIndex;
-        public byte PartID;
         public string label;
         public float maxHitPoints;
         public Functionality[] tags;
@@ -562,7 +564,6 @@ namespace MultiplayerRunTime
 
         public ShipPartRecord(ShipPartScriptableObject part)
         {
-            PartID = part.PartID;
             label = part.label;
             maxHitPoints = part.hitPoints;
             tags = part.tags;
@@ -571,7 +572,6 @@ namespace MultiplayerRunTime
 
         public ShipPartRecord(ShipPartRecord part)
         {
-            PartID = part.PartID;
             label = part.label;
             maxHitPoints = part.maxHitPoints;
             tags = part.tags;
@@ -588,15 +588,6 @@ namespace MultiplayerRunTime
                 return HierarchyIndex.CompareTo(other.HierarchyIndex);
             }
         }
-    }
-
-    [Serializable]
-    public class ShipPartID
-    {
-        public byte PartID;
-        public byte HierachyID;
-        public string customLabel;
-        public ShipPartID[] children;
     }
 
     public enum Functionality : byte

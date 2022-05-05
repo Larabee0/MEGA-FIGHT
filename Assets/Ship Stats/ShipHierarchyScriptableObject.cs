@@ -11,6 +11,5 @@ namespace MultiplayerRunTime
         public byte ShipID;
         public string label;
         public ShipPartScriptableObject[] parts;
-        public ShipPartID root;
     }
 }

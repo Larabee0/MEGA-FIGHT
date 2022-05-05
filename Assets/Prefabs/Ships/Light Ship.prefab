@@ -119,6 +119,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Cockpit
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 3004695792953479891}
   HierarchyID: 0
   meshRenderer: {fileID: 0}
@@ -238,6 +242,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser
+  CustomLabel: Laser 2
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 3004695792953479891}
   HierarchyID: 4
   meshRenderer: {fileID: 0}
@@ -358,6 +366,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing
+  CustomLabel: Right Wing
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 3004695792953479891}
   HierarchyID: 3
   meshRenderer: {fileID: 0}
@@ -1243,6 +1255,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser
+  CustomLabel: Laser 1
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 3004695792953479891}
   HierarchyID: 2
   meshRenderer: {fileID: 0}
@@ -1530,6 +1546,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing
+  CustomLabel: Left Wing
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 3004695792953479891}
   HierarchyID: 1
   meshRenderer: {fileID: 0}

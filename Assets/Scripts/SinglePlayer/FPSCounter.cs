@@ -23,8 +23,6 @@ namespace SinglePlayerRunTime
             {
                 enabled = false;
             }
-            //Display.displays[0].Activate();
-            //Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
         }
 
         void Update()

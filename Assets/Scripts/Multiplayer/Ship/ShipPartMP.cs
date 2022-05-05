@@ -8,6 +8,11 @@ namespace MultiplayerRunTime
 {
     public class ShipPartMP : NetworkBehaviour , IComparable<ShipPartMP>
     {
+        public string PartName;
+        public string CustomLabel;
+        public ShipPartMP parent;
+        public List<ShipPartMP> children = new();
+
         public SpaceshipMP owner;
         public byte HierarchyID;
         [SerializeField] private MeshRenderer meshRenderer;
@@ -58,7 +63,11 @@ namespace MultiplayerRunTime
         private void Awake()
         {
             meshRenderer = GetComponent<MeshRenderer>();
-            
+            parent = transform.parent.GetComponentInParent<ShipPartMP>();
+            if(parent != null)
+            {
+                parent.children.Add(this);
+            }
         }
 
         private void OnEnable()

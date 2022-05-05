@@ -113,6 +113,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Front Extension
+  CustomLabel: Front Upper Hull Extension
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 1
   meshRenderer: {fileID: 0}
@@ -399,6 +403,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Rear Hull Section
+  CustomLabel: Rear Left Hull Section
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 8
   meshRenderer: {fileID: 0}
@@ -883,6 +891,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Cockpit Corridor
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 15
   meshRenderer: {fileID: 0}
@@ -1034,6 +1046,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Entrance Section
+  CustomLabel: Right Entrance Section
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 6
   meshRenderer: {fileID: 0}
@@ -1157,6 +1173,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Front Hull Section
+  CustomLabel: Front Left Hull
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 3
   meshRenderer: {fileID: 0}
@@ -1275,6 +1295,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Dish
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 11
   meshRenderer: {fileID: 0}
@@ -1395,6 +1419,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Front Extension
+  CustomLabel: Front Right Hull Extension
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 19
   meshRenderer: {fileID: 0}
@@ -1963,6 +1991,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Front Extension
+  CustomLabel: Front Left Hull Extension
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 13
   meshRenderer: {fileID: 0}
@@ -2895,6 +2927,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Front Extension
+  CustomLabel: Front Lower Hull Extension A
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 2
   meshRenderer: {fileID: 0}
@@ -3100,6 +3136,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Gun
+  CustomLabel: Top Turret
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 17
   meshRenderer: {fileID: 0}
@@ -3227,6 +3267,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Front Hull Section
+  CustomLabel: Front Right Hull
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 4
   meshRenderer: {fileID: 0}
@@ -3822,6 +3866,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Root
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 0
   meshRenderer: {fileID: 0}
@@ -4100,6 +4148,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Rear Hull Section
+  CustomLabel: Rear Right Hull Section
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 9
   meshRenderer: {fileID: 0}
@@ -4386,6 +4438,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Entrance Section
+  CustomLabel: Left Entrance Section
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 5
   meshRenderer: {fileID: 0}
@@ -4507,6 +4563,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Cockpit
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 16
   meshRenderer: {fileID: 0}
@@ -4710,6 +4770,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Landing Gear Extension
+  CustomLabel: Front Right Landing Gear
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 14
   meshRenderer: {fileID: 0}
@@ -4914,6 +4978,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Landing Gear Extension
+  CustomLabel: Front Left Landing Gear
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 12
   meshRenderer: {fileID: 0}
@@ -5596,6 +5664,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Gun
+  CustomLabel: Bottom Turret
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 18
   meshRenderer: {fileID: 0}
@@ -6166,6 +6238,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Landing Gear Extension
+  CustomLabel: Centre Landing Gear
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 0
   meshRenderer: {fileID: 0}
@@ -6287,6 +6363,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Gun Pod
+  CustomLabel: Gun Pods
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 7
   meshRenderer: {fileID: 0}
@@ -6662,6 +6742,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 2480375619670779146}
   HierarchyID: 10
   meshRenderer: {fileID: 0}

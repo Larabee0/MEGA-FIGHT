@@ -111,6 +111,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Rudder
+  CustomLabel: Right Rudder
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 9
   meshRenderer: {fileID: 0}
@@ -396,6 +400,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser
+  CustomLabel: Laser 2
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 13
   meshRenderer: {fileID: 0}
@@ -546,6 +554,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser
+  CustomLabel: Laser 3
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 2
   meshRenderer: {fileID: 0}
@@ -751,6 +763,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing Spur
+  CustomLabel: Right Wing Spur
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 11
   meshRenderer: {fileID: 0}
@@ -870,6 +886,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser
+  CustomLabel: Laser 5
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 17
   meshRenderer: {fileID: 0}
@@ -988,6 +1008,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Rudder
+  CustomLabel: Left Rudder
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 8
   meshRenderer: {fileID: 0}
@@ -1273,6 +1297,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing
+  CustomLabel: Right Wing
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 7
   meshRenderer: {fileID: 0}
@@ -1392,6 +1420,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: Engine 1
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 14
   meshRenderer: {fileID: 0}
@@ -1594,6 +1626,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: Engine 3
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 18
   meshRenderer: {fileID: 0}
@@ -1713,6 +1749,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Elevator
+  CustomLabel: Right Elevator
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 5
   meshRenderer: {fileID: 0}
@@ -1832,6 +1872,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser
+  CustomLabel: Laser 4
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 3
   meshRenderer: {fileID: 0}
@@ -2161,6 +2205,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: Engine 2
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 15
   meshRenderer: {fileID: 0}
@@ -2289,6 +2337,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Hull
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 0
   meshRenderer: {fileID: 0}
@@ -2408,6 +2460,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing
+  CustomLabel: Left Wing
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 6
   meshRenderer: {fileID: 0}
@@ -2776,6 +2832,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser
+  CustomLabel: Laser 6
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 16
   meshRenderer: {fileID: 0}
@@ -2895,6 +2955,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser
+  CustomLabel: Laser 1
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 12
   meshRenderer: {fileID: 0}
@@ -3045,6 +3109,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: Engine 4
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 19
   meshRenderer: {fileID: 0}
@@ -3278,6 +3346,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Elevator
+  CustomLabel: Left Elevator
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 4
   meshRenderer: {fileID: 0}
@@ -3491,6 +3563,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Flight Deck
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 1
   meshRenderer: {fileID: 0}
@@ -3644,6 +3720,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing Spur
+  CustomLabel: Left Wing Spur
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 4857360922940806553}
   HierarchyID: 10
   meshRenderer: {fileID: 0}

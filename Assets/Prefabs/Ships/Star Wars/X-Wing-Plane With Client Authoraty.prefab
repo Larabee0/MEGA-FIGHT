@@ -170,6 +170,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser Gun
+  CustomLabel: Number 3 Gun
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 11
   meshRenderer: {fileID: 0}
@@ -290,6 +294,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing
+  CustomLabel: Bottom Right Wing (3)
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 4
   meshRenderer: {fileID: 0}
@@ -409,6 +417,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: Engine 2
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 8
   meshRenderer: {fileID: 0}
@@ -984,6 +996,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing
+  CustomLabel: Bottom Left Wing (1)
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 2
   meshRenderer: {fileID: 0}
@@ -1217,6 +1233,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: Engine 1
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 6
   meshRenderer: {fileID: 0}
@@ -1337,6 +1357,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing
+  CustomLabel: Top Right Wing (4)
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 5
   meshRenderer: {fileID: 0}
@@ -1489,6 +1513,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Wing
+  CustomLabel: Top Left Wing (2)
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 3
   meshRenderer: {fileID: 0}
@@ -1608,6 +1636,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: Engine 3
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 10
   meshRenderer: {fileID: 0}
@@ -1726,6 +1758,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Repair Droid
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 1
   meshRenderer: {fileID: 0}
@@ -1928,6 +1964,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser Gun
+  CustomLabel: Number 1 Gun
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 7
   meshRenderer: {fileID: 0}
@@ -2137,6 +2177,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Hull & Cockpit
+  CustomLabel: 
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 0
   meshRenderer: {fileID: 0}
@@ -2463,6 +2507,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Engine
+  CustomLabel: Engine 4
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 12
   meshRenderer: {fileID: 0}
@@ -2582,6 +2630,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser Gun
+  CustomLabel: Number 2 Gun
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 9
   meshRenderer: {fileID: 0}
@@ -2701,6 +2753,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701830055f3be3144a557e83b4ccbca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PartName: Laser Gun
+  CustomLabel: Number 4 Gun
+  parent: {fileID: 0}
+  children: []
   owner: {fileID: 1159166252719439589}
   HierarchyID: 13
   meshRenderer: {fileID: 0}

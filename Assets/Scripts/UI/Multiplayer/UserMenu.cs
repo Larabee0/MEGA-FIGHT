@@ -9,6 +9,7 @@ using Unity.Netcode.Transports.UNET;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using System.Linq;
 
 namespace MultiplayerRunTime
 {
@@ -635,6 +636,11 @@ namespace MultiplayerRunTime
             private readonly Label MouseFlightTargetSensValue;
             private readonly Label DefaultAimDst;
             private readonly Label AimDstValue;
+            private readonly Label DisplayNum;
+
+            private readonly DropdownField DisplayChoices;
+            private readonly DropdownField FullScreenMode;
+            private readonly DropdownField Resolution;
 
             private readonly Button SaveAndCloseButton;
             private readonly Button CloseButton;
@@ -651,6 +657,7 @@ namespace MultiplayerRunTime
             private readonly Button PlusAimDistanceSensButton;
 
             public OnCloseOpenWindow onCloseOpenWindow = OnCloseOpenWindow.SettingsPopUp;
+            List<DisplayInfo> displays = new List<DisplayInfo>();
 
             public SettingsPopUp(UserMenu Menu, VisualElement RootVisualElement)
             {
@@ -672,6 +679,11 @@ namespace MultiplayerRunTime
                 MouseFlightTargetSensValue = rootVisualElement.Q<Label>("MouseFlightTargetSensValue");
                 DefaultAimDst = rootVisualElement.Q<Label>("DefaultAimDst");
                 AimDstValue = rootVisualElement.Q<Label>("AimDstValue");
+                DisplayNum = rootVisualElement.Q<Label>("DisplayNum");
+
+                DisplayChoices = rootVisualElement.Q<DropdownField>("DisplayChoices");
+                FullScreenMode = rootVisualElement.Q<DropdownField>("FullScreenMode");
+                Resolution = rootVisualElement.Q<DropdownField>("Resolution");
 
                 SaveAndCloseButton = rootVisualElement.Q<Button>("SaveAndCloseButton");
                 CloseButton = rootVisualElement.Q<Button>("CloseButton");
@@ -721,6 +733,25 @@ namespace MultiplayerRunTime
                 DefaultAimDistance.RegisterValueChangedCallback(ev => DefaultAimDistanceValueChange(ev.newValue));
                 AimDistanceSens.RegisterValueChangedCallback(ev => AimDistanceSenstivityValueChange(ev.newValue));
 
+                DisplayChoices.choices=new();
+                Screen.GetDisplayLayout(displays);
+                for (int i = 0; i < displays.Count; i++)
+                {
+                    DisplayInfo display = displays[i];
+                    DisplayChoices.choices.Add(string.Format("Display {0}", i + 1));
+
+                }
+                int StartDisplayIndex = displays.IndexOf(Screen.mainWindowDisplayInfo);
+                DisplayChoices.index = StartDisplayIndex;
+                DisplayNum.text = (StartDisplayIndex + 1).ToString();
+
+                DisplayChoices.RegisterValueChangedCallback(ev => OnDisplayChoiceChange());
+
+                FullScreenMode.index = (int)Screen.fullScreenMode;
+                FullScreenMode.RegisterValueChangedCallback(ev => OnFullScreenChange());
+
+                RefreshResolutionChoices();
+                Resolution.RegisterValueChangedCallback(ev => OnResolutionChange());
                 Reset();
             }
 
@@ -730,6 +761,37 @@ namespace MultiplayerRunTime
                 MouseFlightTargetSens,
                 DefaultAimDistance,
                 AimDistanceSens
+            }
+
+            private void RefreshResolutionChoices()
+            {
+                Resolution.choices.Clear();
+                List<Resolution> resolutions = new(Screen.resolutions);
+                for (int i = 0; i < resolutions.Count; i++)
+                {
+                    Resolution resolution = resolutions[i];
+                    Resolution.choices.Add(string.Format("{0}x{1}", resolution.width, resolution.height));
+                }
+                Resolution.index = resolutions.IndexOf(Screen.currentResolution);
+            }
+
+            private void OnDisplayChoiceChange()
+            {
+
+                Screen.MoveMainWindowTo(displays[DisplayChoices.index], Vector2Int.zero);
+                DisplayNum.text = (DisplayChoices.index + 1).ToString();
+                RefreshResolutionChoices();
+            }
+
+            private void OnFullScreenChange()
+            {
+                Screen.fullScreenMode = (FullScreenMode)FullScreenMode.index;
+            }
+
+            private void OnResolutionChange()
+            {
+                Resolution newResolution = Screen.resolutions[Resolution.index];
+                Screen.SetResolution(newResolution.width, newResolution.height, (FullScreenMode)FullScreenMode.index);
             }
 
             private void PlusMinusButton(ButtonName button, bool minus = false)

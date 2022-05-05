@@ -94,7 +94,7 @@
 }
 
 .unity-progress-bar__progress {
-    background-color: rgba(64, 153, 0, 255);
+    background-color: rgb(64, 153, 0);
     margin-left: 0;
     margin-right: 0;
     margin-top: 0;
@@ -110,7 +110,7 @@
     border-right-width: 0;
     border-top-width: 0;
     border-bottom-width: 0;
-    background-color: rgba(42, 42, 42, 255);
+    background-color: rgb(42, 42, 42);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-top-right-radius: 0;
@@ -129,4 +129,83 @@
     padding-top: 0;
     padding-bottom: 0;
     font-size: 0;
+}
+
+.unity-popup-field__input {
+    font-size: 12px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-right: 6px;
+    padding-left: 6px;
+    background-color: rgb(81, 81, 81);
+    color: rgb(255, 255, 255);
+    border-left-color: rgb(48, 48, 48);
+    border-right-color: rgb(48, 48, 48);
+    border-top-color: rgb(48, 48, 48);
+    border-bottom-color: rgb(36, 36, 36);
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+.unity-base-popup-field__arrow {
+    -unity-background-image-tint-color: rgb(196, 196, 196);
+    height: 5px;
+    width: 7px;
+}
+
+.unity-toggle__checkmark {
+    -unity-background-image-tint-color: rgba(255, 255, 255, 255);
+    background-color: rgba(42, 42, 42, 255);
+    border-left-color: rgba(33, 33, 33, 255);
+    border-right-color: rgba(33, 33, 33, 255);
+    border-top-color: rgba(13, 13, 13, 255);
+    border-bottom-color: rgba(33, 33, 33, 255);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.unity-toggle__input {
+}
+
+.unity-base-slider__dragger {
+    background-color: rgba(153, 153, 153, 255);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    width: 10px;
+    height: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: -4px;
+}
+
+.unity-base-slider__tracker {
+    background-color: rgba(94, 94, 94, 255);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    height: 2px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
 }
