@@ -1782,6 +1782,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 595201830, guid: 81eac8e00d74bbd4c8222cd2f96ba42f, type: 3}
+      propertyPath: damage
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1340265690153048, guid: 81eac8e00d74bbd4c8222cd2f96ba42f, type: 3}
       propertyPath: m_Name
       value: MouseFlightRig
@@ -2466,7 +2470,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.8629441, y: 1}
+    m_SensorSize: {x: 1.6307054, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -3176,22 +3180,6 @@ PrefabInstance:
       propertyPath: localPlayerManager
       value: 
       objectReference: {fileID: 72686267}
-    - target: {fileID: 313136623173481681, guid: b9cb086a49cfc484890f7651da95deeb, type: 3}
-      propertyPath: ExplsionPrefabs.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 313136623173481681, guid: b9cb086a49cfc484890f7651da95deeb, type: 3}
-      propertyPath: ExplsionPrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 8202895967188354500, guid: 3a05ea9d54b287a428c40eafd88a840e, type: 3}
-    - target: {fileID: 313136623173481681, guid: b9cb086a49cfc484890f7651da95deeb, type: 3}
-      propertyPath: ExplsionPrefabs.Array.data[1]
-      value: 
-      objectReference: {fileID: 5963607409263313112, guid: b7a420e633fbd6f4892e169eb7fc5f7c, type: 3}
-    - target: {fileID: 313136623173481681, guid: b9cb086a49cfc484890f7651da95deeb, type: 3}
-      propertyPath: ExplsionPrefabs.Array.data[2]
-      value: 
-      objectReference: {fileID: 262395836327178587, guid: b39b55a4491ea9742b775a7b77f84fcc, type: 3}
     - target: {fileID: 313136623173481684, guid: b9cb086a49cfc484890f7651da95deeb, type: 3}
       propertyPath: m_Name
       value: UI Menus (UI Doc)

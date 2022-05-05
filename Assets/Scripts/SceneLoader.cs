@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
@@ -16,7 +15,6 @@ public class SceneLoader : MonoBehaviour
     private VisualElement ButtonPanel;
     private VisualElement LoadingBarPanel;
 
-    // Start is called before the first frame update
     private void Start()
     {
         document = GetComponent<UIDocument>();
@@ -59,7 +57,6 @@ public class SceneLoader : MonoBehaviour
     {
         LoadingBarPanel.style.display = DisplayStyle.Flex;
         ButtonPanel.style.display = DisplayStyle.None;
-        //yield return new WaitForSeconds(2.5f);
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
         while (!asyncLoad.isDone)
         {

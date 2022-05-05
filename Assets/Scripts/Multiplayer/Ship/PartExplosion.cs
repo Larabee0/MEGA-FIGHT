@@ -13,7 +13,7 @@ namespace MultiplayerRunTime
             yield return new WaitForFixedUpdate();
             PasswordLobbyMP.Singleton.SpawnExplosion(origin,transform);
             yield return new WaitForEndOfFrame();
-
+            
             Collider[] colliders = Physics.OverlapSphere(origin, data.Radius);
             HashSet<Rigidbody> unquieRigibodies = new();
             for (int i = 0; i < colliders.Length; i++)
@@ -24,7 +24,7 @@ namespace MultiplayerRunTime
                 }
                 if(colliders[i].gameObject.TryGetComponent(out ShipPartMP part) && NetworkManager.Singleton.IsHost)
                 {
-                    part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID,  NetworkManager.Singleton.LocalClientId, UnityEngine.Random.Range(0,data.Damage));
+                    //part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID,  NetworkManager.Singleton.LocalClientId, UnityEngine.Random.Range(0,data.Damage));
                 }
             }
             Rigidbody[] bodies = new Rigidbody[unquieRigibodies.Count];

@@ -94,6 +94,10 @@ MonoBehaviour:
     ConnectionData: 
     HostConnectionData: 
     Key: 
+  ExplsionPrefabs:
+  - {fileID: 8202895967188354500, guid: 3a05ea9d54b287a428c40eafd88a840e, type: 3}
+  - {fileID: 5963607409263313112, guid: b7a420e633fbd6f4892e169eb7fc5f7c, type: 3}
+  - {fileID: 262395836327178587, guid: b39b55a4491ea9742b775a7b77f84fcc, type: 3}
 --- !u!114 &313136623173481683
 MonoBehaviour:
   m_ObjectHideFlags: 0

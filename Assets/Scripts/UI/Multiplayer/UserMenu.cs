@@ -273,7 +273,7 @@ namespace MultiplayerRunTime
                     ServerPortTextField.style.display = DisplayStyle.Flex;
                     UNetTransport transport = FindObjectOfType<UNetTransport>();
                     ConnectPortTextField.value = ServerPortTextField.value = transport.ConnectPort.ToString();
-                    //JoinCodeTextField.value = transport.ConnectAddress.ToString();
+
                     JoinCodeTextField.RegisterValueChangedCallback(ev => OnIPChanged(ev.newValue));
                     ConnectPortTextField.RegisterValueChangedCallback(ev => OnPortChanged(ev.newValue, ConnectPortTextField));
                     ServerPortTextField.RegisterValueChangedCallback(ev => OnPortChanged(ev.newValue, ServerPortTextField));
@@ -544,9 +544,13 @@ namespace MultiplayerRunTime
                 {
                     return 2;
                 }
-                else
+                else if(FalconRadioButton.value)
                 {
                     return 3;
+                }
+                else
+                {
+                    return 0;
                 }
             }
 

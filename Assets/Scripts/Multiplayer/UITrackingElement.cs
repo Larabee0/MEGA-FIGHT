@@ -17,7 +17,7 @@ namespace MultiplayerRunTime
         public string DisplayedName { set => playerName.text = value; }
         public string ShipType { set => shipType.text = value; }
         public Color defaultColour = Color.white;
-        private Color32 flashColour = new(187, 191, 41, 255);
+        [SerializeField] private Color32 flashColour = new(187, 191, 41, 255);
         [SerializeField] private float FlashTime = 0.25f;
         public Color ElementColours
         {
