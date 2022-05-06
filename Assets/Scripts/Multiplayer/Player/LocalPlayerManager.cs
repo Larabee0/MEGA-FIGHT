@@ -10,7 +10,6 @@ namespace MultiplayerRunTime
         [SerializeField] private PasswordLobbyMP lobby;
         [SerializeField] private InputControl inputControl;
         [SerializeField] private MouseFlightControllerMP mouseFlightController;
-        [SerializeField] private FireControlMP fireControl;
         [SerializeField] private HudMP hud;
         [SerializeField] private string displayedName;
         public byte ShipPrefabIndex;
@@ -50,7 +49,6 @@ namespace MultiplayerRunTime
             }
             lobby.OnClientConnects += OnConnect;
             lobby.OnClientDisconnects += OnDisconnect;
-            fireControl.inputControl = inputControl;
             mouseFlightController.inputControl = inputControl;
             FindObjectOfType<UserMenu>().inputControl = inputControl;
         }
@@ -118,7 +116,6 @@ namespace MultiplayerRunTime
             PlayerManagerMP.OnShipLost -= OnShipLost;
             hud.enabled = false;
             mouseFlightController.enabled = false;
-            fireControl.enabled = false;
             enabled = false;
         }
 
@@ -152,7 +149,6 @@ namespace MultiplayerRunTime
             Debug.Log("Ship lost");
             hud.enabled = false;
             mouseFlightController.enabled = false;
-            fireControl.enabled = false;
             enabled = false;
             if (PlayerManagerMP.AllowRespawn)
             {
@@ -164,10 +160,8 @@ namespace MultiplayerRunTime
         private void SetAndEnableLocalScripts(SpaceshipMP ship)
         {
             mouseFlightController.SetShip(ship);
-            fireControl.GetComponentReferences(ship);
             hud.enabled = true;
             mouseFlightController.enabled = true;
-            fireControl.enabled = true;
             enabled = true;
         }
 

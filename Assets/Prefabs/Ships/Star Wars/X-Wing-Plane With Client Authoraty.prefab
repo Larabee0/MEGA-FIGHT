@@ -71,6 +71,7 @@ GameObject:
   - component: {fileID: 6958280431969127545}
   - component: {fileID: 58106240789453367}
   - component: {fileID: 4149346696816396865}
+  - component: {fileID: 2585083212040607530}
   m_Layer: 0
   m_Name: Gun3
   m_TagString: Untagged
@@ -181,6 +182,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 6021318666226151067}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &2585083212040607530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58106240789453366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 4149346696816396865}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &934042578696794330
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,6 +548,7 @@ GameObject:
   - component: {fileID: 5600287422478931763}
   - component: {fileID: 6220024572888432506}
   - component: {fileID: 6218074784674028645}
+  - component: {fileID: 5891181242168068937}
   m_Layer: 0
   m_Name: X-Wing-Plane With Client Authoraty
   m_TagString: Untagged
@@ -717,6 +738,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5891181242168068937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153998426719845634}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f54c0594f5d6ed540af9a0f7940e3142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputControl: {fileID: 0}
+  spaceship: {fileID: 0}
+  TargetPoint: {fileID: 9088478775479118555}
+  lastTargetPointPos: {x: 0, y: 0, z: 0}
+  locked: 0
+  lockTime: 1
+  unlockTime: 0.5
+  currentLockTime: 0
+  dstSenstivity: 25
+  minDst: 100
+  maxDst: 1000
+  targetDistance: 500
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
+  damage: 10
+  fire: 0
+  LocalClientId: 18446744073709551615
 --- !u!1 &1632339660718281278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,7 +1082,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2776446577524242471}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.15, z: 13.19}
+  m_LocalPosition: {x: 0, y: 1.15, z: 500}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1377,6 +1428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4503668889748167431}
+  - component: {fileID: 360625553014945314}
   m_Layer: 0
   m_Name: X-Wing-More-Broken-Up
   m_TagString: Untagged
@@ -1400,6 +1452,25 @@ Transform:
   m_Father: {fileID: 1159166252719439588}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &360625553014945314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3876453944496128445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23aa43e131594f347ab4a2bb518afbe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapons:
+  - {fileID: 8418173907598050892}
+  - {fileID: 1753004113630918773}
+  - {fileID: 6196024916060005790}
+  - {fileID: 2585083212040607530}
+  groupFireIntervalMin: 0.1
+  groupFireIntervalMax: 0.2
 --- !u!1 &4316458833786223199
 GameObject:
   m_ObjectHideFlags: 0
@@ -1865,6 +1936,7 @@ GameObject:
   - component: {fileID: 4687235148928434555}
   - component: {fileID: 2225631662515473853}
   - component: {fileID: 9182749159526257797}
+  - component: {fileID: 8418173907598050892}
   m_Layer: 0
   m_Name: Gun1
   m_TagString: Untagged
@@ -1975,6 +2047,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 6021318667462594215}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &8418173907598050892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5525780550204010931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 9182749159526257797}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &5700648664054473737
 GameObject:
   m_ObjectHideFlags: 0
@@ -2531,6 +2622,7 @@ GameObject:
   - component: {fileID: 1452571342443441241}
   - component: {fileID: 1452571342443441242}
   - component: {fileID: 7943216285180640470}
+  - component: {fileID: 6196024916060005790}
   m_Layer: 0
   m_Name: Gun2
   m_TagString: Untagged
@@ -2641,6 +2733,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 6021318667394649067}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &6196024916060005790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7822579802528510562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 7943216285180640470}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &9127309417849964209
 GameObject:
   m_ObjectHideFlags: 0
@@ -2654,6 +2765,7 @@ GameObject:
   - component: {fileID: 1307992946058632610}
   - component: {fileID: 1734945231015204746}
   - component: {fileID: 419407027930743722}
+  - component: {fileID: 1753004113630918773}
   m_Layer: 0
   m_Name: Gun4
   m_TagString: Untagged
@@ -2764,3 +2876,22 @@ MonoBehaviour:
   AnimationPoint: {fileID: 7701342155558460486}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &1753004113630918773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9127309417849964209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 419407027930743722}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000

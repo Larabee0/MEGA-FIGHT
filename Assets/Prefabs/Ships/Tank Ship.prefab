@@ -301,6 +301,7 @@ GameObject:
   - component: {fileID: 8977014816296127539}
   - component: {fileID: 4678150619525983779}
   - component: {fileID: 5678671579381084839}
+  - component: {fileID: 4194423603007266293}
   m_Layer: 0
   m_Name: Gun 4
   m_TagString: Untagged
@@ -411,6 +412,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 1124679083928477021}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &4194423603007266293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840643901594762712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 5678671579381084839}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &1104366354132570579
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,6 +475,7 @@ GameObject:
   - component: {fileID: 6787940971062107190}
   - component: {fileID: 8719664735352794381}
   - component: {fileID: 661780612016528604}
+  - component: {fileID: 4711269759384471150}
   m_Layer: 0
   m_Name: Gun 3
   m_TagString: Untagged
@@ -565,6 +586,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 2820917047451510373}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &4711269759384471150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531878122396910904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 661780612016528604}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &2003949309514287715
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,6 +827,7 @@ GameObject:
   - component: {fileID: 3461947522239841402}
   - component: {fileID: 8278010981130248447}
   - component: {fileID: 1582074324140511473}
+  - component: {fileID: 731578539231252170}
   m_Layer: 0
   m_Name: Gun 5
   m_TagString: Untagged
@@ -897,6 +938,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 1303843256328846840}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &731578539231252170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3339280148826464138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 1582074324140511473}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &3373828025996485545
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,6 +1833,7 @@ GameObject:
   - component: {fileID: 1774639347779172957}
   - component: {fileID: 2909827990360099822}
   - component: {fileID: 1978923417583592737}
+  - component: {fileID: 6077074443233152710}
   m_Layer: 0
   m_Name: Gun 6
   m_TagString: Untagged
@@ -1883,6 +1944,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 898633477809949602}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &6077074443233152710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416027705642957215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 1978923417583592737}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &4857360922940806552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1900,6 +1980,7 @@ GameObject:
   - component: {fileID: 1973887052172790783}
   - component: {fileID: 7064076166313680033}
   - component: {fileID: 8240991288302760132}
+  - component: {fileID: -1792338273593458222}
   m_Layer: 0
   m_Name: Tank Ship
   m_TagString: Untagged
@@ -2093,6 +2174,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1792338273593458222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4857360922940806552}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f54c0594f5d6ed540af9a0f7940e3142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputControl: {fileID: 0}
+  spaceship: {fileID: 0}
+  TargetPoint: {fileID: 7072160391735370633}
+  lastTargetPointPos: {x: 0, y: 0, z: 0}
+  locked: 0
+  lockTime: 1
+  unlockTime: 0.5
+  currentLockTime: 0
+  dstSenstivity: 25
+  minDst: 100
+  maxDst: 1000
+  targetDistance: 500
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
+  damage: 10
+  fire: 0
+  LocalClientId: 18446744073709551615
 --- !u!1 &4960424512795807736
 GameObject:
   m_ObjectHideFlags: 0
@@ -2733,6 +2844,7 @@ GameObject:
   - component: {fileID: 5392505823381285336}
   - component: {fileID: 8374068995370432463}
   - component: {fileID: 961300258291178646}
+  - component: {fileID: 4218607130899664525}
   m_Layer: 0
   m_Name: Gun 2
   m_TagString: Untagged
@@ -2843,6 +2955,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 9096929811393648672}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &4218607130899664525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6890417359080635181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 961300258291178646}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &6925958879168249501
 GameObject:
   m_ObjectHideFlags: 0
@@ -2856,6 +2987,7 @@ GameObject:
   - component: {fileID: 4105802863374450211}
   - component: {fileID: 3294820767484450692}
   - component: {fileID: 612021511633097273}
+  - component: {fileID: 7601414464161650905}
   m_Layer: 0
   m_Name: Gun 1
   m_TagString: Untagged
@@ -2966,6 +3098,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 5022992239205073891}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &7601414464161650905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6925958879168249501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 612021511633097273}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &7077578708714854449
 GameObject:
   m_ObjectHideFlags: 0

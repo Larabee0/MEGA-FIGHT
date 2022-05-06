@@ -143,6 +143,7 @@ GameObject:
   - component: {fileID: 5906115115387335203}
   - component: {fileID: 5906115115387335205}
   - component: {fileID: 5906115115387335202}
+  - component: {fileID: 347245566609397756}
   m_Layer: 0
   m_Name: Gun2
   m_TagString: Untagged
@@ -253,6 +254,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 1139807501458933352}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &347245566609397756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422673606546477110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 5906115115387335202}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &2257035912199802530
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,6 +589,7 @@ GameObject:
   - component: {fileID: 7916427166386909386}
   - component: {fileID: 10459044717671340}
   - component: {fileID: 1631926848159538924}
+  - component: {fileID: -766841857339725354}
   m_Layer: 0
   m_Name: Light Ship
   m_TagString: Untagged
@@ -752,6 +773,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-766841857339725354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3004695792953479902}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f54c0594f5d6ed540af9a0f7940e3142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputControl: {fileID: 0}
+  spaceship: {fileID: 0}
+  TargetPoint: {fileID: 3004695792657850417}
+  lastTargetPointPos: {x: 0, y: 0, z: 0}
+  locked: 0
+  lockTime: 1
+  unlockTime: 0.5
+  currentLockTime: 0
+  dstSenstivity: 25
+  minDst: 100
+  maxDst: 1000
+  targetDistance: 500
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
+  damage: 10
+  fire: 0
+  LocalClientId: 18446744073709551615
 --- !u!1 &3004695792972226866
 GameObject:
   m_ObjectHideFlags: 0
@@ -1156,6 +1207,7 @@ GameObject:
   - component: {fileID: 6057040647323288383}
   - component: {fileID: 6057040647323288369}
   - component: {fileID: 6057040647323288382}
+  - component: {fileID: 3163792306518846058}
   m_Layer: 0
   m_Name: Gun1
   m_TagString: Untagged
@@ -1266,6 +1318,25 @@ MonoBehaviour:
   AnimationPoint: {fileID: 5632618455637277747}
   AnimationPoints: []
   MultiPoint: 0
+--- !u!114 &3163792306518846058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6037668648261839305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d38edd7a090ff46841a8deb20a5223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 6057040647323288382}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &6536709163703131632
 GameObject:
   m_ObjectHideFlags: 0

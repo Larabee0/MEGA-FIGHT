@@ -9,14 +9,14 @@ namespace MultiplayerRunTime
 {
     public class FireControlMP : MonoBehaviour
     {
-        [HideInInspector] public InputControl inputControl;
+        public InputControl inputControl;
         private LaserSpawnerMP laserSpawnerMP;
-        private SpaceshipMP spaceship;
+        public SpaceshipMP spaceship;
         private MouseFlightControllerMP controller;
 
         //private ShipPartMP[] WeaponOutputPoints;
         private WeaponOutputPoint[] WeaponOutputPoints;
-        private Transform TargetPoint;
+        public Transform TargetPoint;
         public Vector3 lastTargetPointPos;
         public bool locked = false;
         public float lockTime = 1f;
@@ -31,11 +31,11 @@ namespace MultiplayerRunTime
         [SerializeField] [Range(0f,1f)] float fireIntervalMin = 0.01f;
         [SerializeField] [Range(0f, 1f)] float fireIntervalMax = 0.05f;
         [SerializeField] [Range(500f, 2000f)] float laserRange = 1000f;
-        [SerializeField][Range(1f, 100f)] float damage = 10f;
+        [SerializeField] [Range(1f, 100f)] float damage = 10f;
         private float fireInterval = 0f;
         private int currentWeaponIndex = 0;
-        private bool fire = false;
-        private ulong LocalClientId = ulong.MaxValue;
+        [HideInInspector] public bool fire = false;
+        [HideInInspector] public ulong LocalClientId = ulong.MaxValue;
 
         public float TargetDistance
         {
@@ -51,7 +51,14 @@ namespace MultiplayerRunTime
 
         private void Awake()
         {
-            controller = GetComponent<MouseFlightControllerMP>();
+            spaceship = GetComponent<SpaceshipMP>();
+            if (spaceship.IsOwner)
+            {
+                controller = FindObjectOfType<MouseFlightControllerMP>();
+                controller.fireControl = this;
+                laserSpawnerMP= GetComponent<LaserSpawnerMP>();
+
+            }
         }
 
         private void OnEnable()
@@ -90,12 +97,9 @@ namespace MultiplayerRunTime
         private void ToggleOnFire(InputAction.CallbackContext context) => fire = true;
         private void ToggleOffFire(InputAction.CallbackContext context) => fire = false;
 
-        public void GetComponentReferences(SpaceshipMP ship)
+        public void GetComponentReferences()
         {
-            spaceship = ship;
-            laserSpawnerMP = spaceship.laserSpawnerMP;
             WeaponOutputPoints = GetWeaponOutputPoints(spaceship.WeaponOutputPoints);
-            TargetPoint = spaceship.TargetPoint;
             TargetDistance = TargetDistance;
             enabled = true;
         }
@@ -114,7 +118,7 @@ namespace MultiplayerRunTime
             switch (fire)
             {
                 case true:
-                    Fire();
+                    //Fire();
                     break;
             }
         }
@@ -250,12 +254,6 @@ namespace MultiplayerRunTime
                 }
             }
             return points;
-        }
-
-        public class WeaponOutputPoint
-        {
-            public ShipPartMP weaponSource;
-            public Transform point;
-        }
+        }   
     }
 }

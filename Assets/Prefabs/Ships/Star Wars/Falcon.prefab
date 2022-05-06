@@ -1530,6 +1530,7 @@ GameObject:
   - component: {fileID: 8818162054365231980}
   - component: {fileID: 219660032267660338}
   - component: {fileID: 1394182462772068439}
+  - component: {fileID: 819897348651100841}
   m_Layer: 0
   m_Name: Falcon
   m_TagString: Untagged
@@ -1712,6 +1713,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &819897348651100841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480375619670779147}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f54c0594f5d6ed540af9a0f7940e3142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputControl: {fileID: 0}
+  spaceship: {fileID: 0}
+  TargetPoint: {fileID: 225633058177241882}
+  lastTargetPointPos: {x: 0, y: 0, z: 0}
+  locked: 0
+  lockTime: 1
+  unlockTime: 0.5
+  currentLockTime: 0
+  dstSenstivity: 25
+  minDst: 100
+  maxDst: 1000
+  targetDistance: 500
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
+  damage: 10
+  fire: 0
+  LocalClientId: 18446744073709551615
 --- !u!1 &3032500547417156521
 GameObject:
   m_ObjectHideFlags: 0
@@ -3034,6 +3065,7 @@ GameObject:
   - component: {fileID: 7427455759199508449}
   - component: {fileID: 787271088185313822}
   - component: {fileID: 7833455343334934050}
+  - component: {fileID: 2817593671593713054}
   m_Layer: 0
   m_Name: Top Gun
   m_TagString: Untagged
@@ -3151,6 +3183,29 @@ MonoBehaviour:
   - {fileID: 6330324820795067568}
   - {fileID: 3959299267825820795}
   MultiPoint: 1
+--- !u!114 &2817593671593713054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4417475854811502936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 709f038376b7e324bb473e56aed2db8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 7833455343334934050}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  Syncronous: 1
+  syncronousGroups:
+  - indicies: 0100000002000000
+  - indicies: 0000000003000000
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &4423416945246292088
 GameObject:
   m_ObjectHideFlags: 0
@@ -5562,6 +5617,7 @@ GameObject:
   - component: {fileID: 2854441882930092649}
   - component: {fileID: 4623462903275538851}
   - component: {fileID: 6711288425346987757}
+  - component: {fileID: 1753203829743679752}
   m_Layer: 0
   m_Name: Bottom Gun
   m_TagString: Untagged
@@ -5679,6 +5735,29 @@ MonoBehaviour:
   - {fileID: 8107804332376075285}
   - {fileID: 8381320480260831514}
   MultiPoint: 1
+--- !u!114 &1753203829743679752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7841649422360140271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 709f038376b7e324bb473e56aed2db8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPart: {fileID: 6711288425346987757}
+  damage: 10
+  fireGroup: {fileID: 0}
+  controller: {fileID: 0}
+  Syncronous: 1
+  syncronousGroups:
+  - indicies: 0000000003000000
+  - indicies: 0100000002000000
+  fireIntervalMin: 0.1
+  fireIntervalMax: 0.2
+  laserRange: 2000
 --- !u!1 &7893937793976790620
 GameObject:
   m_ObjectHideFlags: 0
