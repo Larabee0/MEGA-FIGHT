@@ -15,6 +15,7 @@ namespace MultiplayerRunTime
 
         public override void Start()
         {
+            base.Start();
             weaponOutputPoint = new WeaponOutputPoint { point = weaponPart.AnimationPoint, weaponSource = weaponPart };
         }
 
@@ -65,7 +66,7 @@ namespace MultiplayerRunTime
                     break;
             }
 
-            LaserSpawnerMP.ClientLaserSpawnCall(new float3x2(Spaceship.transform.InverseTransformPoint(weaponOutputPoint.point.position), Spaceship.transform.InverseTransformPoint(endPoint)));
+            LaserSpawnerMP.ClientLaserSpawnCall(Spaceship.transform.InverseTransformPoint(weaponOutputPoint.point.position), Spaceship.transform.InverseTransformPoint(endPoint));
         }
     }
 }

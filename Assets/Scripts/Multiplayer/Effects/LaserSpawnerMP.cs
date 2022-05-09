@@ -36,23 +36,23 @@ namespace MultiplayerRunTime
             }
         }
 
-        public void ClientLaserSpawnCall(float3x2 points)
+        public void ClientLaserSpawnCall(Vector3 c0, Vector3 c1)
         {
-            SpawnLaserServerRPC(points, laserColour);
-            Instantiate(laserPrefab, transform).Show(points, laserColour);
+            SpawnLaserServerRPC(c0,c1, laserColour);
+            Instantiate(laserPrefab, transform).Show(new float3x2(c0,c1), laserColour);
         }
 
         [ServerRpc(Delivery = RpcDelivery.Unreliable)]
-        private void SpawnLaserServerRPC(float3x2 points, Color32 laserColour)
+        private void SpawnLaserServerRPC(Vector3 c0, Vector3 c1, Color32 laserColour)
         {
-            SpawnLaserClientRPC(points, laserColour);
+            SpawnLaserClientRPC(c0, c1, laserColour);
         }
 
         [ClientRpc(Delivery = RpcDelivery.Unreliable)]
-        private void SpawnLaserClientRPC(float3x2 points, Color32 laserColour)
+        private void SpawnLaserClientRPC(Vector3 c0, Vector3 c1, Color32 laserColour)
         {
             if (IsOwner) { return; }
-            Instantiate(laserPrefab, transform).Show(points, laserColour);
+            Instantiate(laserPrefab, transform).Show(new float3x2(c0, c1), laserColour);
         }
     }
 }

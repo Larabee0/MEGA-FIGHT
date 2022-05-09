@@ -10,7 +10,7 @@ namespace MultiplayerRunTime
     {
         [SerializeField] private Canvas canvas;
         [SerializeField] private UITrackingElement trackingElementPrefab;
-        private Dictionary<ulong, UITrackingElement> elements = new();
+        private  readonly Dictionary<ulong, UITrackingElement> elements = new();
 
         public void GetExistingShips()
         {

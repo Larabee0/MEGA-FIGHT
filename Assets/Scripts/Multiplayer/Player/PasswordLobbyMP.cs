@@ -57,7 +57,7 @@ namespace MultiplayerRunTime
             networkManager.OnClientDisconnectCallback +=HandleClientDisconnected;
         }
 
-        float timeOutTime = 30f;
+        private const float timeOutTime = 30f;
         float timeOutCurrnet = 0;
         bool allowTextMod = false;
         private void FixedUpdate()
@@ -88,10 +88,10 @@ namespace MultiplayerRunTime
 
         public IEnumerator StartHost()
         {
-            if (UnityRelayHandlerV2.IsRelayEnabled)
+            if (UnityRelayHandler.IsRelayEnabled)
             {
                 Debug.Log("Starting Relay");
-                var hostDataTask = UnityRelayHandlerV2.SetupRelay();
+                var hostDataTask = UnityRelayHandler.SetupRelay();
                 while (!hostDataTask.IsCompleted)
                 {
                     yield return null;
@@ -109,9 +109,9 @@ namespace MultiplayerRunTime
 
         public IEnumerator StartClient(string joinCode)
         {
-            if (UnityRelayHandlerV2.IsRelayEnabled && !string.IsNullOrEmpty(joinCode))
+            if (UnityRelayHandler.IsRelayEnabled && !string.IsNullOrEmpty(joinCode))
             {
-                var clientDataTask = UnityRelayHandlerV2.JoinRelay(joinCode);
+                var clientDataTask = UnityRelayHandler.JoinRelay(joinCode);
 
                 while (!clientDataTask.IsCompleted)
                 {

@@ -49,16 +49,12 @@ namespace MultiplayerRunTime
 
         private Vector3 LocalTargetPointPos { set => TargetPoint.localPosition = value; get => TargetPoint.localPosition; }
 
-        private void Awake()
+        public void SetUp(MouseFlightControllerMP mouseFlightControllerMP)
         {
             spaceship = GetComponent<SpaceshipMP>();
-            if (spaceship.IsOwner)
-            {
-                controller = FindObjectOfType<MouseFlightControllerMP>();
-                controller.fireControl = this;
-                laserSpawnerMP= GetComponent<LaserSpawnerMP>();
-
-            }
+            controller = mouseFlightControllerMP;
+            controller.fireControl = this;
+            laserSpawnerMP = GetComponent<LaserSpawnerMP>();
         }
 
         private void OnEnable()
@@ -81,6 +77,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.ScrollWheel.performed += SetTargetDistance;
             LocalClientId = NetworkManager.Singleton.LocalClientId;
             lastTargetPointPos = LocalTargetPointPos;
+            TargetDistance = TargetDistance;
         }
         private void OnDisable()
         {
@@ -96,13 +93,6 @@ namespace MultiplayerRunTime
 
         private void ToggleOnFire(InputAction.CallbackContext context) => fire = true;
         private void ToggleOffFire(InputAction.CallbackContext context) => fire = false;
-
-        public void GetComponentReferences()
-        {
-            WeaponOutputPoints = GetWeaponOutputPoints(spaceship.WeaponOutputPoints);
-            TargetDistance = TargetDistance;
-            enabled = true;
-        }
 
         private void SetTargetDistance(InputAction.CallbackContext context)
         {
@@ -159,7 +149,7 @@ namespace MultiplayerRunTime
                             break;
                     }
 
-                    laserSpawnerMP.ClientLaserSpawnCall(new float3x2(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].point.position), spaceship.transform.InverseTransformPoint(endPoint)));
+                    laserSpawnerMP.ClientLaserSpawnCall(spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].point.position), spaceship.transform.InverseTransformPoint(endPoint));
                     currentWeaponIndex = (currentWeaponIndex + 1) % WeaponOutputPoints.Length;
                     break;
             }
@@ -208,11 +198,7 @@ namespace MultiplayerRunTime
         private void NullOut()
         {
             fire = false;
-            laserSpawnerMP = null;
-            spaceship = null;
-
             WeaponOutputPoints = null;
-            TargetPoint = null;
         }
 
         private WeaponOutputPoint[] GetWeaponOutputPoints(ShipPartMP[] weapons)

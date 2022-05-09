@@ -114,7 +114,6 @@ namespace MultiplayerRunTime
         private void OnEnable()
         {
             fireControl.inputControl = inputControl;
-            fireControl.GetComponentReferences();
             fireControl.enabled = true;
             if (mouseAim == null)
                 Debug.LogError(name + "MouseFlightController - No mouse aim transform assigned!");
@@ -128,7 +127,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.CameraSwitch.canceled += OnPerspectiveButtonPressed;
             inputControl.FlightActions.FreeCam.started += OnFreeCamButton;
             inputControl.FlightActions.FreeCam.canceled += OnFreeCamButton;
-            inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo(this);
+            inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo();
             //FreezeMouseAim = inputControl.ControllerPresent;
             if (DeSpawnedVirtualCamera != null) DeSpawnedVirtualCamera.Priority = 8;
             SetSettings();

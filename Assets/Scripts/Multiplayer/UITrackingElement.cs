@@ -100,8 +100,6 @@ namespace MultiplayerRunTime
 
             rootTransform.position = new Vector2(visualRect.xMax, visualRect.yMin);
 
-            RectTransform image = childRectTransformList[0];
-
             for (int i = 0; i < childRectTransformList.Count; i++)
             {
                 RectTransform child = childRectTransformList[i];

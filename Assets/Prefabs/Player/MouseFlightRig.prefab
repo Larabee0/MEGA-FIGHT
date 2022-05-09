@@ -91,6 +91,8 @@ MonoBehaviour:
   camSmoothSpeed: 5
   mouseSensitivity: 0.15
   showDebugInfo: 0
+  frozenDirection: {x: 0, y: 0, z: 1}
+  isMouseAimFrozen: 0
   throttleSenstivity: 1
 --- !u!114 &595201830
 MonoBehaviour:
@@ -105,6 +107,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputControl: {fileID: 0}
+  spaceship: {fileID: 0}
+  TargetPoint: {fileID: 0}
+  lastTargetPointPos: {x: 0, y: 0, z: 0}
+  locked: 0
+  lockTime: 1
+  unlockTime: 0.5
+  currentLockTime: 0
   dstSenstivity: 25
   minDst: 100
   maxDst: 1000
@@ -113,6 +122,8 @@ MonoBehaviour:
   fireIntervalMax: 0.2
   laserRange: 2000
   damage: 100
+  fire: 0
+  LocalClientId: 18446744073709551615
 --- !u!1 &1411132086413374
 GameObject:
   m_ObjectHideFlags: 0

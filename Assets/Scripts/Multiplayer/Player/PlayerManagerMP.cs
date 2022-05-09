@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Text;
 using System;
+using Unity.Mathematics;
 
 namespace MultiplayerRunTime
 {
@@ -130,6 +131,7 @@ namespace MultiplayerRunTime
         {
             if (ShipSpawned)
             {
+                
                 LocalSpaceship.transform.position = position;
                 LocalSpaceship.transform.forward = forward;
                 FindObjectOfType<MouseFlightControllerMP>().frozenDirection = forward;
@@ -142,7 +144,7 @@ namespace MultiplayerRunTime
             UserMenu menu = PasswordLobbyMP.Singleton.menu;
             menu.ShowInfoOverlay(true);
             menu.infoPopUp.UpperLabel = "Starting in...";
-            menu.infoPopUp.LowerLabel = time.ToString("F0");
+            menu.infoPopUp.LowerLabel = ((float)time).ToString("F0");
             if (time <= 3)
             {
                 menu.infoPopUp.MakeRed();

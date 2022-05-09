@@ -62,9 +62,9 @@ namespace MultiplayerRunTime
             UserCustomisableSettings.instance.OnUserSettingsChanged += SetSettings;
         }
 
-        public InGameInfo GetInGameInfo(MouseFlightControllerMP mFCMP)
+        public InGameInfo GetInGameInfo()
         {
-            return new InGameInfo(mFCMP, rootVisualElement.Q("InGameInfo"));
+            return new InGameInfo(rootVisualElement.Q("InGameInfo"));
         }
 
         public void SetMenuSelection()
@@ -220,13 +220,14 @@ namespace MultiplayerRunTime
             private readonly Button ConnectButton;
             private readonly Button HostButton;
             private readonly Button SettingsButton;
+            private readonly Button SwitchNetworkModeButton;
             private readonly Label JoinCodeDisplay;
             private readonly TextField JoinCodeTextField;
             private readonly TextField ConnectPortTextField;
             private readonly TextField ServerPortTextField;
-            string relayLabel = "Join Code for Connecting Players\nProvided in Respawn Lobby";
-            string relayTextField = "Join Code";
-            string PTPTextField = "IP";
+            private readonly string relayLabel = "Join Code for Connecting Players\nProvided in Respawn Lobby";
+            private readonly string relayTextField = "Join Code";
+            private readonly string PTPTextField = "IP";
             
             public string JoinCodeText { set { JoinCodeTextField.value = value; } }
 
@@ -251,6 +252,7 @@ namespace MultiplayerRunTime
                 ConnectButton = rootVisualElement.Q<Button>("ClientConnectButton");
                 HostButton = rootVisualElement.Q<Button>("HostStartButton");
                 SettingsButton = rootVisualElement.Q<Button>("SettingsButton");
+                SwitchNetworkModeButton = rootVisualElement.Q<Button>("NetworkModeButton");
                 JoinCodeTextField = rootVisualElement.Q<TextField>("JoinCode");
                 ConnectPortTextField = rootVisualElement.Q<TextField>("ConnectPort");
                 ServerPortTextField = rootVisualElement.Q<TextField>("ServerPort");
@@ -260,11 +262,13 @@ namespace MultiplayerRunTime
                 HostButton.RegisterCallback<ClickEvent>(ev => OnHostCallback());
                 ConnectButton.RegisterCallback<ClickEvent>(ev => OnConnectCallback());
                 SettingsButton.RegisterCallback<ClickEvent>(ev => ShowSettings());
+                SwitchNetworkModeButton.RegisterCallback<ClickEvent>(ev => SwitchNetworkModeCallback());
 
                 QuitButton.RegisterCallback<NavigationSubmitEvent>(ev => OnQuitCallback());
                 HostButton.RegisterCallback<NavigationSubmitEvent>(ev => OnHostCallback());
                 ConnectButton.RegisterCallback<NavigationSubmitEvent>(ev => OnConnectCallback());
                 SettingsButton.RegisterCallback<NavigationSubmitEvent>(ev => ShowSettings());
+                SwitchNetworkModeButton.RegisterCallback<NavigationSubmitEvent>(ev => SwitchNetworkModeCallback());
 
                 if (UserCustomisableSettings.UseLocal)
                 {
@@ -291,6 +295,11 @@ namespace MultiplayerRunTime
             private void OnQuitCallback()
             {
                 Application.Quit();
+            }
+
+            private void SwitchNetworkModeCallback()
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             }
 
             private void OnHostCallback()
@@ -368,7 +377,7 @@ namespace MultiplayerRunTime
                     StreamReader sr = new(resp.GetResponseStream());
                     string response = sr.ReadToEnd().Trim();
                     string[] ipAddressWithText = response.Split(':');
-                    string ipAddressWithHTMLEnd = ipAddressWithText[1].Substring(1);
+                    string ipAddressWithHTMLEnd = ipAddressWithText[1][1..];
                     string[] ipAddress = ipAddressWithHTMLEnd.Split('<');
                     string mainIP = ipAddress[0];
                     return mainIP;
@@ -575,7 +584,6 @@ namespace MultiplayerRunTime
 
         public class InGameInfo
         {
-            private readonly MouseFlightControllerMP controller;
             private readonly VisualElement rootVisualElement;
 
             private readonly Label ThrustLabel;
@@ -606,9 +614,8 @@ namespace MultiplayerRunTime
                 }
             }
 
-            public InGameInfo(MouseFlightControllerMP Controller, VisualElement RootVisualElement)
+            public InGameInfo(VisualElement RootVisualElement)
             {
-                controller = Controller;
                 rootVisualElement = RootVisualElement;
 
                 ThrustLabel = rootVisualElement.Q<Label>("THRValue");
@@ -657,7 +664,7 @@ namespace MultiplayerRunTime
             private readonly Button PlusAimDistanceSensButton;
 
             public OnCloseOpenWindow onCloseOpenWindow = OnCloseOpenWindow.SettingsPopUp;
-            List<DisplayInfo> displays = new List<DisplayInfo>();
+            private readonly List<DisplayInfo> displays = new List<DisplayInfo>();
 
             public SettingsPopUp(UserMenu Menu, VisualElement RootVisualElement)
             {

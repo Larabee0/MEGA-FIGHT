@@ -24,7 +24,7 @@ namespace MultiplayerRunTime
                 }
                 if(colliders[i].gameObject.TryGetComponent(out ShipPartMP part) && NetworkManager.Singleton.IsHost)
                 {
-                    //part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID,  NetworkManager.Singleton.LocalClientId, UnityEngine.Random.Range(0,data.Damage));
+                    part.owner.shipHealthManagerMP.HitServerRpc(part.HierarchyID,  NetworkManager.Singleton.LocalClientId, UnityEngine.Random.Range(0,data.Damage));
                 }
             }
             Rigidbody[] bodies = new Rigidbody[unquieRigibodies.Count];

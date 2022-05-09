@@ -5,9 +5,11 @@ using UnityEngine;
 
 namespace MultiplayerRunTime
 {
-    public class MultipointLaser : WeaponBase
+    public class MultipointLaserTurret : TurretBase
     {
+        private readonly List<Transform> possibleTargets = new();
         private WeaponOutputPoint[] WeaponOutputPoints;
+        [Header("Firing Settings")]
         [SerializeField] bool Syncronous = false;
         [SerializeField] SyncronousGroup[] syncronousGroups;
         [SerializeField][Range(0f, 1f)] float fireIntervalMin = 0.01f;
@@ -19,17 +21,28 @@ namespace MultiplayerRunTime
 
         public override void Start()
         {
+            base.Start();
             WeaponOutputPoints=GetWeaponOutputPoints();
+            if (!Owner)
+            {
+                enabled = false;
+                return;
+            }
+            InvokeRepeating(nameof(UpdateTargets), 0f, 5f);
+            InvokeRepeating(nameof(SetTarget), 5f, 2.5f);
         }
 
-
-        public override void GroupFire()
+        public override void Update()
         {
-            MultiFire();
-        }
-
-        public override void Fire()
-        {
+            if (!Owner)
+            {
+                return;
+            }
+            base.Update();
+            if (!IsAimed)
+            {
+                return;
+            }
             fireInterval -= Time.deltaTime;
 
             switch (fireInterval)
@@ -41,8 +54,55 @@ namespace MultiplayerRunTime
             }
         }
 
+        private void UpdateTargets()
+        {
+            List<ShipPartMP> parts = new(FindObjectsOfType<ShipPartMP>());
+            possibleTargets.Clear();
+            for (int i = parts.Count - 1; i >= 0; i--)
+            {
+                if (parts[i].owner != Spaceship)
+                {
+                    possibleTargets.Add(parts[i].transform);
+                }
+            }
+        }
+
+        private void SetTarget()
+        {
+            if(possibleTargets == null || possibleTargets.Count == 0)
+            {
+                target = null;
+                return;
+            }
+            if (TargetPoint != null && possibleTargets.Contains(TargetPoint))
+            {
+                if (CanHitTarget(TargetPointPos,laserRange))
+                {
+                    return;
+                }
+            }
+            for (int i = 0; i < possibleTargets.Count; i++)
+            {
+                if(possibleTargets[i] == null)
+                {
+                    continue;
+                }
+                Transform possibleTarget = possibleTargets[i];
+                if (CanHitTarget(possibleTarget.position, laserRange))
+                {
+                    target = possibleTarget;
+                    return;
+                }
+            }
+            target = null;
+        }
+
         private void MultiFire()
         {
+            if (TargetPoint == null)
+            {
+                return;
+            }
             if (Syncronous)
             {
                 for (int i = 0; i < syncronousGroups[currentGroupIndex].indicies.Length; i++)
@@ -90,7 +150,7 @@ namespace MultiplayerRunTime
                     break;
             }
 
-            LaserSpawnerMP.ClientLaserSpawnCall(new float3x2(Spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].point.position), Spaceship.transform.InverseTransformPoint(endPoint)));
+            LaserSpawnerMP.ClientLaserSpawnCall(Spaceship.transform.InverseTransformPoint(WeaponOutputPoints[currentWeaponIndex].point.position), Spaceship.transform.InverseTransformPoint(endPoint));
         }
 
 

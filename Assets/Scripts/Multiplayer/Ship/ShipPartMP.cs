@@ -18,7 +18,7 @@ namespace MultiplayerRunTime
         [SerializeField] private MeshRenderer meshRenderer;
         private Color32 normalFlashColour = new(0, 0, 0, 255);
         private Color32 flashColour = new(187, 191, 41, 255);
-        private float Intensity = 10f;
+        [SerializeField] private float Intensity = 10f;
         [SerializeField] private float FlashTime = 0.25f;
         public Transform AnimationPoint;
         public Transform[] AnimationPoints;

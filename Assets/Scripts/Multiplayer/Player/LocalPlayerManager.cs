@@ -159,6 +159,7 @@ namespace MultiplayerRunTime
 
         private void SetAndEnableLocalScripts(SpaceshipMP ship)
         {
+            ship.GetComponent<FireControlMP>().SetUp(mouseFlightController);
             mouseFlightController.SetShip(ship);
             hud.enabled = true;
             mouseFlightController.enabled = true;

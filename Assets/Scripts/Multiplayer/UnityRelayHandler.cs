@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Core.Environments;
@@ -9,11 +11,36 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 
-public static class UnityRelayHandlerV2
+[Serializable]
+public struct RelayHostData
 {
-    private static string enviornment = "production";
+    public string JoinCode;
+    public string IPv4Address;
+    public ushort Port;
+    public Guid AllocationID;
+    public byte[] AllocationIDBytes;
+    public byte[] ConnectionData;
+    public byte[] Key;
+}
 
-    private static int maxConnections = 10;
+[Serializable]
+public struct RelayJoinData
+{
+    public string JoinCode;
+    public string IPv4Address;
+    public ushort Port;
+    public Guid AllocationID;
+    public byte[] AllocationIDBytes;
+    public byte[] ConnectionData;
+    public byte[] HostConnectionData;
+    public byte[] Key;
+}
+
+public static class UnityRelayHandler
+{
+    private const string enviornment = "production";
+
+    private const int maxConnections = 10;
 
     public static bool IsRelayEnabled = Transport != null && Transport.Protocol == UnityTransport.ProtocolType.RelayUnityTransport;
 
@@ -63,7 +90,7 @@ public static class UnityRelayHandlerV2
 
         JoinAllocation allocation =  await Relay.Instance.JoinAllocationAsync(joinCode);
 
-        RelayJoinData relayJoinData = new RelayJoinData()
+        RelayJoinData relayJoinData = new()
         {
             Key = allocation.Key,
             Port = (ushort)allocation.RelayServer.Port,

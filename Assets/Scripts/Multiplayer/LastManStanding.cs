@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace MultiplayerRunTime
@@ -179,7 +180,7 @@ namespace MultiplayerRunTime
                 SpawnPoint point = null;
                 while (point == null)
                 {
-                    point = spawnPoints[Random.Range(0, spawnPoints.Length)];
+                    point = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
                     if (!usedPoints.Contains(point))
                     {
                         usedPoints.Add(point);

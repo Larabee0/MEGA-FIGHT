@@ -4,6 +4,7 @@
 //
 
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -57,8 +58,6 @@ namespace MultiplayerRunTime
         private float throttle = 0f;
         public float Throttle { set { throttle = Mathf.Clamp(value, -0.25f, 1f); } get { return throttle; } }
 
-        private float Drag { set { rigid.drag = value == 0 ? 2.5f : Mathf.Clamp(Mathf.Lerp(1f, 5f, Mathf.Abs(value) * 1.2f), 1f, 5f); } }
-
         public Vector3 controlInput;
 
         private Rigidbody rigid;
@@ -109,7 +108,7 @@ namespace MultiplayerRunTime
                 return;
             }
             ContactPoint[] contacts = collision.contacts;
-            HashSet<InternalCollisionHandler> unquieParts = new HashSet<InternalCollisionHandler>();
+            HashSet<InternalCollisionHandler> unquieParts = new();
             for (int i = 0; i < contacts.Length; i++)
             {
                 ContactPoint point = contacts[i];

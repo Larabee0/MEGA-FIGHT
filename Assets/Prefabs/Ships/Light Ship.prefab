@@ -126,6 +126,7 @@ MonoBehaviour:
   owner: {fileID: 3004695792953479891}
   HierarchyID: 0
   meshRenderer: {fileID: 0}
+  Intensity: 10
   FlashTime: 0.25
   AnimationPoint: {fileID: 0}
   AnimationPoints: []
@@ -250,6 +251,7 @@ MonoBehaviour:
   owner: {fileID: 3004695792953479891}
   HierarchyID: 4
   meshRenderer: {fileID: 0}
+  Intensity: 10
   FlashTime: 0.25
   AnimationPoint: {fileID: 1139807501458933352}
   AnimationPoints: []
@@ -270,6 +272,7 @@ MonoBehaviour:
   damage: 10
   fireGroup: {fileID: 0}
   controller: {fileID: 0}
+  Owner: 0
   fireIntervalMin: 0.1
   fireIntervalMax: 0.2
   laserRange: 2000
@@ -393,6 +396,7 @@ MonoBehaviour:
   owner: {fileID: 3004695792953479891}
   HierarchyID: 3
   meshRenderer: {fileID: 0}
+  Intensity: 10
   FlashTime: 0.25
   AnimationPoint: {fileID: 0}
   AnimationPoints: []
@@ -571,7 +575,6 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
-  CanCommitToTransform: 0
 --- !u!1 &3004695792953479902
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +763,6 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
-  CanCommitToTransform: 0
 --- !u!114 &1631926848159538924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1314,6 +1316,7 @@ MonoBehaviour:
   owner: {fileID: 3004695792953479891}
   HierarchyID: 2
   meshRenderer: {fileID: 0}
+  Intensity: 10
   FlashTime: 0.25
   AnimationPoint: {fileID: 5632618455637277747}
   AnimationPoints: []
@@ -1334,6 +1337,7 @@ MonoBehaviour:
   damage: 10
   fireGroup: {fileID: 0}
   controller: {fileID: 0}
+  Owner: 0
   fireIntervalMin: 0.1
   fireIntervalMax: 0.2
   laserRange: 2000
@@ -1624,6 +1628,7 @@ MonoBehaviour:
   owner: {fileID: 3004695792953479891}
   HierarchyID: 1
   meshRenderer: {fileID: 0}
+  Intensity: 10
   FlashTime: 0.25
   AnimationPoint: {fileID: 0}
   AnimationPoints: []

@@ -154,7 +154,10 @@ namespace MultiplayerRunTime
                     break;
                 }
             }
-            
+        }
+
+        private void Start()
+        {
             if (IsServer)
             {
                 for (int i = 0; i < shipHierarchy.parts.Count; i++)
@@ -162,10 +165,6 @@ namespace MultiplayerRunTime
                     partHealths.Add(shipHierarchy.parts[i].maxHitPoints);
                 }
             }
-        }
-
-        private void Start()
-        {
             parts.Sort();
             for (int i = 0; i < shipHierarchy.tags.Count; i++)
             {
@@ -333,7 +332,7 @@ namespace MultiplayerRunTime
         [ClientRpc(Delivery = RpcDelivery.Reliable)]
         private void AlertHitClientRPC(NetworkBehaviourReference instigatorClient, byte hierachyID, float damage, ClientRpcParams clientRpcParams = default)
         {
-            DamageInfo damageInfo = GetDamageInfo(hierachyID, damage);
+            DamageInfo damageInfo = GetDamageInfo(hierachyID, (float)damage);
             if (instigatorClient.TryGet(out PlayerManagerMP targetObject))
             {
                 string instigator = targetObject.DisplayedName;
@@ -350,7 +349,7 @@ namespace MultiplayerRunTime
         {
             if (target.TryGet(out PlayerManagerMP targetObject))
             {
-                DamageInfo damageInfo = targetObject.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID, damage);
+                DamageInfo damageInfo = targetObject.LocalSpaceship.shipHealthManagerMP.GetDamageInfo(hierachyID, (float)damage);
                 damageInfo.Instigator = "You";
                 damageInfo.hitPlayer = targetObject.DisplayedName;
                 damageInfo.HitPlayerGrammar = "'s";
