@@ -98,7 +98,7 @@ namespace MultiplayerRunTime
         {
             if (!locked)
             {
-                TargetDistance += inputControl.FlightActions.ScrollWheel.ReadValue<Vector2>().y * dstSenstivity * Time.deltaTime;
+                TargetDistance += context.ReadValue<Vector2>().y * dstSenstivity * Time.deltaTime;
             }
         }
 

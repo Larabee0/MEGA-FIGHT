@@ -46,6 +46,7 @@ namespace MultiplayerRunTime
 
         [Tooltip("When idle, the turret does not aim at anything and simply points forwards.")]
         public bool IsIdle = false;
+        public bool ForceIdle = false;
 
         [Tooltip("Position the turret will aim at when not idle. Set this to whatever you want" +
             "the turret to actively aim at.")]
@@ -104,7 +105,7 @@ namespace MultiplayerRunTime
             {
                 return;
             }
-            if (TargetPoint != null)
+            if (TargetPoint != null && !ForceIdle)
             {
                 AimPosition = TargetPoint.position;
                 IsIdle = false;
@@ -116,9 +117,7 @@ namespace MultiplayerRunTime
 
             if (IsIdle)
             {
-                if (!IsTurretAtRest)
-                    RotateTurretToIdle();
-                isAimed = false;
+                AimPosition = controller.TargetPoint.position;
             }
             else
             {

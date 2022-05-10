@@ -55,7 +55,10 @@ namespace MultiplayerRunTime
 
         [SerializeField]
         [Tooltip("How quickly the camera tracks the mouse aim point.")]
-        private float camSmoothSpeed = 5f;
+        private float TPScamSmoothSpeed = 5f;
+        [SerializeField]
+        [Tooltip("How quickly the camera tracks the mouse aim point.")]
+        private float FPSCamSmoothSpeed = 15f;
 
         [SerializeField]
         [Tooltip("Mouse sensitivity for the mouse flight target")]
@@ -128,7 +131,7 @@ namespace MultiplayerRunTime
             inputControl.FlightActions.FreeCam.started += OnFreeCamButton;
             inputControl.FlightActions.FreeCam.canceled += OnFreeCamButton;
             inGameInfo = PasswordLobbyMP.Singleton.menu.GetInGameInfo();
-            //FreezeMouseAim = inputControl.ControllerPresent;
+
             if (DeSpawnedVirtualCamera != null) DeSpawnedVirtualCamera.Priority = 8;
             SetSettings();
         }
@@ -212,7 +215,7 @@ namespace MultiplayerRunTime
             UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
             throttleSenstivity = userSettings.userSettings.ThrottleSenstivity;
             mouseSensitivity = userSettings.userSettings.FlightTargetSensitivity;
-            camSmoothSpeed = userSettings.userSettings.ThirdPersonCameraSensitivity;
+            TPScamSmoothSpeed = userSettings.userSettings.ThirdPersonCameraSensitivity;
             if (!userSettings.userSettings.ThirdPersonIsDefaultCamera)
             {
                 perspective = Perspective.FirstPerson;
@@ -317,19 +320,25 @@ namespace MultiplayerRunTime
                 case Perspective.FirstPerson:
                     mouseAim.Rotate(FPSCamPos.right, mouseY, Space.World);
                     mouseAim.Rotate(FPSCamPos.up, mouseX, Space.World);
+                    if (isMouseAimFrozen)
+                    {
+                        Vector3 FpsUpVec = (math.abs(mouseAim.forward.y) > 0.9f) ? FPSCamPos.up : Vector3.up;
+                        FPSCamPos.rotation = DampCamera(FPSCamPos.rotation, Quaternion.LookRotation(mouseAim.forward, FpsUpVec), FPSCamSmoothSpeed, Time.deltaTime);
+                    }
+                    else
+                    {
+                        FPSCamPos.localEulerAngles = Vector3.zero;
+                    }
                     break;
             }
-
             // The up vector of the camera normally is aligned to the horizon. However, when
             // looking straight up/down this can feel a bit weird. At those extremes, the camera
             // stops aligning to the horizon and instead aligns to itself.
             Vector3 upVec = (math.abs(mouseAim.forward.y) > 0.9f) ? cameraRig.up : Vector3.up;
 
             // Smoothly rotate the camera to face the mouse aim.
-            cameraRig.rotation = DampCamera(cameraRig.rotation,
-                                      Quaternion.LookRotation(mouseAim.forward, upVec),
-                                      camSmoothSpeed,
-                                      Time.deltaTime);
+            cameraRig.rotation = DampCamera(cameraRig.rotation, Quaternion.LookRotation(mouseAim.forward, upVec), TPScamSmoothSpeed, Time.deltaTime);
+            
         }
 
         private Vector3 GetFrozenMouseAimPos()

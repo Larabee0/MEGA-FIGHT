@@ -56,7 +56,7 @@ namespace MultiplayerRunTime
             pausePopUp = new PausePopUp(this, rootVisualElement.Q("PausePopUp"));
             spawnPopUp = new SpawnPopUp(this, rootVisualElement.Q("SpawnPopUp"));
             settingsPopUp = new SettingsPopUp(this, rootVisualElement.Q("SettingsPopUp"));
-            infoPopUp = new InfoPopUp(this, rootVisualElement.Q("InfoPopUp"));
+            infoPopUp = new InfoPopUp(rootVisualElement.Q("InfoPopUp"));
             ShowConnectionOverlay(true);
             SetSettings();
             UserCustomisableSettings.instance.OnUserSettingsChanged += SetSettings;
@@ -664,7 +664,7 @@ namespace MultiplayerRunTime
             private readonly Button PlusAimDistanceSensButton;
 
             public OnCloseOpenWindow onCloseOpenWindow = OnCloseOpenWindow.SettingsPopUp;
-            private readonly List<DisplayInfo> displays = new List<DisplayInfo>();
+            private readonly List<DisplayInfo> displays = new();
 
             public SettingsPopUp(UserMenu Menu, VisualElement RootVisualElement)
             {
@@ -909,7 +909,6 @@ namespace MultiplayerRunTime
         public class InfoPopUp
         {
             public readonly VisualElement rootVisualElement;
-            private readonly UserMenu menu;
 
             private readonly Label InfoLabelA;
             private readonly Label InfoLabelB;
@@ -917,10 +916,9 @@ namespace MultiplayerRunTime
             public string UpperLabel { set => InfoLabelA.text = value; }
             public string LowerLabel { set => InfoLabelB.text = value; }
 
-            public InfoPopUp(UserMenu Menu,VisualElement RootVisualElement)
+            public InfoPopUp(VisualElement RootVisualElement)
             {
                 rootVisualElement = RootVisualElement;
-                menu = Menu;
 
                 InfoLabelA = rootVisualElement.Q<Label>("InfoDisplayA");
                 InfoLabelB = rootVisualElement.Q<Label>("InfoDisplayB");

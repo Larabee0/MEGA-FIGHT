@@ -39,6 +39,7 @@ public class InputControl : MonoBehaviour
         playerActions = new Player();
         SetUIEnabled(true);
         SetAlwaysOnEnabled(true);
+        AlwaysOn.Mouse.performed += GetValue;
     }
 
     //private void FixedUpdate()
@@ -51,6 +52,11 @@ public class InputControl : MonoBehaviour
     //    Debug.Log(FlightActions.JoyStick.ReadValue<Vector3>());
     //
     //}
+
+    private void GetValue(InputAction.CallbackContext context)
+    {
+        Debug.Log(context.ReadValue<Vector2>());
+    }
 
     public void SetFlightEnabled(bool enabled)
     {
