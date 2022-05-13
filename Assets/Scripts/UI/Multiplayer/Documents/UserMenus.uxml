@@ -20,7 +20,7 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="overlay" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.69); align-items: center; justify-content: center; display: flex;">
-        <ui:VisualElement name="ConnectionPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgb(56, 56, 56); display: flex; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
+        <ui:VisualElement name="ConnectionPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; background-color: rgb(56, 56, 56); display: none; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
             <ui:VisualElement style="flex-direction: row;">
                 <ui:VisualElement name="ConnectSide" style="margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); width: 200px; justify-content: space-between;">
                     <ui:Label text="Connect" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
@@ -39,7 +39,7 @@
             <ui:Button text="Switch Network Mode" display-tooltip-when-elided="true" name="NetworkModeButton" class="StandardButton" style="margin-top: 2px;" />
             <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 2px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: none;">
+        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: flex;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:Label text="Respawn?" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
                 <ui:VisualElement style="border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);">
@@ -47,11 +47,11 @@
                         <ui:RadioButtonGroup label="Pick Ship" name="ShipChoiceGroup" style="color: rgb(253, 253, 253); flex-direction: column; justify-content: space-around;">
                             <ui:VisualElement style="flex-direction: row; justify-content: space-around;">
                                 <ui:VisualElement>
-                                    <ui:RadioButton name="LightShip" value="true" style="background-image: url(&apos;project://database/Assets/Models%20&amp;%20Materials/Ship%20Images/Light%20Ship.png?fileID=2800000&amp;guid=7eadc58ae32b0de438cf9b27128cf359&amp;type=3#Light Ship&apos;); -unity-background-scale-mode: scale-to-fit; width: 175px; height: 125px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+                                    <ui:RadioButton name="LightShip" value="false" style="background-image: url(&apos;project://database/Assets/Models%20&amp;%20Materials/Ship%20Images/Light%20Ship.png?fileID=2800000&amp;guid=7eadc58ae32b0de438cf9b27128cf359&amp;type=3#Light Ship&apos;); -unity-background-scale-mode: scale-to-fit; width: 175px; height: 125px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
                                     <ui:RadioButton name="XWing" style="background-image: url(&apos;project://database/Assets/Models%20&amp;%20Materials/Ship%20Images/X-Wing.png?fileID=2800000&amp;guid=559246c76c39fad48817de23c7c4c7f1&amp;type=3#X-Wing&apos;); -unity-background-scale-mode: scale-to-fit; width: 175px; height: 125px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; display: flex;" />
                                 </ui:VisualElement>
                                 <ui:VisualElement>
-                                    <ui:RadioButton name="TankShip" style="background-image: url(&apos;project://database/Assets/Models%20&amp;%20Materials/Ship%20Images/Tank%20Ship.png?fileID=2800000&amp;guid=5f2dfc714f6deda40a38f66d8c9017f1&amp;type=3#Tank Ship&apos;); -unity-background-scale-mode: scale-to-fit; width: 175px; height: 125px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+                                    <ui:RadioButton name="TankShip" value="true" style="background-image: url(&apos;project://database/Assets/Models%20&amp;%20Materials/Ship%20Images/Tank%20Ship.png?fileID=2800000&amp;guid=5f2dfc714f6deda40a38f66d8c9017f1&amp;type=3#Tank Ship&apos;); -unity-background-scale-mode: scale-to-fit; width: 175px; height: 125px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
                                     <ui:RadioButton name="Falcon" style="background-image: url(&apos;project://database/Assets/Models%20&amp;%20Materials/Ship%20Images/Falcon.png?fileID=2800000&amp;guid=91a9431cbd936b44b88897c81c31fef5&amp;type=3#Falcon&apos;); -unity-background-scale-mode: scale-to-fit; width: 175px; height: 125px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; display: flex;" />
                                 </ui:VisualElement>
                             </ui:VisualElement>

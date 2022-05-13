@@ -99,6 +99,7 @@ namespace MultiplayerRunTime
                     ShowSpawnOverlay(false, false);
                     ShowSettingsOverlay(false, false);
                     ShowInfoOverlay(false, false);
+                    connectionPopUp.HostButton.Focus();
                     break;
                 case false:
                     connectionPopUp.rootVisualElement.style.display = DisplayStyle.None;
@@ -218,7 +219,7 @@ namespace MultiplayerRunTime
 
             private readonly Button QuitButton;
             private readonly Button ConnectButton;
-            private readonly Button HostButton;
+            public readonly Button HostButton;
             private readonly Button SettingsButton;
             private readonly Button SwitchNetworkModeButton;
             private readonly Label JoinCodeDisplay;
@@ -520,6 +521,12 @@ namespace MultiplayerRunTime
                 XWingRadioButton = rootVisualElement.Q<RadioButton>("XWing");
                 FalconRadioButton = rootVisualElement.Q<RadioButton>("Falcon");
 
+
+                LightShipRadioButton.RegisterCallback<NavigationSubmitEvent>(ev => RadioButtonPressedByXbox());
+                TankShipRadioButton.RegisterCallback<NavigationSubmitEvent>(ev => RadioButtonPressedByXbox());
+                XWingRadioButton.RegisterCallback<NavigationSubmitEvent>(ev => RadioButtonPressedByXbox());
+                FalconRadioButton.RegisterCallback<NavigationSubmitEvent>(ev => RadioButtonPressedByXbox());
+
                 SpawnButton.RegisterCallback<ClickEvent>(ev => SpawnButtonCallback());
                 LeaveButton.RegisterCallback<ClickEvent>(ev => LeaveButtonCallback());
                 QuitGameButton.RegisterCallback<ClickEvent>(ev => QuitGameButtonCallback());
@@ -529,6 +536,11 @@ namespace MultiplayerRunTime
                 LeaveButton.RegisterCallback<NavigationSubmitEvent>(ev => LeaveButtonCallback());
                 QuitGameButton.RegisterCallback<NavigationSubmitEvent>(ev => QuitGameButtonCallback());
                 SettingsButton.RegisterCallback<NavigationSubmitEvent>(ev => ShowSettings());
+            }
+
+            private void RadioButtonPressedByXbox()
+            {
+                Debug.Log("button pressed");
             }
 
             private void SpawnButtonCallback()
@@ -739,26 +751,28 @@ namespace MultiplayerRunTime
                 MouseFlightTargetSens.RegisterValueChangedCallback(ev => MouseFlightTargetSensValueChange(ev.newValue));
                 DefaultAimDistance.RegisterValueChangedCallback(ev => DefaultAimDistanceValueChange(ev.newValue));
                 AimDistanceSens.RegisterValueChangedCallback(ev => AimDistanceSenstivityValueChange(ev.newValue));
-
-                DisplayChoices.choices=new();
-                Screen.GetDisplayLayout(displays);
-                for (int i = 0; i < displays.Count; i++)
+                if (Application.platform == RuntimePlatform.WindowsPlayer)
                 {
-                    DisplayInfo display = displays[i];
-                    DisplayChoices.choices.Add(string.Format("Display {0}", i + 1));
+                    DisplayChoices.choices = new();
+                    Screen.GetDisplayLayout(displays);
+                    for (int i = 0; i < displays.Count; i++)
+                    {
+                        DisplayInfo display = displays[i];
+                        DisplayChoices.choices.Add(string.Format("Display {0}", i + 1));
 
+                    }
+                    int StartDisplayIndex = displays.IndexOf(Screen.mainWindowDisplayInfo);
+                    DisplayChoices.index = StartDisplayIndex;
+                    DisplayNum.text = (StartDisplayIndex + 1).ToString();
+
+                    DisplayChoices.RegisterValueChangedCallback(ev => OnDisplayChoiceChange());
+
+                    FullScreenMode.index = (int)Screen.fullScreenMode;
+                    FullScreenMode.RegisterValueChangedCallback(ev => OnFullScreenChange());
+
+                    RefreshResolutionChoices();
+                    Resolution.RegisterValueChangedCallback(ev => OnResolutionChange());
                 }
-                int StartDisplayIndex = displays.IndexOf(Screen.mainWindowDisplayInfo);
-                DisplayChoices.index = StartDisplayIndex;
-                DisplayNum.text = (StartDisplayIndex + 1).ToString();
-
-                DisplayChoices.RegisterValueChangedCallback(ev => OnDisplayChoiceChange());
-
-                FullScreenMode.index = (int)Screen.fullScreenMode;
-                FullScreenMode.RegisterValueChangedCallback(ev => OnFullScreenChange());
-
-                RefreshResolutionChoices();
-                Resolution.RegisterValueChangedCallback(ev => OnResolutionChange());
                 Reset();
             }
 

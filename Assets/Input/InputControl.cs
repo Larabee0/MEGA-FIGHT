@@ -39,7 +39,6 @@ public class InputControl : MonoBehaviour
         playerActions = new Player();
         SetUIEnabled(true);
         SetAlwaysOnEnabled(true);
-        AlwaysOn.Mouse.performed += GetValue;
     }
 
     //private void FixedUpdate()

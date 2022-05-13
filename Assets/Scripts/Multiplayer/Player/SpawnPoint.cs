@@ -6,7 +6,7 @@ using Unity.Netcode;
 public class SpawnPoint : MonoBehaviour
 {
     private bool spawnEmpty = true;
-    public bool IsServer = false;
+    [HideInInspector] public bool IsServer = false;
     public bool SpawnEmpty
     {
         get { return spawnEmpty; }

@@ -66,7 +66,7 @@ namespace MultiplayerRunTime
                     break;
             }
 
-            LaserSpawnerMP.ClientLaserSpawnCall(Spaceship.transform.InverseTransformPoint(weaponOutputPoint.point.position), Spaceship.transform.InverseTransformPoint(endPoint));
+            LaserSpawnerMP.ClientRaycastLaserSpawnCall(Spaceship.transform.InverseTransformPoint(weaponOutputPoint.point.position), Spaceship.transform.InverseTransformPoint(endPoint));
         }
     }
 }
