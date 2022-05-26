@@ -675,6 +675,11 @@ namespace MultiplayerRunTime
             private readonly Button PlusDefaultAimDistanceButton;
             private readonly Button PlusAimDistanceSensButton;
 
+            private readonly Toggle OverrideEngineColour;
+            private ColourDisplay EngineColourDisplay;
+            private readonly Toggle OverrideLaserColour;
+            private ColourDisplay LaserColourDisplay;
+
             public OnCloseOpenWindow onCloseOpenWindow = OnCloseOpenWindow.SettingsPopUp;
             private readonly List<DisplayInfo> displays = new();
 
@@ -688,6 +693,9 @@ namespace MultiplayerRunTime
 
                 DisableFlyAroundCamera = rootVisualElement.Q<Toggle>("DisableFlyAroundCamera");
                 DefaultFlightCamera = rootVisualElement.Q<Toggle>("DefaultFlightCamera");
+
+                OverrideEngineColour = rootVisualElement.Q<Toggle>("OverrideEngineColour");
+                OverrideLaserColour = rootVisualElement.Q<Toggle>("OverrideLaserColour");
 
                 ThirdPersonCamSpeed = rootVisualElement.Q<Slider>("ThirdPersonCamSpeed");
                 MouseFlightTargetSens = rootVisualElement.Q<Slider>("MouseFlightTargetSens");
@@ -717,6 +725,9 @@ namespace MultiplayerRunTime
                 PlusMouseFlightTargetSensButton = rootVisualElement.Q<Button>("MFTSPlus");
                 PlusDefaultAimDistanceButton = rootVisualElement.Q<Button>("DADPlus");
                 PlusAimDistanceSensButton = rootVisualElement.Q<Button>("ADSPlus");
+
+                EngineColourDisplay = new ColourDisplay(rootVisualElement.Q("EngineColourDisplay"));
+                LaserColourDisplay = new ColourDisplay(rootVisualElement.Q("LaserColourDisplay"));
 
                 SaveAndCloseButton.RegisterCallback<ClickEvent>(ev => SaveAndClose());
                 CloseButton.RegisterCallback<ClickEvent>(ev => Close());
@@ -861,6 +872,10 @@ namespace MultiplayerRunTime
                 userSettings.userSettings.DefaultAimDistance = DefaultAimDistance.value;
                 userSettings.userSettings.AimDistanceSenstivity = AimDistanceSens.value;
 
+                userSettings.userSettings.OverrideLaserColour = OverrideLaserColour.value;
+                userSettings.userSettings.PlayerLaserColour = LaserColourDisplay.Colour;
+                userSettings.userSettings.OverrideEngineColour = OverrideEngineColour.value;
+                userSettings.userSettings.PlayerEngineColour = EngineColourDisplay.Colour;
                 userSettings.OnUserSettingsChanged?.Invoke();
                 Close();
             }
@@ -890,6 +905,8 @@ namespace MultiplayerRunTime
                 {
                     userSettings.userSettings = new UserSettingsSaveData();
                 }
+                LaserColourDisplay.Colour = userSettings.userSettings.PlayerLaserColour;
+                EngineColourDisplay.Colour = userSettings.userSettings.PlayerEngineColour;
                 PlayerDisplayedName.value = userSettings.userSettings.PlayerDisplayedName;
                 DisableFlyAroundCamera.value = userSettings.userSettings.DisableFlyAroundCamera;
                 DefaultFlightCamera.value = userSettings.userSettings.ThirdPersonIsDefaultCamera;
@@ -897,6 +914,8 @@ namespace MultiplayerRunTime
                 MouseFlightTargetSens.value = userSettings.userSettings.FlightTargetSensitivity;
                 DefaultAimDistance.value = userSettings.userSettings.DefaultAimDistance;
                 AimDistanceSens.value = userSettings.userSettings.AimDistanceSenstivity;
+                OverrideLaserColour.value = userSettings.userSettings.OverrideLaserColour;
+                OverrideEngineColour.value = userSettings.userSettings.OverrideEngineColour;
             }
 
             public void OnTPSCamSpeedValueChange(float newValue)

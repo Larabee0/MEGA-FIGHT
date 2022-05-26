@@ -39,7 +39,7 @@
             <ui:Button text="Switch Network Mode" display-tooltip-when-elided="true" name="NetworkModeButton" class="StandardButton" style="margin-top: 2px;" />
             <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 2px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: flex;">
+        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: none;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:Label text="Respawn?" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
                 <ui:VisualElement style="border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);">
@@ -77,7 +77,7 @@
                 <ui:Button text="Close Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 5px;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="SettingsPopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: none;">
+        <ui:VisualElement name="SettingsPopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: flex;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:VisualElement name="Buttons" style="flex-direction: row; justify-content: center; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 1px;">
                     <ui:Button text="Save &amp; Close " display-tooltip-when-elided="true" name="SaveAndCloseButton" class="StandardButton" style="margin-top: 5px; width: 100px;" />
@@ -156,6 +156,50 @@
                         <ui:Slider picking-mode="Ignore" value="25" high-value="100" low-value="1" name="AimDistanceSens" style="width: 100px;" />
                         <ui:Button text="+" display-tooltip-when-elided="true" name="ADSPlus" class="StandardButton" style="padding-right: 0; padding-left: 0; height: 12px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-bottom: 0; padding-top: 0; width: 12px;" />
                         <ui:Label text="100" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); width: 37px;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:VisualElement style="flex-direction: row; width: 270px; justify-content: flex-end;">
+                        <ui:Label text="Override Engine Colour" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-right-width: 1px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-direction: row; width: 210px; justify-content: center; align-items: center;">
+                        <ui:Toggle value="true" name="OverrideEngineColour" style="background-color: rgb(42, 42, 42);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:VisualElement style="flex-direction: row; width: 270px; justify-content: flex-end;">
+                        <ui:Label text="Engine Colour" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-right-width: 1px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-direction: row; width: 210px; justify-content: center; align-items: center;">
+                        <ui:VisualElement name="EngineColourDisplay" class="ColourDisplay" style="height: 16px; width: 212px;">
+                            <ui:VisualElement name="MapSettingsGridColour" style="flex-direction: row; align-items: center; background-color: rgb(128, 128, 128); height: 13px; width: 100%;" />
+                            <ui:VisualElement name="Alphas" style="flex-direction: row; height: 3px; width: 100%;">
+                                <ui:VisualElement name="MapSettingsWhiteAlpha" style="background-color: rgb(255, 255, 255); width: 50%; height: 3px;" />
+                                <ui:VisualElement name="MapSettingsBlackAlpha" style="height: 3px; background-color: rgb(0, 0, 0); width: 50%;" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:VisualElement style="flex-direction: row; width: 270px; justify-content: flex-end;">
+                        <ui:Label text="Override Laser Colour" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-right-width: 1px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-direction: row; width: 210px; justify-content: center; align-items: center;">
+                        <ui:Toggle value="true" name="OverrideLaserColour" style="background-color: rgb(42, 42, 42);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:VisualElement style="flex-direction: row; width: 270px; justify-content: flex-end;">
+                        <ui:Label text="Laser Colour" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-right-width: 1px;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-direction: row; width: 210px; justify-content: center; align-items: center;">
+                        <ui:VisualElement name="LaserColourDisplay" class="ColourDisplay" style="height: 16px; width: 212px;">
+                            <ui:VisualElement name="MapSettingsGridColour" style="flex-direction: row; align-items: center; background-color: rgb(128, 128, 128); height: 13px; width: 100%;" />
+                            <ui:VisualElement name="Alphas" style="flex-direction: row; height: 3px; width: 100%;">
+                                <ui:VisualElement name="MapSettingsWhiteAlpha" style="background-color: rgb(255, 255, 255); width: 50%; height: 3px;" />
+                                <ui:VisualElement name="MapSettingsBlackAlpha" style="height: 3px; background-color: rgb(0, 0, 0); width: 50%;" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
