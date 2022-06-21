@@ -10,6 +10,7 @@ public delegate void ColourPickerApply(Color result);
 public class ColourPicker : MonoBehaviour
 {
     public static ColourPicker Instance;
+    public bool IsOpen = false;
     public ColourPickerApply OnColourPickerApply;
     public ColourPickerApply OnColourPickerClose;
     [SerializeField] private Texture2D colourGraident;
@@ -43,7 +44,6 @@ public class ColourPicker : MonoBehaviour
     public Color SetColour;
     private Color32[] SatPixelColours;
     private Color32[] ValuePixelColours;
-
     private void Awake()
     {
         SatSliderTexutre = new Texture2D(147, 18);
@@ -109,14 +109,16 @@ public class ColourPicker : MonoBehaviour
 
     public void Close()
     {
-        document.enabled = false;
+        document.rootVisualElement.style.display = DisplayStyle.None;
+        IsOpen = false;
         OnColourPickerClose?.Invoke(SetColour);
     }
 
     public void Open(Color start)
     {
-        document.enabled = true;
-        QueryDocument();
+        document.rootVisualElement.style.display = DisplayStyle.Flex;
+        IsOpen = true;
+        //QueryDocument();
         StartCoroutine(SetPickerPosDelayed(start));
     }
 

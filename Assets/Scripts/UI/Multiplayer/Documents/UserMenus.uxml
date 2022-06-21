@@ -39,7 +39,7 @@
             <ui:Button text="Switch Network Mode" display-tooltip-when-elided="true" name="NetworkModeButton" class="StandardButton" style="margin-top: 2px;" />
             <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 2px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: none;">
+        <ui:VisualElement name="SpawnPopUp" style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgb(56, 56, 56); display: flex;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:Label text="Respawn?" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-text-align: upper-center; font-size: 28px; -unity-font-style: bold;" />
                 <ui:VisualElement style="border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);">
@@ -62,6 +62,7 @@
                 <ui:TextField picking-mode="Ignore" label="Displayed Name" value="Player" text="Player" name="DisplayedName" max-length="16" style="flex-direction: column; -unity-text-align: upper-center; display: none;" />
                 <ui:VisualElement style="flex-direction: row; justify-content: center;">
                     <ui:Button text="Spawn" display-tooltip-when-elided="true" name="SpawnButton" class="StandardButton" style="width: 75px;" />
+                    <ui:Button text="Change Colour" display-tooltip-when-elided="true" name="ChangeColourButton" class="StandardButton" style="width: 120px;" />
                     <ui:Button text="Leave" display-tooltip-when-elided="true" name="LeaveButton" class="StandardButton" style="width: 75px;" />
                 </ui:VisualElement>
                 <ui:Button text="Settings" display-tooltip-when-elided="true" name="SettingsButton" class="StandardButton" style="margin-bottom: 2px;" />
@@ -77,7 +78,7 @@
                 <ui:Button text="Close Game" display-tooltip-when-elided="true" name="QuitGameButton" class="StandardButton" style="margin-top: 5px;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="SettingsPopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: flex;">
+        <ui:VisualElement name="SettingsPopUp" style="background-color: rgb(56, 56, 56); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; display: none;">
             <ui:VisualElement style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
                 <ui:VisualElement name="Buttons" style="flex-direction: row; justify-content: center; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 1px;">
                     <ui:Button text="Save &amp; Close " display-tooltip-when-elided="true" name="SaveAndCloseButton" class="StandardButton" style="margin-top: 5px; width: 100px;" />

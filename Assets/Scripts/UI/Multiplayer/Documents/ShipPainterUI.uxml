@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/UI/Multiplayer/Documents/MainMenuStyleSheet.uss?fileID=7433441132597879392&amp;guid=572322021726fdc4487c24c6a2dc06fc&amp;type=3#MainMenuStyleSheet" />
+    <ui:VisualElement style="flex-direction: column; justify-content: flex-start; position: absolute; bottom: 0; left: 0; background-color: rgb(56, 56, 56); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
+        <ui:VisualElement style="justify-content: flex-start; flex-direction: row; align-items: center;">
+            <ui:Label text="Colour" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255);" />
+            <ui:VisualElement name="ColourDisplay" class="ColourDisplay" style="height: 16px; width: 212px;">
+                <ui:VisualElement name="MapSettingsGridColour" style="flex-direction: row; align-items: center; background-color: rgb(128, 128, 128); height: 13px; width: 100%;" />
+                <ui:VisualElement name="Alphas" style="flex-direction: row; height: 3px; width: 100%;">
+                    <ui:VisualElement name="MapSettingsWhiteAlpha" style="background-color: rgb(255, 255, 255); width: 50%; height: 3px;" />
+                    <ui:VisualElement name="MapSettingsBlackAlpha" style="height: 3px; background-color: rgb(0, 0, 0); width: 50%;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="justify-content: center; flex-direction: row; align-items: stretch;">
+            <ui:Button text="Discard" display-tooltip-when-elided="true" name="Discard" class="StandardButton" style="width: 125px;" />
+            <ui:Button text="Apply" display-tooltip-when-elided="true" name="Apply" class="StandardButton" style="width: 125px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

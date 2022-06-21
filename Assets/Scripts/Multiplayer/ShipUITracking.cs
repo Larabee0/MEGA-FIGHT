@@ -21,6 +21,7 @@ namespace MultiplayerRunTime
                 if (existingShips[i].ShipSpawned)
                 {
                     AddName(existingShips[i].OwnerClientId, existingShips[i].DisplayedName, existingShips[i].LocalSpaceship.shipHealthManagerMP);
+                    existingShips[i].LocalSpaceship.shipHealthManagerMP.SetHullColourForLateJoiner();
                 }
             }
         }

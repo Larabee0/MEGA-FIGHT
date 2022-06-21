@@ -24,6 +24,55 @@ namespace MultiplayerRunTime
         public Transform[] AnimationPoints;
         public bool MultiPoint = false;
 
+        public Color32 ObjectColour
+        {
+            get => ObjectReColour.Value;
+            set
+            {
+                if (meshRenderer == null)
+                {
+                    return;
+                }
+                List<Material> mats = new();
+                meshRenderer.GetMaterials(mats);
+                mats.ForEach(mat =>
+                {
+                    switch (mat.shader.FindPropertyIndex("_Colour"))
+                    {
+                        case -1:
+                            break;
+                        default:
+                            mat.SetColor("_Colour", value);
+                            break;
+                    }
+                });
+            }
+        }
+
+        public bool Recolourable
+        {
+            get
+            {
+                if (meshRenderer == null)
+                {
+                    return false;
+                }
+                List<Material> mats = new();
+                meshRenderer.GetMaterials(mats);
+                for (int i = 0; i < mats.Count; i++)
+                {
+                    switch (mats[i].shader.FindPropertyIndex("_Colour"))
+                    {
+                        case -1:
+                            break;
+                        default:
+                            return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         public Color32 TintColour
         {
             get => meshRenderer.material.GetColor("_BaseColor");
@@ -34,7 +83,9 @@ namespace MultiplayerRunTime
                 {
                     return;
                 }
-                meshRenderer.material.SetColor("_BaseColor", value);
+                List<Material> mats = new();
+                meshRenderer.GetMaterials(mats);
+                mats.ForEach(mat => mat.SetColor("_BaseColor", value));
             }
         }
 
@@ -59,6 +110,7 @@ namespace MultiplayerRunTime
 
         private NetworkVariable<bool> ObjectEnabled = new(true);
         private NetworkVariable<Color32> ObjectTint = new(new Color32(255,255,255,255));
+        private NetworkVariable<Color32> ObjectReColour = new(new Color32(255, 255, 255, 255));
 
         private void Awake()
         {
@@ -80,6 +132,7 @@ namespace MultiplayerRunTime
             TintColour = ObjectTint.Value;
             ObjectEnabled.OnValueChanged += OnObjectEnabledChanged;
             ObjectTint.OnValueChanged += OnTintColourChanged;
+            ObjectReColour.OnValueChanged += OnObjectColourChanged;
         }
 
         private void OnObjectEnabledChanged(bool oldValue, bool newValue)
@@ -96,10 +149,20 @@ namespace MultiplayerRunTime
             TintColour = newValue;
         }
 
+        private void OnObjectColourChanged(Color32 oldvalue, Color32 newValue)
+        {
+            ObjectColour = newValue;
+        }
+
         [ServerRpc(Delivery = RpcDelivery.Reliable)]
         public void SetObjectEnabledServerRpc(bool enabled)
         {
             ObjectEnabled.Value = enabled;
+        }
+
+        public void SetObjectColour(Color32 objectColour)
+        {
+            ObjectReColour.Value = objectColour;
         }
 
         [ServerRpc(Delivery = RpcDelivery.Reliable)]

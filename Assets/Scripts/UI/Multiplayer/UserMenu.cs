@@ -25,6 +25,7 @@ namespace MultiplayerRunTime
 
         [SerializeField] private PasswordLobbyMP lobby;
         [SerializeField] private LocalPlayerManager localPlayerManager;
+        public ShipPainter shipPainter;
         private UIDocument document;
         private VisualElement rootVisualElement;
         private VisualElement overlay;
@@ -491,6 +492,7 @@ namespace MultiplayerRunTime
             private readonly RadioButton FalconRadioButton;
 
             private readonly Button SpawnButton;
+            private readonly Button ChangeColourButton;
             private readonly Button LeaveButton;
             private readonly Button QuitGameButton;
             private readonly Button SettingsButton;
@@ -508,6 +510,7 @@ namespace MultiplayerRunTime
                 rootVisualElement = RootVisualElement;
 
                 SpawnButton = rootVisualElement.Q<Button>("SpawnButton");
+                ChangeColourButton = rootVisualElement.Q<Button>("ChangeColourButton");
                 LeaveButton = rootVisualElement.Q<Button>("LeaveButton");
                 QuitGameButton = rootVisualElement.Q<Button>("QuitGameButton");
                 SettingsButton = rootVisualElement.Q<Button>("SettingsButton");
@@ -522,12 +525,13 @@ namespace MultiplayerRunTime
                 FalconRadioButton = rootVisualElement.Q<RadioButton>("Falcon");
 
 
-                LightShipRadioButton.RegisterCallback<NavigationSubmitEvent>(ev => RadioButtonPressedByXbox());
-                TankShipRadioButton.RegisterCallback<NavigationSubmitEvent>(ev => RadioButtonPressedByXbox());
-                XWingRadioButton.RegisterCallback<NavigationSubmitEvent>(ev => RadioButtonPressedByXbox());
-                FalconRadioButton.RegisterCallback<NavigationSubmitEvent>(ev => RadioButtonPressedByXbox());
+                LightShipRadioButton.RegisterCallback<ClickEvent>(ev => RadioButtonPressed());
+                TankShipRadioButton.RegisterCallback<ClickEvent>(ev => RadioButtonPressed());
+                XWingRadioButton.RegisterCallback<ClickEvent>(ev => RadioButtonPressed());
+                FalconRadioButton.RegisterCallback<ClickEvent>(ev => RadioButtonPressed());
 
                 SpawnButton.RegisterCallback<ClickEvent>(ev => SpawnButtonCallback());
+                ChangeColourButton.RegisterCallback<ClickEvent>(ev => OpenShipColourPicker());
                 LeaveButton.RegisterCallback<ClickEvent>(ev => LeaveButtonCallback());
                 QuitGameButton.RegisterCallback<ClickEvent>(ev => QuitGameButtonCallback());
                 SettingsButton.RegisterCallback<ClickEvent>(ev => ShowSettings());
@@ -536,11 +540,25 @@ namespace MultiplayerRunTime
                 LeaveButton.RegisterCallback<NavigationSubmitEvent>(ev => LeaveButtonCallback());
                 QuitGameButton.RegisterCallback<NavigationSubmitEvent>(ev => QuitGameButtonCallback());
                 SettingsButton.RegisterCallback<NavigationSubmitEvent>(ev => ShowSettings());
+                ChangeColourButton.style.display = DisplayStyle.None;
+                RadioButtonPressed();
             }
 
-            private void RadioButtonPressedByXbox()
+            private void OpenShipColourPicker()
             {
-                Debug.Log("button pressed");
+                menu.ShowSpawnOverlay(false);
+                menu.shipPainter.Open(GetIndexFromButton());
+            }
+
+            private void RadioButtonPressed()
+            {
+                int shipIndex = GetIndexFromButton();
+                ChangeColourButton.style.display = shipIndex switch
+                {
+                    0 => (StyleEnum<DisplayStyle>)DisplayStyle.Flex,
+                    1 => (StyleEnum<DisplayStyle>)DisplayStyle.Flex,
+                    _ => (StyleEnum<DisplayStyle>)DisplayStyle.None,
+                };
             }
 
             private void SpawnButtonCallback()

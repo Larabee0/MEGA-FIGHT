@@ -22,7 +22,8 @@ namespace MultiplayerRunTime
         [SerializeField] private ExplosionData explosionData;
         private Bounds modelBounds;
         private List<ShipPartMP> parts;
-
+        [SerializeField] private Color32 defaultColour;
+        public Color32 DefaultColour => defaultColour;
         private NetworkList<float> partHealths;
 
         public Dictionary<Functionality, float> functionalityEfficiencies = new();
@@ -123,6 +124,8 @@ namespace MultiplayerRunTime
             }
         }
 
+        public bool HasAnyRecolourableParts => parts != null && parts.Count > 0 && parts.Find(part => part.Recolourable) != null;
+
         private ShipPartRecord LogDestroyedParentOrRoot(ShipPartRecord source)
         {
             if(source == null)
@@ -173,6 +176,10 @@ namespace MultiplayerRunTime
             }
 
             partHealths.OnListChanged += RecalculateEffiencies;
+            if (IsOwner)
+            {
+                SetHullColourServerRpc(PasswordLobbyMP.Singleton.menu.shipPainter.Colour);
+            }
         }
 
         private void RecalculateEffiencies(NetworkListEvent<float> changedValue)
@@ -389,6 +396,15 @@ namespace MultiplayerRunTime
             Destroy(gameObject);
         }
 
+        [ServerRpc(Delivery = RpcDelivery.Reliable)]
+        private void SetHullColourServerRpc(Color32 colour)
+        {
+            parts.ForEach(part => part.SetObjectColour(colour));
+        }
+        public void SetHullColourForLateJoiner()
+        {
+            parts.ForEach(part => part.ObjectColour = part.ObjectColour);
+        }
         #endregion
     }
 

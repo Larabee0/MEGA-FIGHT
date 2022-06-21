@@ -55,7 +55,8 @@ namespace MultiplayerRunTime
 
         [SerializeField]
         [Tooltip("How quickly the camera tracks the mouse aim point.")]
-        private float TPScamSmoothSpeed = 5f;
+        private float tPScamSmoothSpeed = 5f;
+        public float TPScamSmoothSpeed => tPScamSmoothSpeed;
         [SerializeField]
         [Tooltip("How quickly the camera tracks the mouse aim point.")]
         private float FPSCamSmoothSpeed = 15f;
@@ -63,6 +64,7 @@ namespace MultiplayerRunTime
         [SerializeField]
         [Tooltip("Mouse sensitivity for the mouse flight target")]
         private float mouseSensitivity = 3f;
+        public float MouseSensitivity => mouseSensitivity;
 
         private float AimDistance => fireControl.TargetDistance;
 
@@ -215,7 +217,7 @@ namespace MultiplayerRunTime
             UserCustomisableSettings userSettings = UserCustomisableSettings.instance;
             throttleSenstivity = userSettings.userSettings.ThrottleSenstivity;
             mouseSensitivity = userSettings.userSettings.FlightTargetSensitivity;
-            TPScamSmoothSpeed = userSettings.userSettings.ThirdPersonCameraSensitivity;
+            tPScamSmoothSpeed = userSettings.userSettings.ThirdPersonCameraSensitivity;
             if (!userSettings.userSettings.ThirdPersonIsDefaultCamera)
             {
                 perspective = Perspective.FirstPerson;
@@ -337,7 +339,7 @@ namespace MultiplayerRunTime
             Vector3 upVec = (math.abs(mouseAim.forward.y) > 0.9f) ? cameraRig.up : Vector3.up;
 
             // Smoothly rotate the camera to face the mouse aim.
-            cameraRig.rotation = DampCamera(cameraRig.rotation, Quaternion.LookRotation(mouseAim.forward, upVec), TPScamSmoothSpeed, Time.deltaTime);
+            cameraRig.rotation = DampCamera(cameraRig.rotation, Quaternion.LookRotation(mouseAim.forward, upVec), tPScamSmoothSpeed, Time.deltaTime);
             
         }
 

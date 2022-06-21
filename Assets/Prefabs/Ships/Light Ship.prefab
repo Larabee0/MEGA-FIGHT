@@ -342,7 +342,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f3b169e4c6399824cabc5b6c0f04f19e, type: 2}
+  - {fileID: 2100000, guid: 178d38a6802febf409a4bdb0efeb839f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -740,6 +740,9 @@ MonoBehaviour:
     Force: 0
     ForceMult: 0
     Damage: 0
+  defaultColour:
+    serializedVersion: 2
+    rgba: 4283253534
 --- !u!114 &10459044717671340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -973,7 +976,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3004695793008553382}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1577,7 +1580,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f3b169e4c6399824cabc5b6c0f04f19e, type: 2}
+  - {fileID: 2100000, guid: 178d38a6802febf409a4bdb0efeb839f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
